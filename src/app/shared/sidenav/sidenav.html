@@ -1,0 +1,97 @@
+<div class="sidenav" 
+     [ngClass]="{'sidenav-collapsed': collapsed, 'sidenav-pinned': pinned}"
+     (mouseenter)="onMouseEnter()"
+     (mouseleave)="onMouseLeave()">
+     
+  <div class="logo-container">
+    <div class="logo">
+      <i class="fas fa-cube"></i>
+    </div>
+    <div class="logo-text" @fadeInOut *ngIf="!collapsed || pinned">TeamDev</div>
+    <button class="pin-button" 
+            [ngClass]="{'pinned': pinned}"
+            @fadeInOut 
+            *ngIf="!collapsed || pinned" 
+            (click)="togglePin()">
+      <i class="fas fa-thumbtack"></i>
+    </button>
+  </div>
+  
+  <div class="menu-container">
+    <ul class="sidenav-nav">
+      <!-- Dashboard -->
+      <li class="sidenav-nav-item">
+        <a class="sidenav-nav-link" 
+           [routerLink]="[navData[0].path]"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}">
+          <i class="sidenav-link-icon" [class]="navData[0].icon"></i>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[0].title}}</span>
+          <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[0].title}}</div>
+        </a>
+      </li>
+
+      <!-- Technicien -->
+      <li class="sidenav-nav-item">
+        <a class="sidenav-nav-link" 
+           [routerLink]="[navData[1].path]"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}">
+          <i class="sidenav-link-icon" [class]="navData[1].icon"></i>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[1].title}}</span>
+          <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[1].title}}</div>
+        </a>
+      </li>
+
+      <!-- Liste OR -->
+      <li class="sidenav-nav-item">
+        <a class="sidenav-nav-link" 
+           [routerLink]="[navData[2].path]"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}">
+          <i class="sidenav-link-icon" [class]="navData[2].icon"></i>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[2].title}}</span>
+          <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[2].title}}</div>
+        </a>
+      </li>
+      
+      <!-- Administration - CORRIGÉ -->
+      <li class="sidenav-nav-item">
+        <a class="sidenav-nav-link" 
+           [routerLink]="[navData[3].path]"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}">
+          <i class="sidenav-link-icon" [class]="navData[3].icon"></i>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[3].title}}</span>
+          <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[3].title}}</div>
+        </a>
+      </li>
+      
+      <!-- Parametrages -->
+      <li class="sidenav-nav-item">
+        <a class="sidenav-nav-link" 
+           [routerLink]="[navData[4].path]"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}">
+          <i class="sidenav-link-icon" [class]="navData[4].icon"></i>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[4].title}}</span>
+          <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[4].title}}</div>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+  <!-- Logout en bas -->
+  <div class="logout-container">
+    <li class="sidenav-nav-item">
+      <a class="sidenav-nav-link" 
+         [routerLink]="[navData[5].path]"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact: true}">
+        <i class="sidenav-link-icon" [class]="navData[5].icon"></i>
+        <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[5].title}}</span>
+        <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[5].title}}</div>
+      </a>
+    </li>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<router-outlet *ngIf="!showLayout"></router-outlet>
+
+<div class="app-container" *ngIf="showLayout" [ngClass]="{ 'collapsed': isSideNavCollapsed }">
+  <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+  
+  <div class="main-content">
+    <app-header [collapsed]="isSideNavCollapsed" [screenWidth]="screenWidth"></app-header>
+    
+    <div class="body" [ngClass]="getBodyclass()">
+      <router-outlet></router-outlet>
+    </div>
+    
+    <app-footer [collapsed]="isSideNavCollapsed" [screenWidth]="screenWidth"></app-footer>
+  </div>
+</div>

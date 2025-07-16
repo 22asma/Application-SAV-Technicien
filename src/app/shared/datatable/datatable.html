@@ -1,0 +1,179 @@
+<div class="datatable-container">
+  <!-- Controls -->
+  <div class="datatable-controls">
+  <div class="controls-left">
+
+      <div class="controls-right">
+        <div class="entries-control">
+          <span>Afficher</span>
+          <select [(ngModel)]="entriesPerPage" (change)="onEntriesPerPageChange()">
+           <option *ngFor="let option of entriesPerPageOptions" [value]="option">{{ option }}</option>
+          </select>
+          <span>entrées</span>
+        </div>
+      </div>
+</div>
+    
+          <!-- Bouton Ajouter -->
+      <button 
+        class="btn btn-add" 
+        *ngIf="showAddButton"
+        (click)="addClicked.emit()"
+      >
+       <i class="icon icon-add"></i> 
+         Ajouter
+     </button>
+    <!-- Barre de recherche -->
+   <div class="search-container" *ngIf="showSearch">
+  <i class="icon icon-search"></i>
+  <input 
+    type="text" 
+    placeholder="Rechercher..." 
+    [(ngModel)]="searchQuery" 
+    (input)="applyFilter()"
+    (click)="$event.stopPropagation()"
+    (focus)="$event.stopPropagation()"
+    (keydown.enter)="$event.preventDefault()"
+  >
+</div>
+
+    <!-- Bouton Filtre -->
+    <button class="btn btn-outline filter-btn" *ngIf="showFilters">
+      <i class="icon icon-filter"></i>
+      Filtre
+    </button>
+
+    <!-- Bouton Export -->
+    <button class="btn btn-outline export-btn" *ngIf="showExport" (click)="exportToExcel()">
+      <i class="icon icon-file-excel"></i>
+      Exporter
+    </button>
+  </div>
+
+
+  <!-- Filtres par statut (onglets) -->
+  <div class="filter-tabs-container" *ngIf="tabs.length > 0">
+    <div class="filter-tabs">
+      <button 
+        *ngFor="let tab of tabs"
+        class="tab-button" 
+        [class.active]="activeTab === tab.key" 
+        (click)="onTabChange(tab.key)"
+      >
+        {{ tab.label }}
+        <span class="count">{{ getTabCount(tab.key) }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <table class="datatable">
+      <thead>
+        <tr>
+          <th *ngFor="let column of columns" [style.width]="column.width">
+            {{ column.label }}
+          </th>
+          <th *ngIf="actions.length > 0">ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of paginatedData">
+          <td *ngFor="let column of columns" [ngClass]="column.key + '-column'">
+            <!-- Texte simple -->
+            <span *ngIf="column.type === 'text' || !column.type">
+              {{ getCellValue(item, column) }}
+            </span>
+            
+            <!-- Badge de statut -->
+            <span 
+              *ngIf="column.type === 'badge'"
+              class="status-badge"
+              [ngClass]="getBadgeClass(getCellValue(item, column), column)"
+              >
+              {{ getCellValue(item, column) }}
+            </span>
+
+            <!-- Date -->
+            <span *ngIf="column.type === 'date'">
+              {{ getCellValue(item, column) | date:'dd/MM/yyyy' }}
+            </span>
+
+            <!-- Nombre -->
+            <span *ngIf="column.type === 'number'">
+              {{ getCellValue(item, column) | number }}
+            </span>
+
+            <!-- Client avec information -->
+            <div *ngIf="column.type === 'client'" class="client-cell">
+              <div class="name-info">
+                <div class="name">{{ getCellValue(item, column) }}</div>
+              </div>
+            </div>
+          </td>
+          
+          <!-- Actions -->
+          <td class="actions-column" *ngIf="actions.length > 0">
+            <div class="actions-menu">
+              <ng-container *ngFor="let action of actions">
+                <button 
+                  *ngIf="shouldShowAction(action, item)"
+                  class="action-btn" 
+                  (click)="executeAction(action, item)"
+                  [title]="action.label"
+                >
+                  <i class="icon" [ngClass]="action.icon"></i>
+                </button>
+              </ng-container>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div class="datatable-footer" *ngIf="showPagination">
+    <div class="entries-info">
+      Affichage de {{ (currentPage - 1) * entriesPerPage + 1 }} à 
+      {{ getMinCurrentPageEntries() }} sur {{ totalEntries }} entrées
+    </div>
+    <div class="pagination">
+      <button 
+        class="page-btn" 
+        [disabled]="currentPage === 1"
+        (click)="onPageChange(currentPage - 1)"
+      >
+        <i class="icon icon-chevron-left"></i>
+      </button>
+      
+      <button 
+        *ngFor="let page of getPageNumbers()"
+        class="page-btn"
+        [ngClass]="{ 'active': page === currentPage }"
+        (click)="onPageChange(page)"
+      >
+        {{ page }}
+      </button>
+      
+      <button *ngIf="getTotalPages() > 5" class="page-btn">...</button>
+      
+      <button 
+        *ngIf="getTotalPages() > 5"
+        class="page-btn"
+        [ngClass]="{ 'active': getTotalPages() === currentPage }"
+        (click)="onPageChange(getTotalPages())"
+      >
+        {{ getTotalPages() }}
+      </button>
+      
+      <button 
+        class="page-btn"
+        [disabled]="currentPage === getTotalPages()"
+        (click)="onPageChange(currentPage + 1)"
+      >
+        <i class="icon icon-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

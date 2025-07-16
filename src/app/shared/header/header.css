@@ -1,0 +1,385 @@
+.head {
+  border-bottom: 1px solid #e5e7eb;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+  transition: all 0.3s ease;
+  margin-left: 5rem;
+  background: #f4f6f8;
+  padding: 0 24px;
+}
+
+.head-trimmed {
+  left: 175px;
+}
+
+.head-md-screen {
+  left: 0;
+}
+
+.head-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 0.625rem;
+  box-shadow: 0px 0px 10px 0 rgb(34 41 47 / 10%);
+  padding: 0.813rem 1.563rem;
+  margin-top: 28px;
+  margin-left: -10px;
+}
+
+.head-content-left {
+  display: flex;
+  align-items: center;
+}
+
+.interface-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.interface-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.interface-date {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+/* Right side - Actions */
+.head-content-right {
+  display: flex;
+  align-items: center;
+}
+
+.head-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.head-menu-item {
+  position: relative;
+}
+
+.head-menu-item-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.head-menu-item-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.head-menu-item-btn.ripple:active {
+  transform: scale(0.95);
+}
+
+.menu-icon {
+  font-size: 18px;
+  color: #6b7280;
+}
+
+/* Language selector specific styles */
+.language-selector .head-menu-item-btn {
+  width: 60px;
+  gap: 4px;
+}
+
+.language-flag {
+  font-size: 16px;
+}
+
+/* User button specific styles */
+.user-btn {
+  width: auto !important;
+  padding: 0 12px;
+  gap: 8px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #0068FF 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-icon {
+  font-size: 14px;
+  color: white;
+}
+
+.dropdown-arrow {
+  font-size: 12px;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+.user-menu.show .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Notification badge */
+.notification-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0; /* Changé de left: 0 à right: 0 */
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f9fafb;
+}
+
+.dropdown-item:first-child {
+  border-radius: 12px 12px 0 0;
+}
+
+.dropdown-item:last-child {
+  border-radius: 0 0 12px 12px;
+}
+
+.dropdown-item .icon {
+  font-size: 16px;
+  color: #6b7280;
+  width: 16px;
+}
+
+.dropdown-item span {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.language-menu {
+  min-width: 150px;
+  right: 0; 
+  left: auto; 
+}
+
+.notification-menu {
+  min-width: 320px;
+  right: 0; 
+  left: auto; 
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  border-radius: 12px 12px 0 0;
+}
+
+.notification-header span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.mark-read-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.mark-read-btn:hover {
+  background-color: #eff6ff;
+}
+
+.notification-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+.notification-item:hover {
+  background-color: #f9fafb;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  flex-shrink: 0;
+}
+
+.notification-icon {
+  font-size: 14px;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-message {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.user-dropdown {
+  min-width: 180px;
+  left: auto;
+  right: 0;
+}
+
+.user-dropdown .dropdown-item {
+  padding: 12px 16px;
+}
+
+.user-dropdown .dropdown-item:hover {
+  background-color: #f9fafb;
+}
+
+.user-dropdown .dropdown-item[data-logout] {
+  color: #ef4444;
+  border-top: 1px solid #e5e7eb;
+}
+
+.user-dropdown .dropdown-item[data-logout]:hover {
+  background-color: #fef2f2;
+}
+
+.language-label {
+  font-size: 14px;
+  color: #374151;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .head {
+    padding: 0 16px;
+    height: 60px;
+  }
+  
+  .head-trimmed,
+  .head-md-screen {
+    left: 0;
+  }
+  
+  .interface-name {
+    font-size: 16px;
+  }
+  
+  .interface-date {
+    font-size: 12px;
+  }
+  
+  .head-menu {
+    gap: 4px;
+  }
+  
+  .head-menu-item-btn {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .language-selector .head-menu-item-btn {
+    width: 50px;
+  }
+  
+  .dropdown-menu {
+    min-width: 180px;
+  }
+  
+  .notification-menu {
+    min-width: 280px;
+  }
+}

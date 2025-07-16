@@ -1,0 +1,38 @@
+<div class="users-container">
+  <!-- Message de chargement -->
+  <div *ngIf="loading" class="loading-message">
+    <i class="icon icon-spinner"></i> Chargement en cours...
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Datatable -->
+  <div *ngIf="!loading && users.length > 0" class="table-wrapper">
+<div class="users-container">
+  <app-datatable
+    [data]="users"
+    [columns]="userColumns"
+    [actions]="userActions"
+    [showSearch]="true"
+    [showFilters]="false"
+    [showExport]="true"
+    [showPagination]="true"
+    [showAddButton]="true"
+    [entriesPerPageOptions]="[10, 25, 50, 100]"
+    [useBackendPagination]="false"
+    (addClicked)="onAddClicked()"
+    (exportData)="onExportData($event)"
+    (rowSelect)="onRowSelect($event)"
+    (filterChange)="onFilterChange($event)"
+    (pageChange)="onPageChange($event)"
+  ></app-datatable>
+  </div>
+
+  <!-- Message si aucune donnée -->
+  <div *ngIf="!loading && users.length === 0 && !errorMessage" class="no-data-message">
+    Aucun utilisateur trouvé
+  </div>
+</div>

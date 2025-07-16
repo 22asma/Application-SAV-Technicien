@@ -1,0 +1,101 @@
+<div class="modal-container">
+  <div class="modal-header">
+    <h2>Détails des tâches</h2>
+    <button class="modal-close" (click)="onFermerModal()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  
+  <div class="modal-content" *ngIf="ordreInfo">
+    <!-- Informations générales de l'ordre -->
+    <div class="info-section">
+      <h3>Informations de l'ordre</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Véhicule:</label>
+          <span>{{ordreInfo.vehicule}}</span>
+        </div>
+        <div class="info-item">
+          <label>Client:</label>
+          <span>{{ordreInfo.client}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Résumé des tâches -->
+    <div class="resume-section">
+      <h3>Résumé des tâches</h3>
+      <div class="resume-grid">
+        <div class="resume-item">
+          <span class="resume-label">Total tâches:</span>
+          <span class="resume-value">{{taches.length}}</span>
+        </div>
+        <div class="resume-item">
+          <span class="resume-label">Terminées:</span>
+          <span class="resume-value terminee">{{getNombreTachesParStatut('TERMINEE')}}</span>
+        </div>
+        <div class="resume-item">
+          <span class="resume-label">En cours:</span>
+          <span class="resume-value en-cours">{{getNombreTachesParStatut('EN_COURS')}}</span>
+        </div>
+        <div class="resume-item">
+          <span class="resume-label">En Pause:</span>
+          <span class="resume-value en-attente">{{getNombreTachesParStatut('EN_PAUSE')}}</span>
+        </div>
+        <div class="resume-item">
+          <span class="resume-label">Non Démarre:</span>
+          <span class="resume-value en-attente">{{getNombreTachesParStatut('NON_DEMAREE')}}</span>
+        </div>
+        <div class="resume-item">
+          <span class="resume-label">Avancement:</span>
+          <span class="resume-value">{{getPourcentageAvancement()}}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liste détaillée des tâches -->
+    <div class="taches-section">
+      <h3>Liste des tâches ({{taches.length}})</h3>
+
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <span>Chargement des tâches...</span>
+      </div>
+      <div *ngIf="!loading" class="taches-container">
+        <div *ngFor="let tache of taches; let i = index" class="tache-card">
+          <div class="tache-header">
+            <div class="tache-numero">#{{'T' + (i + 1).toString().padStart(3, '0')}}</div>
+            <div class="tache-titre">
+              <span class="tache-nom">{{tache.titre}}</span>
+              <div class="tache-statut-container">
+                <span class="tache-statut" [ngClass]="'statut-' + getStatutClass(tache.statut)">
+                  <span class="statut-icon">{{getStatutIcon(tache.statut)}}</span>
+                  {{tache.statut}}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tache-body">
+            <div class="tache-description">
+              <span class="description-icon">📝</span>
+              {{tache.details}}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Message si aucune tâche -->
+    <div *ngIf="taches.length === 0" class="no-taches">
+      <div class="no-taches-icon">📋</div>
+      <h3>Aucune tâche assignée</h3>
+      <p>Cet ordre de réparation n'a pas encore de tâches assignées.</p>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="onFermerModal()">Fermer</button>
+  </div>
+</div>

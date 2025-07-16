@@ -1,0 +1,34 @@
+<div class="ordreReparation-container">
+  <!-- Message de chargement -->
+  <div *ngIf="loading" class="loading-message">
+    <i class="icon icon-spinner"></i> Chargement en cours...
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Datatable -->
+  <div *ngIf="!loading && ordreReparation.length > 0" class="table-wrapper">
+<div class="OrdreReparation-container">
+  <app-datatable
+    [data]="ordreReparation"
+    [columns]="columns"
+    [actions]="actions"
+    [showSearch]="true"
+    [showFilters]="false"
+    [showExport]="true"
+    [showPagination]="true"
+    [showAddButton]="false"
+    [entriesPerPageOptions]="[10, 25, 50, 100]"
+    [useBackendPagination]="false"
+    (addClicked)="onAddClicked()"
+    (rowSelect)="onRowSelect($event)"
+    (filterChange)="onFilterChange($event)"
+    (pageChange)="onPageChange($event)"
+    (exportData)="onExportData($event)"
+  ></app-datatable>
+  </div>
+
+</div>

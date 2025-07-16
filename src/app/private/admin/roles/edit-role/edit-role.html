@@ -1,0 +1,95 @@
+<div class="modal-overlay" (click)="onCancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <mat-icon class="icon">edit</mat-icon>
+        {{isNewRole ? 'Créer un nouveau rôle' : 'Modifier le rôle: ' + role.name}}
+      </h2>
+      <button class="close-btn" mat-icon-button (click)="onCancel()" matTooltip="Fermer">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nom du rôle</mat-label>
+          <input 
+            matInput
+            type="text" 
+            id="roleName" 
+            [(ngModel)]="editedName" 
+            placeholder="Entrez le nom du rôle"
+            required
+          >
+          <mat-icon matSuffix>badge</mat-icon>
+          <mat-error *ngIf="!editedName || editedName.trim() === ''">
+            Le nom du rôle est obligatoire
+          </mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="form-group">
+        <h3 class="permissions-title">
+          <mat-icon class="icon">lock</mat-icon>
+          Permissions disponibles
+        </h3>
+        <div class="permissions-container">
+  <div *ngFor="let mainPermission of data.allPermissions" class="permission-group">
+    <div class="main-permission">
+      <mat-checkbox
+        [checked]="isPermissionSelected(mainPermission.id)"
+        [indeterminate]="areSomeSubPermissionsSelected(mainPermission)"
+        (change)="toggleMainPermission(mainPermission, $event.checked)"
+        color="primary"
+      >
+        {{ mainPermission.name }}
+        <span *ngIf="isPermissionSelected(mainPermission.id)" class="badge">
+          <mat-icon class="badge-icon">check_circle</mat-icon>
+          Sélectionnée
+        </span>
+      </mat-checkbox>
+    </div>
+    
+    <div class="sub-permissions" [class.disabled]="!isPermissionSelected(mainPermission.id)">
+      <div *ngFor="let subPermission of mainPermission.secondaryPermissions" 
+           class="sub-permission-item">
+        <mat-checkbox
+          [checked]="isPermissionSelected(subPermission.id)"
+          [disabled]="!isPermissionSelected(mainPermission.id) && !isPermissionSelected(subPermission.id)"
+          (change)="onPermissionChange(subPermission.id, $event.checked)"
+          color="primary"
+        >
+          {{ subPermission.name }}
+          <span *ngIf="isPermissionSelected(subPermission.id)" class="badge">
+            <mat-icon class="badge-icon">check_circle</mat-icon>
+            Attribuée
+          </span>
+        </mat-checkbox>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    <div class="modal-footer">
+      <button 
+        mat-stroked-button 
+        class="btn-cancel" 
+        (click)="onCancel()"
+      >
+        <mat-icon>cancel</mat-icon>
+        Annuler
+      </button>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="btn-save" 
+        (click)="onSave()"
+        [disabled]="!editedName || editedName.trim() === ''"
+      >
+        <mat-icon>{{isNewRole ? 'add' : 'save'}}</mat-icon>
+        {{isNewRole ? 'Créer' : 'Enregistrer'}}
+      </button>
+    </div>
+  </div>
+</div>

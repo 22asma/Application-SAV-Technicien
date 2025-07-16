@@ -1,0 +1,16 @@
+<div class="technicien-container">
+  <div *ngIf="loading" class="loading-message">Chargement en cours...</div>
+  <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
+  
+  <app-datatable
+    *ngIf="!loading && !errorMessage"
+    [data]="techniciens"
+    [columns]="columns"
+    [actions]="actions"
+    [showSearch]="true"
+    [showFilters]="true"
+    [showExport]="true"
+    [showPagination]="true"
+    (exportData)="onExportData($event)"
+  ></app-datatable>
+</div>

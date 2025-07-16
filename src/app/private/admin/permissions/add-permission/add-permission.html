@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h2 class="modal-title">
+    {{ isMainPermission ? 'Nouvelle permission principale' : 'Nouvelle sous-permission' }}
+  </h2>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="permissionForm">
+    <div class="form-field">
+      <label for="permissionName">Nom de la permission</label>
+      <input 
+        type="text" 
+        id="permissionName" 
+        formControlName="name" 
+        placeholder="Ex: Gestion des utilisateurs">
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-cancel" (click)="onCancel()">Annuler</button>
+  <button 
+    class="btn btn-submit" 
+    (click)="onSubmit()" 
+    [disabled]="!permissionForm.valid">
+    {{ isMainPermission ? 'Créer' : 'Ajouter' }}
+  </button>
+</div>

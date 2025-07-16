@@ -1,0 +1,55 @@
+@import '../node_modules/@syncfusion/ej2-base/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-buttons/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-inputs/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-lists/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css';
+/* Supprimé: @import '../node_modules/@syncfusion/ej2-angular-calendars/styles/material.css'; */
+
+/* Angular Material Theme Imports */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import '@angular/cdk/overlay-prebuilt.css';
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+app-root {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+/* Body Styles */
+body {
+    position: relative;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f8 ;
+    line-height: 1.6;
+    color: #333;
+    flex: 1;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.transparent-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  opacity: 1 !important;
+}
+
+.custom-dialog-panel .mat-dialog-container {
+  padding: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 
+              0 24px 38px 3px rgba(0,0,0,.14), 
+              0 9px 46px 8px rgba(0,0,0,.12);
+}
+
+.cdk-overlay-dark-backdrop {
+  background: rgba(0, 0, 0, 0.6) !important;
+}

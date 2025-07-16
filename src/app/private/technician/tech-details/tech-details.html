@@ -1,0 +1,68 @@
+<div class="tech-modal-container">
+  <div class="tech-modal-header">
+    <h2>Journal du technicien</h2>
+    <button mat-icon-button (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <div class="technicien-info-card">
+      <div class="technicien-identity">
+        <mat-icon class="avatar-icon">person</mat-icon>
+        <div class="identity-details">
+          <span class="technicien-name">{{technicien.prenom}} {{technicien.nom}}</span>
+          <span class="technicien-username">{{technicien.username}}</span>
+        </div>
+      </div>
+      <div class="technicien-status">
+        <span class="status-badge" [ngClass]="getStatusClass()">
+          {{ getStatusLabel() }}
+        </span>
+      </div>
+    </div>
+
+    <div class="history-section">
+      <h3>Historique du jour</h3>
+      
+      <div *ngIf="loading" class="loading-state">
+        <mat-spinner diameter="40"></mat-spinner>
+        <span>Chargement en cours...</span>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-state">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <div *ngIf="!loading && !errorMessage" class="history-table-container">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th class="time-header">Heure</th>
+              <th class="type-header">Type</th>
+              <th class="task-header">Tâche</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of journalData">
+              <td class="time-cell">{{entry.heure}}</td>
+              <td class="type-cell">
+                <span class="type-badge" [ngClass]="getBadgeClass(entry.rawType)">
+                  {{entry.type}}
+                </span>
+              </td>
+              <td class="task-cell">{{entry.tache}}</td>
+            </tr>
+            <tr *ngIf="journalData.length === 0">
+              <td colspan="3" class="no-data">
+                <mat-icon>info</mat-icon>
+                <span>Aucun enregistrement aujourd'hui</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </mat-dialog-content>
+</div>

@@ -1,0 +1,53 @@
+<div class="roles-container">
+  <div class="tab-content">
+    <div class="roles-grid">
+      <!-- Cartes de rôles -->
+      <div class="role-card" *ngFor="let role of roleList">
+        <div class="role-card-header">
+          <div class="users-count">{{ countPermissions(role) }} permissions</div>
+        </div>
+        
+        <div class="role-card-body">
+          <div>
+            <h3 class="role-name">{{ role.name }}</h3>
+            <!-- Affichage des permissions -->
+            <div class="permissions" *ngIf="role.rolePermissions?.length">
+              <span class="permission-tag" 
+                    *ngFor="let rp of role.rolePermissions">
+                {{ rp.permission.name }}
+              </span>
+            </div>
+            <div *ngIf="!role.rolePermissions?.length" class="no-permissions">
+              Aucune permission attribuée
+            </div>
+          </div>
+          <div class="role-actions">
+            <button class="edit-role-btn" (click)="openEditModal(role)" >
+              Modifier
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carte d'ajout de nouveau rôle -->
+      <div class="add-role-card">
+        <div class="add-role-content">
+          <div class="add-role-illustration">
+            <div class="illustration-icon" (click)="openNewRoleModal()">
+              +
+            </div>
+          </div>
+          <div class="add-role-actions">
+            <button class="add-role-btn">
+              Ajouter un rôle
+            </button>
+            <p class="add-role-description">
+              Créer un nouveau rôle<br>
+              personnalisé
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

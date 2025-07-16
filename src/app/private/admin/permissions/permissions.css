@@ -1,0 +1,241 @@
+.permissions-container {
+  padding: 20px;
+  height: 100%;
+  background-color: #f8f9fa;
+}
+
+.tab-content {
+  padding: 20px;
+  height: 100%;
+}
+
+.permissions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Cartes de permissions */
+.permission-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e9ecef;
+  border-top: 5px solid #28a745;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 250px;
+}
+
+.permission-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.permission-card-header {
+  margin-bottom: 15px;
+}
+
+.secondary-count {
+  font-size: 13px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.permission-card-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.permission-info {
+  flex-grow: 1;
+}
+
+.permission-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+}
+
+/* Styles pour les sous-permissions */
+.secondary-permissions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.secondary-permission-tag {
+  background-color: #e8f5e8;
+  color: #28a745;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #c3e6cb;
+  transition: all 0.2s ease;
+}
+
+.secondary-permission-tag:hover {
+  background-color: #d4edda;
+  transform: translateY(-1px);
+}
+
+/* Message aucune sous-permission */
+.no-secondary {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px dashed #dee2e6;
+  text-align: center;
+}
+
+.no-secondary-text {
+  color: #6c757d;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.permission-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+.edit-permission-btn {
+  background: none;
+  border: 1px solid #28a745;
+  color: #28a745;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.edit-permission-btn:hover {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Carte d'ajout de nouvelle permission */
+.add-permission-card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 2px dashed #e9ecef;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-permission-card:hover {
+  border-color: #28a745;
+  background-color: #f8fff8;
+}
+
+.add-permission-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.add-permission-illustration {
+  margin-bottom: 10px;
+}
+
+.illustration-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #f1f9f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #28a745;
+  font-size: 32px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.add-permission-card:hover .illustration-icon {
+  background: #28a745;
+  color: white;
+  transform: scale(1.1);
+}
+
+.add-permission-btn {
+  background: none;
+  color: #28a745;
+  border: none;
+  padding: 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-size: 16px;
+}
+
+.add-permission-card:hover .add-permission-btn {
+  color: #1e7e34;
+}
+
+.add-permission-description {
+  color: #6c757d;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .permissions-container {
+    padding: 15px;
+  }
+  
+  .permissions-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .permission-card {
+    padding: 15px;
+    min-height: 200px;
+  }
+  
+  .add-permission-card {
+    padding: 25px 15px;
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .permission-card-body {
+    gap: 15px;
+  }
+  
+  .secondary-permissions {
+    gap: 6px;
+  }
+  
+  .secondary-permission-tag {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}

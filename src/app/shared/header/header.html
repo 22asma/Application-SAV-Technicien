@@ -1,0 +1,80 @@
+<div class="head" [ngClass]="getHeadClass()">
+    <div class="head-content">
+        <!-- Left side - Interface name and date -->
+        <div class="head-content-left">
+            <div class="interface-info">
+                <h1 class="interface-name">{{ interfaceName }}</h1>
+                <span class="interface-date">{{ currentDate }}</span>
+            </div>
+        </div>
+
+        <!-- Right side - Actions -->
+        <div class="head-content-right">
+            <div class="head-menu">
+                <!-- Language Selector -->
+                <div class="head-menu-item language-selector">
+                    <button class="head-menu-item-btn ripple" (click)="toggleLanguageMenu($event)">
+                        <i class="fas fa-globe menu-icon"></i>
+                        <span class="language-flag">{{ selectedLanguage.flag }}</span>
+                    </button>
+                    <div class="dropdown-menu language-menu" [class.show]="isLanguageOpen" (click)="$event.stopPropagation()">
+                        <div class="dropdown-item" 
+                             *ngFor="let language of languages" 
+                             (click)="selectLanguage(language, $event)">
+                            <span class="language-flag">{{ language.flag }}</span>
+                            <span class="language-label">{{ language.label }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="head-menu-item notifications">
+                    <button class="head-menu-item-btn ripple" (click)="toggleNotifications($event)">
+                        <i class="far fa-bell menu-icon"></i>
+                        <span *ngIf="hasNewNotification" class="notification-badge"></span>
+                    </button>
+                    <div class="dropdown-menu notification-menu" [class.show]="isNotificationOpen" (click)="$event.stopPropagation()">
+                        <div class="notification-header">
+                            <span>Notifications</span>
+                            <button class="mark-read-btn" (click)="markAllAsRead($event)">
+                                Marquer comme lu
+                            </button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item" *ngFor="let notification of notifications">
+                                <div class="notification-icon-container">
+                                    <i class="notification-icon"
+                                       [ngClass]="getNotificationIcon(notification.type).iconClass"
+                                       [ngStyle]="{'color': getNotificationIcon(notification.type).color}">
+                                    </i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-message">{{ notification.message }}</div>
+                                    <div class="notification-time">{{ notification.time }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Menu -->
+                <div class="head-menu-item user-menu">
+                    <button class="head-menu-item-btn user-btn ripple" (click)="toggleUserMenu($event)">
+                        <div class="user-avatar">
+                            <i class="fas fa-user user-icon"></i>
+                        </div>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </button>
+                    <div class="dropdown-menu user-dropdown" [class.show]="isMenuOpen" (click)="$event.stopPropagation()">
+                        <div class="dropdown-item" 
+                             *ngFor="let item of userItems" 
+                             (click)="onUserItemClicked(item, $event)">
+                            <i class="icon" [ngClass]="item.icon"></i>
+                            <span>{{ item.label }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

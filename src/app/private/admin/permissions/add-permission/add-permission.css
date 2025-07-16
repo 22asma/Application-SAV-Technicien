@@ -1,0 +1,95 @@
+/* Style minimaliste pour la modal */
+.mat-dialog-container {
+  padding: 0 !important;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  background: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Style des champs de formulaire */
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: #3f51b5;
+}
+
+/* Style des boutons */
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel {
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background: #f5f5f5;
+}
+
+.btn-submit {
+  background: #3f51b5;
+  border: 1px solid #3f51b5;
+  color: white;
+}
+
+.btn-submit:hover {
+  background: #303f9f;
+}
+
+.btn-submit:disabled {
+  background: #b0b0b0;
+  border-color: #b0b0b0;
+  cursor: not-allowed;
+}

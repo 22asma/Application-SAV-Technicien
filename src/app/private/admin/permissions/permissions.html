@@ -1,0 +1,55 @@
+<div class="permissions-container">
+<div class="permissions-grid">
+  <!-- Cartes de permissions principales -->
+  <div class="permission-card" *ngFor="let permission of permissionList">
+    <div class="permission-card-header">
+      <div class="secondary-count">
+        {{ getSecondaryPermissionsCount(permission) }} sous-permissions
+      </div>
+    </div>
+    
+    <div class="permission-card-body">
+      <div class="permission-info">
+        <h3 class="permission-name">{{ permission.name }}</h3>
+        
+        <div class="secondary-permissions" *ngIf="permission.secondaryPermissions && permission.secondaryPermissions.length > 0">
+          <div class="secondary-permission-tag" 
+               *ngFor="let secondaryPerm of permission.secondaryPermissions">
+            {{ secondaryPerm.name }}
+          </div>
+        </div>
+        
+        <div class="no-secondary" *ngIf="!permission.secondaryPermissions">
+          <span class="no-secondary-text">Aucune sous-permission définie</span>
+        </div>
+      </div>
+      
+      <div class="permission-actions">
+        <button class="edit-permission-btn" (click)="openSecondaryPermissionModal(permission.id)">
+          Ajouter sous-permission
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carte d'ajout de nouvelle permission -->
+  <div class="add-permission-card">
+    <div class="add-permission-content">
+      <div class="add-permission-illustration">
+        <div class="illustration-icon" (click)="openMainPermissionModal()">
+          +
+        </div>
+      </div>
+      <div class="add-permission-actions">
+        <button class="add-permission-btn" (click)="openMainPermissionModal()">
+          Ajouter une permission
+        </button>
+        <p class="add-permission-description">
+          Créer une nouvelle permission<br>
+          personnalisée
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

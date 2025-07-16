@@ -1,0 +1,61 @@
+<div class="modal-header">
+  <h2 mat-dialog-title>Modifier l'utilisateur</h2>
+  <button mat-icon-button mat-dialog-close class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div class="modal-body" mat-dialog-content>
+  <!-- Message d'erreur global -->
+  <div *ngIf="errorMessage" class="error-message">
+    <mat-icon>error</mat-icon>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <!-- Nom d'utilisateur -->
+    <div class="form-section">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom d'utilisateur</mat-label>
+        <input matInput formControlName="username" placeholder="Entrez le nom d'utilisateur">
+        <mat-error *ngIf="hasFieldError('username')">
+          {{ getFieldError('username') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Rôle -->
+    <div class="form-section">
+      <h3>Rôle</h3>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Rôle</mat-label>
+        <mat-select formControlName="roleId">
+          <mat-option *ngFor="let role of roles" [value]="role.id">
+            {{ role.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasFieldError('roleId')">
+          {{ getFieldError('roleId') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer" mat-dialog-actions>
+  <button mat-stroked-button 
+          type="button" 
+          (click)="onCancel()"
+          [disabled]="isLoading">
+    Annuler
+  </button>
+  
+  <button mat-raised-button 
+          color="primary" 
+          (click)="onSubmit()"
+          [disabled]="isLoading || userForm.invalid">
+    <mat-spinner *ngIf="isLoading" diameter="20" class="button-spinner"></mat-spinner>
+    <span *ngIf="!isLoading">Enregistrer</span>
+  </button>
+</div>

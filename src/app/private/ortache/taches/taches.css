@@ -1,0 +1,373 @@
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1000; /* Z-index élevé pour éviter les conflits */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.modal-close:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.modal-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  max-height: calc(90vh - 140px); /* Ajustement pour header et footer */
+}
+
+/* Section informations */
+.info-section {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.info-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-item label {
+  font-weight: 500;
+  color: #666;
+  min-width: 100px;
+}
+
+.info-item span {
+  color: #333;
+  font-weight: 500;
+}
+
+/* Section résumé */
+.resume-section {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.resume-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.resume-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.resume-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.resume-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.resume-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.resume-value.terminee {
+  color: #28a745;
+}
+
+.resume-value.en-cours {
+  color: #ffc107;
+}
+
+.resume-value.en-attente {
+  color: #6c757d;
+}
+
+/* Section tâches */
+.taches-section {
+  margin-bottom: 24px;
+}
+
+.taches-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.taches-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tache-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  transition: box-shadow 0.2s;
+}
+
+.tache-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tache-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tache-numero {
+  background: #007bff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-width: 50px;
+  text-align: center;
+}
+
+.tache-titre {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tache-nom {
+  font-weight: 600;
+  color: #333;
+}
+
+.tache-statut-container {
+  display: flex;
+  align-items: center;
+}
+
+.tache-statut {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.statut-en-cours {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.statut-terminée {
+  background: #d4edda;
+  color: #155724;
+}
+
+.statut-en-attente {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.tache-duree {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  color: #666;
+}
+
+.tache-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tache-technicien,
+.tache-description {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+}
+
+.tache-technicien .technicien-nom {
+  font-weight: 500;
+  color: #333;
+}
+
+.tache-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.btn-modifier {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-modifier:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* Message aucune tâche */
+.no-taches {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.no-taches-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.no-taches h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.no-taches p {
+  margin: 0;
+  color: #666;
+}
+
+/* Footer */
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background: #f8f9fa;
+  border-radius: 0 0 8px 8px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-container {
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .resume-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .tache-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .tache-titre {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
