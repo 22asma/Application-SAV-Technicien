@@ -26,13 +26,17 @@ export class AddUser implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.userForm = this.fb.group({
-      nom: ['', [Validators.required, Validators.minLength(2)]],
-      prenom: ['', [Validators.required, Validators.minLength(2)]],
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      roleId: ['', Validators.required],
-      badgeId: [''],
-      password: ['', [Validators.required, Validators.minLength(8)]]
-    });
+     nom: ['', [Validators.required, Validators.minLength(2)]],
+     prenom: ['', [Validators.required, Validators.minLength(2)]],
+     username: ['', [Validators.required, Validators.minLength(3)]],
+     roleId: ['', Validators.required],
+     badgeId: [''],
+     password: ['', [
+      Validators.required, 
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)
+   ]]
+ });
   }
 
   ngOnInit(): void {
@@ -55,21 +59,24 @@ export class AddUser implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  getFieldError(fieldName: string): string {
-    const field = this.userForm.get(fieldName);
-    
-    if (field?.errors && field.touched) {
-      if (field.errors['required']) {
-        return 'Ce champ est requis';
-      }
-      if (field.errors['minlength']) {
-        const requiredLength = field.errors['minlength'].requiredLength;
-        return `Minimum ${requiredLength} caractères requis`;
-      }
+getFieldError(fieldName: string): string {
+  const field = this.userForm.get(fieldName);
+  
+  if (field?.errors && field.touched) {
+    if (field.errors['required']) {
+      return 'Ce champ est requis';
     }
-    
-    return '';
+    if (field.errors['minlength']) {
+      const requiredLength = field.errors['minlength'].requiredLength;
+      return `Minimum ${requiredLength} caractères requis`;
+    }
+    if (field.errors['pattern'] && fieldName === 'password') {
+      return 'Le mot de passe doit contenir au moins :\n- Une majuscule\n- Une minuscule\n- Un chiffre';
+    }
   }
+  
+  return '';
+}
 
   hasFieldError(fieldName: string): boolean {
     const field = this.userForm.get(fieldName);

@@ -1,0 +1,112 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Paramètres de l'application</mat-card-title>
+      <mat-card-subtitle>Configurez les préférences du système</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="param-section">
+        <h3>Gestion des tâches</h3>
+        <mat-divider></mat-divider>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Autoriser pause sur tâche active</span>
+            <small>Permet aux techniciens de mettre une tâche en pause</small>
+          </div>
+          <mat-slide-toggle [(ngModel)]="parametres.autoriserPauseSurTacheActive"></mat-slide-toggle>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Autoriser tâches parallèles</span>
+            <small>Permet plusieurs tâches actives en parallèle pour un technicien</small>
+          </div>
+          <mat-slide-toggle [(ngModel)]="parametres.autoriserTachesParalleles"></mat-slide-toggle>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Autoriser tâche multi-technicien</span>
+            <small>Permet à plusieurs techniciens de travailler sur la même tâche</small>
+          </div>
+          <mat-slide-toggle [(ngModel)]="parametres.autoriserTacheMultiTechnicien"></mat-slide-toggle>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Inclure pause dans durée tâche</span>
+            <small>Inclut le temps de pause dans le calcul de la durée de la tâche</small>
+          </div>
+          <mat-slide-toggle [(ngModel)]="parametres.inclurePauseDansTempsTache"></mat-slide-toggle>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Clôture uniquement par créateur</span>
+            <small>Seul le technicien ayant démarré la tâche peut la clôturer</small>
+          </div>
+          <mat-slide-toggle [(ngModel)]="parametres.clotureUniquementParCreateur"></mat-slide-toggle>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Scan de badge obligatoire</span>
+            <small>Le scan du badge est obligatoire pour toute action</small>
+          </div>
+          <mat-slide-toggle [(ngModel)]="parametres.scanBadgeObligatoire"></mat-slide-toggle>
+        </div>
+      </div>
+
+      <div class="param-section">
+        <h3>Paramètres temporels</h3>
+        <mat-divider></mat-divider>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Heure début journée</span>
+            <small>Heure standard de début de la journée de travail</small>
+          </div>
+          <mat-form-field>
+            <input matInput type="time" [(ngModel)]="parametres.heureDebutJournee">
+          </mat-form-field>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Heure fin journée</span>
+            <small>Heure standard de fin de la journée de travail</small>
+          </div>
+          <mat-form-field>
+            <input matInput type="time" [(ngModel)]="parametres.heureFinJournee">
+          </mat-form-field>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Durée pause par défaut (minutes)</span>
+            <small>Durée par défaut d'une pause</small>
+          </div>
+          <mat-form-field>
+            <input matInput type="number" [(ngModel)]="parametres.dureePauseParDefaut">
+          </mat-form-field>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Durée max inactivité (minutes)</span>
+            <small>Temps max d'inactivité avant alerte</small>
+          </div>
+          <mat-form-field>
+            <input matInput type="number" [(ngModel)]="parametres.dureeMaxInactivite">
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="enregistrerParametres()">Enregistrer</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -83,15 +83,18 @@
   
   <!-- Logout en bas -->
   <div class="logout-container">
-    <li class="sidenav-nav-item">
-      <a class="sidenav-nav-link" 
-         [routerLink]="[navData[5].path]"
-         routerLinkActive="active"
-         [routerLinkActiveOptions]="{exact: true}">
-        <i class="sidenav-link-icon" [class]="navData[5].icon"></i>
-        <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[5].title}}</span>
-        <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[5].title}}</div>
-      </a>
-    </li>
-  </div>
+  <li class="sidenav-nav-item">
+    <a class="sidenav-nav-link" 
+       (click)="logout()" 
+       style="cursor: pointer;">
+      <i class="sidenav-link-icon" [class]="navData[5].icon"></i>
+      <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">
+        {{navData[5].title}}
+      </span>
+      <div class="tooltip" *ngIf="collapsed && !pinned">
+        {{navData[5].title}}
+      </div>
+    </a>
+  </li>
+</div>
 </div>

@@ -1,0 +1,167 @@
+.profile-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.combined-card {
+  width: 100%;
+  max-width: 1200px;  /* Largeur maximale augmentée */
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0068FF, #2196f3);
+  color: white;
+}
+
+.profile-avatar mat-icon {
+  width: 60px;
+  height: 60px;
+  font-size: 60px;
+}
+
+mat-card-header {
+  padding: 2rem 2rem 1rem;
+}
+
+mat-card-title {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+mat-card-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.profile-content {
+  padding: 1rem 2rem 2rem;
+  margin-top: -50px;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.info-section, .password-section {
+  padding: 1.5rem;
+}
+
+.data-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.data-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.data-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  }
+}
+
+.data-icon {
+  color: #3f51b5;
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.data-label {
+  font-size: 0.85rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.data-value {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.password-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #3f51b5;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+mat-icon {
+    font-size: 28px;
+}
+
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.wide-field {
+  width: 100%;
+}
+
+.submit-btn {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .data-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-container {
+    padding: 1rem;
+  }
+  
+  mat-card-header {
+    padding: 1.5rem 1.5rem 0.5rem;
+  }
+}

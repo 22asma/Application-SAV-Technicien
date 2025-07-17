@@ -1,0 +1,106 @@
+<div class="profile-container">
+  <mat-card class="combined-card">
+    <mat-card-header>
+      <div mat-card-avatar class="profile-avatar">
+        <mat-icon>account_circle</mat-icon>
+      </div>
+      <mat-card-title>Mon Profil Utilisateur</mat-card-title>
+      <mat-card-subtitle>Gestion complète de votre compte</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Success state -->
+      <div *ngIf="!isLoading && userProfile" class="profile-content">
+        <div class="main-grid">
+          <!-- Section des informations -->
+          <div class="info-section">
+            <div class="data-grid">
+              <!-- Première ligne -->
+              <div class="data-row">
+                <div class="data-item">
+                  <mat-icon class="data-icon">badge</mat-icon>
+                  <div>
+                    <div class="data-label">NOM</div>
+                    <div class="data-value">{{ userProfile.nom }}</div>
+                  </div>
+                </div>
+                
+                <div class="data-item">
+                  <mat-icon class="data-icon">face</mat-icon>
+                  <div>
+                    <div class="data-label">PRÉNOM</div>
+                    <div class="data-value">{{ userProfile.prenom }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Deuxième ligne -->
+              <div class="data-row">
+                <div class="data-item">
+                  <mat-icon class="data-icon">alternate_email</mat-icon>
+                  <div>
+                    <div class="data-label">NOM D'UTILISATEUR</div>
+                    <div class="data-value">{{ userProfile.username }}</div>
+                  </div>
+                </div>
+                
+                <div class="data-item">
+                  <mat-icon class="data-icon">credit_card</mat-icon>
+                  <div>
+                    <div class="data-label">BADGE ID</div>
+                    <div class="data-value">{{ userProfile.badgeId || '---' }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Troisième ligne -->
+              <div class="data-row">
+                <div class="data-item">
+                  <mat-icon class="data-icon">admin_panel_settings</mat-icon>
+                  <div>
+                    <div class="data-label">ROLE</div>
+                    <div class="data-value">{{ userProfile.role?.name }}</div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <!-- Section changement de mot de passe -->
+          <div class="password-section">
+            <h3 class="section-title">
+              <mat-icon>lock_reset</mat-icon>
+              CHANGEMENT DE MOT DE PASSE
+            </h3>
+            
+            <form class="password-form">
+              <mat-form-field appearance="outline" class="wide-field">
+                <mat-label>Mot de passe actuel</mat-label>
+                <input matInput type="password" required>
+                <mat-icon matSuffix>lock</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="wide-field">
+                <mat-label>Nouveau mot de passe</mat-label>
+                <input matInput type="password" required>
+                <mat-icon matSuffix>password</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="wide-field">
+                <mat-label>Confirmation</mat-label>
+                <input matInput type="password" required>
+                <mat-icon matSuffix>check_circle</mat-icon>
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" type="submit" class="submit-btn">
+                <mat-icon>save</mat-icon>
+                ENREGISTRER LES MODIFICATIONS
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

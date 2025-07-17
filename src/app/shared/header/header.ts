@@ -2,12 +2,13 @@ import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Location } from '@angular/common';
+import { AuthService } from '../../auth/services/auth.service';
 
 export const userItems = [
   {
     icon: 'fal fa-user',
     label: 'Profile',
-    route: '/profile'
+    route: '/admin/profil'
   },
   {
     icon: 'fal fa-power-off',
@@ -19,7 +20,6 @@ export const userItems = [
 export const languages = [
   { code: 'fr', label: 'Français', flag: '🇫🇷' },
   { code: 'en', label: 'English', flag: '🇺🇸' },
-  { code: 'ar', label: 'العربية', flag: '🇹🇳' }
 ];
 
 export const staticNotifications = [
@@ -76,7 +76,8 @@ export class Header implements OnInit {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private authService: AuthService
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -165,7 +166,7 @@ export class Header implements OnInit {
     'listeOR': 'Ordres de Réparation',
     'settings': 'Paramètres',
     'profile': 'Profil',
-    'administrations': 'Administrations'
+    'administration': 'Administrations'
   };
   
   this.interfaceName = routeMap[route.snapshot.routeConfig?.path || ''] || 'Dashboard';
@@ -173,24 +174,6 @@ export class Header implements OnInit {
 
   navigateBack(): void {
     this.location.back();
-  }
-
-  logout(): void {
-    this.router.navigate(['/login']);
-  }
-
-  // Modification pour empêcher la propagation d'événement
-  onUserItemClicked(item: any, event?: Event): void {
-    if (event) {
-      event.stopPropagation();
-    }
-    
-    if (item.action === 'logout') {
-      this.logout();
-    } else {
-      this.router.navigate([item.route]);
-    }
-    this.isMenuOpen = false;
   }
 
   // Modification pour empêcher la propagation d'événement
@@ -255,5 +238,27 @@ export class Header implements OnInit {
       default:
         return { iconClass: 'fas fa-bell', color: '#6b7280' };
     }
+  }
+
+   logout(): void {
+    this.authService.logout(); // Déconnexion directe sans confirmation
+    this.closeAllMenus(); // Ferme les menus ouverts
+  }
+
+  private closeAllMenus(): void {
+    this.isMenuOpen = false;
+    this.isNotificationOpen = false;
+    this.isLanguageOpen = false;
+  }
+
+  onUserItemClicked(item: any, event?: Event): void {
+    if (event) event.stopPropagation();
+    
+    if (item.action === 'logout') {
+      this.logout(); // Appel direct sans confirmation
+    } else if (item.route) {
+      this.router.navigate([item.route]);
+    }
+    this.closeAllMenus();
   }
 }

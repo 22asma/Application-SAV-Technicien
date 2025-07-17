@@ -15,6 +15,9 @@ export class Login {
   returnUrl: string;
   isLoading = false;
   errorMessage = '';
+  showErrorDialog = false;
+  dialogMessage = '';
+  formSubmitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -31,6 +34,7 @@ export class Login {
   }
 
   onSubmit() {
+    this.formSubmitted = true;
     if (this.loginForm.invalid) return;
 
     this.isLoading = true;
@@ -44,14 +48,23 @@ export class Login {
           localStorage.setItem('rememberedUsername', username);
         }
         this.router.navigateByUrl(this.returnUrl);
-        console.log('login2')
       },
       error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err;
+       this.isLoading = false;
+       this.showLoginError(err.message || 'Nom d\'utilisateur ou mot de passe incorrect');
+       console.log('Error occurred:', err); // Pour débogage
       }
     });
-    console.log('login3')
+  }
+
+showLoginError(message: string) {
+  this.dialogMessage = message;
+  this.showErrorDialog = true;
+  console.log('Dialog should show now'); // Pour débogage
+}
+
+  closeErrorDialog() {
+    this.showErrorDialog = false;
   }
 
   togglePasswordVisibility() {
@@ -68,9 +81,9 @@ export class Login {
 
   getUsernameErrorMessage() {
     if (this.username?.hasError('required')) {
-      return 'Username is required';
+      return this.formSubmitted ? 'Username is required' : '';
     }
-    return this.username?.hasError('username') ? 'Please enter a valid email' : '';
+    return this.username?.hasError('username') ? 'Please enter a valid username' : '';
   }
 
   getPasswordErrorMessage() {

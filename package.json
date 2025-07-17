@@ -19,6 +19,7 @@
     "@angular/material": "^20.0.5",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@auth0/angular-jwt": "^5.2.0",
     "@syncfusion/ej2-base": "^30.1.38",
     "@syncfusion/ej2-buttons": "^30.1.37",
     "@syncfusion/ej2-inputs": "^30.1.38",

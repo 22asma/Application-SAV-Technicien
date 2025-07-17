@@ -22,6 +22,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EditUser } from './users/edit-user/edit-user';
 import { AddPermission } from './permissions/add-permission/add-permission';
 import { EditRole } from './roles/edit-role/edit-role';
+import { Profil } from './users/profil/profil';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 @NgModule({
   declarations: [
     Users,
@@ -31,7 +34,8 @@ import { EditRole } from './roles/edit-role/edit-role';
     AddUser,
     EditUser,
     AddPermission,
-    EditRole
+    EditRole,
+    Profil
   ],
   imports: [
     CommonModule,
@@ -52,6 +56,8 @@ import { EditRole } from './roles/edit-role/edit-role';
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatCardModule,
+    MatDividerModule,
   ]
 })
 export class AdminModule { }

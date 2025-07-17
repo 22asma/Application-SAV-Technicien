@@ -12,13 +12,22 @@ import { Header } from './shared/header/header';
 import { Footer } from './shared/footer/footer';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './auth/services/jwt.interceptor';
-
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { Dashboard } from './private/dashboard/dashboard';
+import { Parametres } from './private/parametres/parametres';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 @NgModule({
   declarations: [
     App,
     Sidenav,
     Header,
     Footer,
+    Dashboard,
+    Parametres,
   ],
   imports: [
     BrowserModule,
@@ -28,7 +37,12 @@ import { JwtInterceptor } from './auth/services/jwt.interceptor';
     ReactiveFormsModule,
     CommonModule,
     RouterModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSlideToggleModule,
+    MatCardModule,
+    MatDividerModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -36,7 +50,9 @@ import { JwtInterceptor } from './auth/services/jwt.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
       multi: true
-    }
+    },
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+    JwtHelperService
   ],
   bootstrap: [App]
 })

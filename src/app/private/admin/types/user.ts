@@ -10,5 +10,11 @@ export interface User {
   password?: string;
   statut?: string;
   roleName?: string; 
-  role?: Role;
+  role?: {
+    id: string;
+    name: string;
+    rolePermissions?: any[];
+    createdAt?: string;
+    updatedAt?: string;
+  };
 }

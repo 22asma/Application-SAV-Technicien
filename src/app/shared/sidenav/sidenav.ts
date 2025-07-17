@@ -1,6 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../auth/services/auth.service';
 
 
 interface SideNavToggle {
@@ -18,7 +19,7 @@ export interface InavbarData {
 
 export const navbarData: InavbarData[] = [
   { 
-    path: '/private/dashboard', 
+    path: '/dashboard', 
     title: 'Dashboard', 
     icon: 'fas fa-home'
   },
@@ -38,7 +39,7 @@ export const navbarData: InavbarData[] = [
     icon: 'fas fa-cog',
   },
   { 
-    path: '/private/parametrages', 
+    path: '/parametres', 
     title: 'Paramétrages', 
     icon: 'fas fa-sliders-h' 
   },
@@ -75,10 +76,9 @@ export class Sidenav implements OnInit {
   pinned = false;
   screenWidth = 0;
   
-  // ✅ Tous les éléments sont maintenant disponibles
   navData = navbarData;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -130,10 +130,19 @@ export class Sidenav implements OnInit {
     this.onToggleSideNav.emit({ collapsed: this.collapsed, screenWidth: this.screenWidth });
   }
 
+  // sidenav.ts
   logout(): void {
-    this.router.navigateByUrl('/login');
-    console.log("Logout from sidebar");
-  }
+  console.debug('[Auth] Début du processus de déconnexion');
+  
+    this.authService.logout();
+    console.log('[Auth] Déconnexion effectuée avec succès');
+    
+    if (this.screenWidth <= 768) {
+      this.collapsed = true;
+      console.debug('[UI] Sidebar réduit après déconnexion sur mobile');
+    }
+    console.debug('[Auth] Déconnexion annulée par l\'utilisateur');
+}
 
   toggleSubMenu(item: InavbarData): void {
   if (item.items && item.items.length) {
