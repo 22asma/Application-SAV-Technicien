@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 
 interface SideNavToggle {
@@ -13,13 +14,16 @@ interface SideNavToggle {
   standalone: false,
   styleUrls: ['./app.css']
 })
-export class App {
+export class App implements OnInit{
   title = 'app-sav';
   isSideNavCollapsed = false;
   screenWidth = 0;
   showLayout = false;
 
-  constructor(private router: Router, private cdRef: ChangeDetectorRef) {
+  constructor(private router: Router, 
+    private cdRef: ChangeDetectorRef,
+    private translate: TranslateService
+  ) {
   this.router.events.pipe(
     filter(event => event instanceof NavigationEnd)
   ).subscribe((event: NavigationEnd) => {
@@ -27,7 +31,12 @@ export class App {
   });
 }
 
-
+  ngOnInit() {
+    // Configuration de la traduction
+    this.translate.setDefaultLang('fr');
+    const browserLang = this.translate.getBrowserLang();
+    this.translate.use(browserLang?.match(/en|fr/) ? browserLang : 'fr');
+  }
 
  private updateLayoutVisibility(url: string): void {
   this.showLayout = !url.startsWith('/auth');

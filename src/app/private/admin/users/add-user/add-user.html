@@ -20,17 +20,17 @@
       <div class="form-row">
         <mat-form-field appearance="outline" class="half-width">
           <mat-label>Nom</mat-label>
-          <input matInput formControlName="nom" placeholder="Entrez le nom">
-          <mat-error *ngIf="hasFieldError('nom')">
-            {{ getFieldError('nom') }}
+          <input matInput formControlName="lastName" placeholder="Entrez le nom">
+          <mat-error *ngIf="hasFieldError('lastName')">
+            {{ getFieldError('lastName') }}
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="half-width">
           <mat-label>Prénom</mat-label>
-          <input matInput formControlName="prenom" placeholder="Entrez le prénom">
-          <mat-error *ngIf="hasFieldError('prenom')">
-            {{ getFieldError('prenom') }}
+          <input matInput formControlName="firstName" placeholder="Entrez le prénom">
+          <mat-error *ngIf="hasFieldError('firstName')">
+            {{ getFieldError('firstName') }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -45,7 +45,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="half-width">
-          <mat-label>Badge ID (optionnel)</mat-label>
+          <mat-label>Badge ID</mat-label>
           <input matInput formControlName="badgeId" placeholder="Entrez l'ID du badge">
         </mat-form-field>
       </div>

@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Role } from '../types/role';
 import { catchError, Observable, tap } from 'rxjs';
+import { environment } from '../../../../environments/environment.development';
 
 
 @Injectable({
@@ -9,7 +10,7 @@ import { catchError, Observable, tap } from 'rxjs';
 })
 export class RolesService {
 
-  baseUrl = 'http://localhost:3000';
+  private baseUrl = environment.apiURL;
 
   constructor(private httpclient: HttpClient) { }
 

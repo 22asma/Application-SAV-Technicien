@@ -14,8 +14,6 @@ import { ORinterface } from '../types/ORinterface';
 })
 export class OrdreReparation implements OnInit {
     ordreReparation: ORinterface[] = [];
-    loading = true;
-    errorMessage = '';
   // Configuration des colonnes
   columns: DataTableColumn[] = [
     { key: 'numOR', label: 'N° OR', width: '15px', type: 'number', sortable: true },
@@ -28,9 +26,9 @@ export class OrdreReparation implements OnInit {
       type: 'badge',
       width: '15%',
       badgeColors: {
-        'NON_DEMARE': 'status-en-attente',
-        'EN_COURS': 'status-en-cours',
-        'TERMINE': 'status-termine'
+        'NOT_STARTED': 'status-en-attente',
+        'IN_PROGRESS': 'status-en-cours',
+        'COMPLETED': 'status-termine'
       }
     }
   ];
@@ -44,11 +42,20 @@ export class OrdreReparation implements OnInit {
     }
   ];
 
-  // Données et états
-  data: any[] = [];
-  currentPage = 1;
-  itemsPerPage = 10;
-  totalItems = 0;
+  loading = true;
+  errorMessage = '';
+  currentPage: number = 1; 
+  itemsPerPage: number = 10;
+  total: number = 0; 
+  lastPage: number = 1;
+  totalEntries: number = 0;
+  noDataFound = false;
+  // Filtres
+  filters: OrdreReparationFilters = {
+    page: 1,
+    items: 10,
+    keyword: ''
+  };
 
   constructor(
     public dialog: MatDialog,
@@ -60,53 +67,61 @@ export class OrdreReparation implements OnInit {
   }
 
   loadORs(): void {
-      this.loading = true;
-      this.errorMessage = '';
-      
-      // Récupérer tous les utilisateurs sans pagination
-      const filters: OrdreReparationFilters = {
-        page: 1,
-        limit: 10000 // Limite élevée pour récupérer tous les utilisateurs
-      };
-      
-      this.orService.getAllOrdreReparation(filters).subscribe({
-        next: (response) => {
-          console.log('Réponse du backend:', response);
-          
-          if (response && response.data && Array.isArray(response.data)) {
-            this.ordreReparation = response.data.map((ordreReparations: any) => ({
-              ...ordreReparations,
-              numeroOR: ordreReparations.numeroOR || 'Aucun rôle'
-            }));
-          } else {
-            console.error('Format de réponse inattendu:', response);
-            this.ordreReparation = [];
-          }
-          
-          this.loading = false;
-        },
-        error: (error) => {
-          this.errorMessage = 'Erreur lors du chargement des utilisateurs';
-          this.loading = false;
-          console.error('Error loading OrdreReparation:', error);
-        }
-      });
-    }
-  
+    this.loading = true;
+    this.errorMessage = '';
+    this.noDataFound = false;
+    
+    this.orService.getAllOR(this.filters).subscribe({
+      next: (response) => {
+        this.ordreReparation = response.result;
+        this.total = response.total;
+        this.totalEntries = response.total;
+        this.currentPage = response.page;
+        this.lastPage = response.lastPage;
 
-  onRowSelect(selectedRows: OrdreReparation[]): void {
-     console.log('Lignes sélectionnées:', selectedRows);
-   }
+        if (response.result.length === 0 && this.filters.keyword && this.filters.keyword.trim() !== '') {
+          this.noDataFound = true;
+        }
+        
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement:', error);
+        this.errorMessage = 'Erreur lors du chargement des utilisateurs';
+        this.loading = false;
+        this.ordreReparation = [];
+        this.total = 0;
+        this.totalEntries = 0;
+      }
+    });
+  }
  
-   // Cette méthode n'est plus nécessaire car le datatable gère tout
-   onFilterChange(filters: any): void {
-     console.log('Filtres changés:', filters);
-   }
- 
-   // Cette méthode n'est plus nécessaire car le datatable gère tout
    onPageChange(params: PaginationParams): void {
-     console.log('Changement de page:', params);
-   }
+    console.log('Paramètres reçus:', params);
+    
+    // Mettre à jour les filtres
+    this.filters = {
+      ...this.filters,
+      page: params.page,
+      items: params.limit,
+      keyword: params.searchQuery || ''
+    };
+    
+    // Charger les nouvelles données
+    this.loadORs();
+  }
+
+  onSearch(keyword: string): void {
+    this.filters.keyword = keyword;
+    this.filters.page = 1;
+    this.loadORs();
+  }
+
+  onStatusFilter(statut: string): void {
+    this.filters.statut = statut;
+    this.filters.page = 1;
+    this.loadORs();
+  }
 
   // Voir les détails d'un OR
  viewDetails(ordre: any): void {
@@ -135,32 +150,52 @@ export class OrdreReparation implements OnInit {
   });
 }
 
-  onExportData(format: string) {
-      if (format === 'excel') {
-        this.exportToExcel();
-      } else {
-        console.warn(`Format ${format} non supporté`);
-      }
-    }
-  
-    private exportToExcel() {
-      // Préparer les données au format Excel
-      const data = [
-        ['Nom', 'Prénom', 'Nom d\'utilisateur', 'Statut'], // En-têtes
-        ...this.ordreReparation.map(t => [t.numeroOR, t.vehicule, t.client])
-      ];
-  
-      // Créer un workbook
-      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Techniciens');
-  
-      // Générer le fichier Excel
-      XLSX.writeFile(wb, 'Techniciens.xlsx');
-    }
-  // Ajout d'un nouvel OR
-  onAddClicked(): void {
-    console.log('Ajouter un nouvel OR');
-    // Implémentez la logique d'ajout ici
+onExportData(format: string): void {
+  if (format === 'excel') {
+    this.exportORToExcel();
   }
+}
+
+private exportORToExcel(): void {
+  this.loading = true;
+  
+  this.orService.exportToExcel(this.filters).subscribe({
+    next: (blob: Blob) => {
+      this.downloadExcelFile(blob);
+      this.loading = false;
+    },
+    error: (error) => {
+      console.error('Erreur export:', error);
+      this.errorMessage = 'Échec de l\'export des OR';
+      this.loading = false;
+    }
+  });
+}
+
+private downloadExcelFile(blob: Blob): void {
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `or_export_${new Date().toISOString().split('T')[0]}.xlsx`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
+
+  onRowSelect(selectedRows: OrdreReparation[]): void {
+      console.log('Lignes sélectionnées:', selectedRows);
+    }
+  
+    onFilterChange(filters: any): void {
+      console.log('Filtres changés:', filters);
+    }
+  
+    // Méthode pour réinitialiser la recherche
+    clearSearch(): void {
+      this.filters.keyword = '';
+      this.filters.page = 1;
+      this.noDataFound = false;
+      this.loadORs();
+    }
 }

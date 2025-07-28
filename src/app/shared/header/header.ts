@@ -1,8 +1,10 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { AuthService } from '../../auth/services/auth.service';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../../assets/i18n/translation.service';
 
 export const userItems = [
   {
@@ -72,13 +74,21 @@ export class Header implements OnInit {
   currentDate: string = '';
   interfaceName: string = 'Dashboard';
   selectedLanguage = languages[0];
-
+  
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private location: Location,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService,
+    private translationService: TranslationService,
+    private cdRef: ChangeDetectorRef
   ) {
+     this.translate.setDefaultLang('fr');
+    
+    // Essayez de récupérer la langue sauvegardée
+    const savedLang = localStorage.getItem('lang') || this.translate.getBrowserLang() || 'fr';
+    this.translate.use(savedLang.match(/en|fr/) ? savedLang : 'fr');
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -101,8 +111,36 @@ export class Header implements OnInit {
     this.loadNotifications();
     this.updateCurrentDate();
     this.updateInterfaceName();
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+    console.log('Langue changée vers:', event.lang);
+    console.log('Traduction de "Dashboard":', this.translate.instant('Dashboard'));
+  });
+  }
+  
+   currentLang = 'fr';
+   switchLanguage() {
+    this.currentLang = this.currentLang === 'fr' ? 'en' : 'fr';
+    this.translationService.changeLanguage(this.currentLang);
   }
 
+selectLanguage(language: any, event?: Event): void {
+  if (event) event.stopPropagation();
+  
+  this.selectedLanguage = language;
+  this.isLanguageOpen = false;
+
+  // Change la langue immédiatement
+  this.translate.use(language.code).subscribe({
+    next: () => {
+      localStorage.setItem('lang', language.code);
+      this.currentLang = language.code;
+      this.updateCurrentDate();
+      this.updateInterfaceName();
+      this.cdRef.detectChanges(); // Force la mise à jour de la vue
+    },
+    error: (err) => console.error('Failed to change language', err)
+  });
+}
   // Ajout d'un HostListener pour fermer les menus lors d'un clic en dehors
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
@@ -144,17 +182,19 @@ export class Header implements OnInit {
   }
 
   private updateCurrentDate(): void {
-    const now = new Date();
-    const options: Intl.DateTimeFormatOptions = {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    };
-    this.currentDate = now.toLocaleDateString('fr-FR', options);
-  }
+  const now = new Date();
+  const options: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: 'long', 
+    year: 'numeric'
+  };
+  
+  // Utilise la langue active
+  this.currentDate = now.toLocaleDateString(this.translate.currentLang === 'fr' ? 'fr-FR' : 'en-US', options);
+}
 
   private updateInterfaceName(): void {
-  let route = this.activatedRoute;
+   let route = this.activatedRoute;
   while (route.firstChild) {
     route = route.firstChild;
   }
@@ -213,16 +253,6 @@ export class Header implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
     this.isNotificationOpen = false;
     this.isLanguageOpen = false;
-  }
-
-  // Modification pour empêcher la propagation d'événement
-  selectLanguage(language: any, event?: Event): void {
-    if (event) {
-      event.stopPropagation();
-    }
-    this.selectedLanguage = language;
-    this.isLanguageOpen = false;
-    // Implement language change logic here
   }
 
   getNotificationIcon(type: string): { iconClass: string, color: string } {

@@ -26,7 +26,7 @@
            routerLinkActive="active"
            [routerLinkActiveOptions]="{exact: true}">
           <i class="sidenav-link-icon" [class]="navData[0].icon"></i>
-          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[0].title}}</span>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[0].title |translate}}</span>
           <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[0].title}}</div>
         </a>
       </li>
@@ -38,7 +38,7 @@
            routerLinkActive="active"
            [routerLinkActiveOptions]="{exact: true}">
           <i class="sidenav-link-icon" [class]="navData[1].icon"></i>
-          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[1].title}}</span>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[1].title |translate}}</span>
           <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[1].title}}</div>
         </a>
       </li>
@@ -50,7 +50,7 @@
            routerLinkActive="active"
            [routerLinkActiveOptions]="{exact: true}">
           <i class="sidenav-link-icon" [class]="navData[2].icon"></i>
-          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[2].title}}</span>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[2].title |translate}}</span>
           <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[2].title}}</div>
         </a>
       </li>
@@ -62,7 +62,7 @@
            routerLinkActive="active"
            [routerLinkActiveOptions]="{exact: true}">
           <i class="sidenav-link-icon" [class]="navData[3].icon"></i>
-          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[3].title}}</span>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[3].title |translate}}</span>
           <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[3].title}}</div>
         </a>
       </li>
@@ -74,7 +74,7 @@
            routerLinkActive="active"
            [routerLinkActiveOptions]="{exact: true}">
           <i class="sidenav-link-icon" [class]="navData[4].icon"></i>
-          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[4].title}}</span>
+          <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">{{navData[4].title |translate}}</span>
           <div class="tooltip" *ngIf="collapsed && !pinned">{{navData[4].title}}</div>
         </a>
       </li>
@@ -89,7 +89,7 @@
        style="cursor: pointer;">
       <i class="sidenav-link-icon" [class]="navData[5].icon"></i>
       <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">
-        {{navData[5].title}}
+        {{navData[5].title |translate}}
       </span>
       <div class="tooltip" *ngIf="collapsed && !pinned">
         {{navData[5].title}}

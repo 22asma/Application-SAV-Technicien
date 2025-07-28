@@ -10,7 +10,10 @@ import { TechDetails } from './tech-details/tech-details';
 import { datatable } from '../../shared/datatable/datatable';
 import { TechnicianRoutingModule } from './technician-routing-module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCheckboxModule,
     datatable,
     TechnicianRoutingModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
+    MatMomentDateModule
   ]
 })
 export class TechnicianModule { }

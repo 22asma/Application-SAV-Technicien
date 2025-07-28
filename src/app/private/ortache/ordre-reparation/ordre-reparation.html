@@ -5,30 +5,56 @@
   </div>
 
   <!-- Message d'erreur -->
-  <div *ngIf="errorMessage" class="error-message">
+  <div *ngIf="errorMessage && !loading" class="error-message">
     {{ errorMessage }}
+    <button class="btn btn-outline" (click)="loadORs()">
+      <i class="icon icon-refresh"></i> Réessayer
+    </button>
   </div>
 
-  <!-- Datatable -->
-  <div *ngIf="!loading && ordreReparation.length > 0" class="table-wrapper">
-<div class="OrdreReparation-container">
-  <app-datatable
-    [data]="ordreReparation"
-    [columns]="columns"
-    [actions]="actions"
-    [showSearch]="true"
-    [showFilters]="false"
-    [showExport]="true"
-    [showPagination]="true"
-    [showAddButton]="false"
-    [entriesPerPageOptions]="[10, 25, 50, 100]"
-    [useBackendPagination]="false"
-    (addClicked)="onAddClicked()"
-    (rowSelect)="onRowSelect($event)"
-    (filterChange)="onFilterChange($event)"
-    (pageChange)="onPageChange($event)"
-    (exportData)="onExportData($event)"
-  ></app-datatable>
+  <!-- Datatable avec données -->
+  <div *ngIf="!loading && !errorMessage && ordreReparation.length > 0" class="table-wrapper">
+    <app-datatable
+      [data]="ordreReparation"
+      [columns]="columns"
+      [actions]="actions"
+      [currentPage]="currentPage"
+      [lastPage]="lastPage"
+      [entriesPerPage]="itemsPerPage"
+      [totalEntries]="totalEntries"
+      [showSearch]="true"
+      [showFilters]="false"
+      [showExport]="true"
+      [showPagination]="true"
+      [serverSideSearch]="true"
+      [entriesPerPageOptions]="[10, 25, 50, 100]"
+      (exportData)="onExportData($event)"
+      (rowSelect)="onRowSelect($event)"
+      (filterChange)="onFilterChange($event)"
+      (pageChange)="onPageChange($event)">
+    </app-datatable>
   </div>
 
+  <!-- Message quand aucun résultat trouvé pour une recherche -->
+  <div *ngIf="!loading && !errorMessage && ordreReparation.length === 0 && noDataFound" class="no-search-results">
+    <div class="no-results-icon">
+      <i class="icon icon-search"></i>
+    </div>
+    <h3>Aucun résultat trouvé</h3>
+    <p>Aucun ordre de réparation ne correspond à votre recherche "{{ filters.keyword }}"</p>
+    <div class="no-results-actions">
+      <button class="btn btn-outline" (click)="clearSearch()">
+        <i class="icon icon-x"></i> Effacer la recherche
+      </button>
+    </div>
+  </div>
+
+  <!-- Message si aucune donnée en général (première fois) -->
+  <div *ngIf="!loading && !errorMessage && ordreReparation.length === 0 && !noDataFound && (!filters.keyword || filters.keyword.trim() === '')" class="no-data-message">
+    <div class="no-data-icon">
+      <i class="icon icon-file-text"></i> <!-- Icône plus appropriée -->
+    </div>
+    <h3>Aucun ordre de réparation</h3>
+    <p>Il n'y a encore aucun ordre de réparation dans le système.</p>
+  </div>
 </div>

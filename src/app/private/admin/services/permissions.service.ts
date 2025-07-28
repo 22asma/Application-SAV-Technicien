@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Permission } from '../types/permission';
+import { environment } from '../../../../environments/environment.development';
 
 
 @Injectable({
@@ -8,7 +9,7 @@ import { Permission } from '../types/permission';
 })
 export class PermissionsService {
 
-  baseUrl = 'http://localhost:3000';
+  private baseUrl = environment.apiURL;
 
   constructor(private httpclient: HttpClient) { }
 

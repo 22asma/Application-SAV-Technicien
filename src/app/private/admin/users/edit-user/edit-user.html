@@ -13,13 +13,24 @@
   </div>
 
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    <!-- Nom d'utilisateur -->
+    <!-- Prénom -->
     <div class="form-section">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nom d'utilisateur</mat-label>
-        <input matInput formControlName="username" placeholder="Entrez le nom d'utilisateur">
-        <mat-error *ngIf="hasFieldError('username')">
-          {{ getFieldError('username') }}
+        <mat-label>Prénom</mat-label>
+        <input matInput formControlName="firstName" placeholder="Entrez le prénom">
+        <mat-error *ngIf="hasFieldError('firstName')">
+          {{ getFieldError('firstName') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Nom -->
+    <div class="form-section">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="lastName" placeholder="Entrez le nom">
+        <mat-error *ngIf="hasFieldError('lastName')">
+          {{ getFieldError('lastName') }}
         </mat-error>
       </mat-form-field>
     </div>
@@ -27,7 +38,6 @@
     <!-- Rôle -->
     <div class="form-section">
       <h3>Rôle</h3>
-      
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Rôle</mat-label>
         <mat-select formControlName="roleId">
@@ -40,7 +50,98 @@
         </mat-error>
       </mat-form-field>
     </div>
+
+    <!-- Statut - Ajouté ici dans le formulaire principal -->
+    <div class="form-section">
+      <h3>Statut</h3>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Statut</mat-label>
+        <mat-select formControlName="statut">
+          <mat-option value="ACTIVE">Actif</mat-option>
+          <mat-option value="INACTIVE">Inactif</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasFieldError('statut')">
+          {{ getFieldError('statut') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
+
+  <!-- Section changement de mot de passe -->
+  <div class="password-section">
+    <button mat-stroked-button 
+            type="button" 
+            (click)="togglePasswordForm()"
+            color="primary">
+      <mat-icon>lock_reset</mat-icon>
+      {{ showPasswordForm ? 'Masquer' : 'Changer le mot de passe' }}
+    </button>
+
+    <div *ngIf="showPasswordForm" class="password-form-container">
+      <!-- Messages pour le mot de passe -->
+      <div *ngIf="passwordErrorMessage" class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ passwordErrorMessage }}</span>
+      </div>
+
+      <div *ngIf="passwordSuccessMessage" class="success-message">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ passwordSuccessMessage }}</span>
+      </div>
+
+      <form [formGroup]="passwordForm">
+        <!-- Nouveau mot de passe -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nouveau mot de passe</mat-label>
+          <input matInput 
+                 formControlName="newPassword" 
+                 [type]="hidePassword ? 'password' : 'text'" 
+                 required>
+          <button mat-icon-button matSuffix 
+                  (click)="hidePassword = !hidePassword"
+                  type="button">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">
+            Ce champ est requis
+          </mat-error>
+          <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('minlength')">
+            Minimum 6 caractères requis
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Confirmation mot de passe -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirmer le mot de passe</mat-label>
+          <input matInput 
+                 formControlName="confirmPassword" 
+                 [type]="hideConfirmPassword ? 'password' : 'text'" 
+                 required>
+          <button mat-icon-button matSuffix 
+                  (click)="hideConfirmPassword = !hideConfirmPassword"
+                  type="button">
+            <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('confirmPassword')?.hasError('required')">
+            Ce champ est requis
+          </mat-error>
+          <mat-error *ngIf="passwordForm.hasError('mismatch')">
+            Les mots de passe ne correspondent pas
+          </mat-error>
+        </mat-form-field>
+
+        <div class="password-actions">
+          <button mat-raised-button 
+                  color="primary" 
+                  (click)="onChangePassword()"
+                  [disabled]="passwordForm.invalid || isPasswordLoading">
+            <span *ngIf="!isPasswordLoading">Enregistrer</span>
+            <mat-spinner *ngIf="isPasswordLoading" diameter="20"></mat-spinner>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <div class="modal-footer" mat-dialog-actions>

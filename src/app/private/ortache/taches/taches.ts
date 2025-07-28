@@ -1,5 +1,5 @@
 // taches.component.ts
-import { Component, Input, Output, EventEmitter, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TachesService } from '../services/tache.service';
 import { Tache } from '../types/tache';
@@ -54,10 +54,11 @@ export class Taches implements OnInit {
   }
 
   loadTaches(): void {
-     if (!this.ordreInfo?.id) {
-    console.error('Aucun OR sélectionné');
-    return;
-  }
+    if (!this.ordreInfo?.id) {
+      console.error('Aucun OR sélectionné');
+      return;
+    }
+    
     this.tachesService.getTachesByORId(this.ordreInfo.id)
       .subscribe({
         next: (taches) => {
@@ -66,37 +67,39 @@ export class Taches implements OnInit {
         },
         error: (err) => {
           console.error('Erreur chargement tâches:', err);
+          this.errorMessage = 'Erreur lors du chargement des tâches';
           this.loading = false;
         }
       });
   }
 
-  getPourcentageAvancement(): number {
-    if (this.taches.length === 0) return 0;
-    const tachesTerminees = this.getNombreTachesParStatut('Terminée');
-    return Math.round((tachesTerminees / this.taches.length) * 100);
-  }
+getPourcentageAvancement(): number {
+  if (!this.taches || this.taches.length === 0) return 0;
+  
+  const statutsTermines = ['COMPLETED', 'COMPLETED']; // Peut être adapté selon vos besoins
+  const tachesTerminees = this.taches.filter(tache => 
+    statutsTermines.includes(tache.statut)
+  ).length;
+  
+  return Math.round((tachesTerminees / this.taches.length) * 100);
+}
 
   onFermerModal(): void {
     this.dialogRef.close();
   }
 
   getStatutClass(statut: string): string {
-  // Convertit le statut du backend en classe CSS
-  const statutMap = {
-    'NON_DEMAREE': 'non-demarree',
-    'EN_COURS': 'en-cours',
-    'TERMINEE': 'terminee'
-  };
-  return statut || 'inconnu';
+   if (!statut) return 'unknown';
+   return statut.toLowerCase().replace(/_/g, '-');
 }
 
 getStatutIcon(statut: string): string {
   // Adaptez les icônes aux statuts du backend
   switch (statut) {
-    case 'EN_COURS': return '⚡';
-    case 'TERMINEE': return '✅';
-    case 'NON_DEMAREE': return '⏸️';
+    case 'IN_PROGRESS': return '⚡';
+    case 'COMPLETED': return '✅';
+    case 'PAUSED': return '⏸️';
+    case 'NOT_STARTED': return '❓';
     default: return '❓';
   }
 }
@@ -104,4 +107,8 @@ getStatutIcon(statut: string): string {
 getNombreTachesParStatut(statut: string): number {
   return this.taches.filter(tache => tache.statut === statut).length;
 }
+
+getTechniciensNames(techniciens: any[]): string {
+    return techniciens.map(t => `${t.lastName} ${t.firstName}`).join(', ');
+  }
 }

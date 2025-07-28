@@ -32,19 +32,19 @@
         </div>
         <div class="resume-item">
           <span class="resume-label">Terminées:</span>
-          <span class="resume-value terminee">{{getNombreTachesParStatut('TERMINEE')}}</span>
+          <span class="resume-value terminee">{{getNombreTachesParStatut('COMPLETED')}}</span>
         </div>
         <div class="resume-item">
           <span class="resume-label">En cours:</span>
-          <span class="resume-value en-cours">{{getNombreTachesParStatut('EN_COURS')}}</span>
+          <span class="resume-value en-cours">{{getNombreTachesParStatut('IN_PROGRESS')}}</span>
         </div>
         <div class="resume-item">
           <span class="resume-label">En Pause:</span>
-          <span class="resume-value en-attente">{{getNombreTachesParStatut('EN_PAUSE')}}</span>
+          <span class="resume-value en-attente">{{getNombreTachesParStatut('PAUSED')}}</span>
         </div>
         <div class="resume-item">
           <span class="resume-label">Non Démarre:</span>
-          <span class="resume-value en-attente">{{getNombreTachesParStatut('NON_DEMAREE')}}</span>
+          <span class="resume-value en-attente">{{getNombreTachesParStatut('NOT_STARTED')}}</span>
         </div>
         <div class="resume-item">
           <span class="resume-label">Avancement:</span>
@@ -61,7 +61,19 @@
         <mat-spinner diameter="40"></mat-spinner>
         <span>Chargement des tâches...</span>
       </div>
-      <div *ngIf="!loading" class="taches-container">
+      
+      <div *ngIf="!loading && errorMessage" class="error-container">
+        <span class="error-icon">⚠️</span>
+        {{errorMessage}}
+      </div>
+      
+      <div *ngIf="!loading && taches.length === 0" class="no-taches">
+        <div class="no-taches-icon">📋</div>
+        <h3>Aucune tâche assignée</h3>
+        <p>Cet ordre de réparation n'a pas encore de tâches assignées.</p>
+      </div>
+
+      <div *ngIf="!loading && taches.length > 0" class="taches-container">
         <div *ngFor="let tache of taches; let i = index" class="tache-card">
           <div class="tache-header">
             <div class="tache-numero">#{{'T' + (i + 1).toString().padStart(3, '0')}}</div>
@@ -76,22 +88,27 @@
             </div>
           </div>
           
-          <div class="tache-body">
+          <div class="tache-body" *ngIf="tache.details">
             <div class="tache-description">
               <span class="description-icon">📝</span>
               {{tache.details}}
             </div>
           </div>
 
+          <div class="tache-footer" *ngIf="tache.techniciens && tache.techniciens.length > 0">
+            <div class="techniciens-section">
+              <span class="techniciens-label">Techniciens assignés :</span>
+              <div class="techniciens-list">
+                <div *ngFor="let technicien of tache.techniciens" class="technicien-badge">
+                  <span class="technicien-icon">👨‍🔧</span>
+                  {{ technicien.lastName }} {{ technicien.firstName }}
+                  <span *ngIf="technicien.badgeId" class="badge-id">({{ technicien.badgeId }})</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Message si aucune tâche -->
-    <div *ngIf="taches.length === 0" class="no-taches">
-      <div class="no-taches-icon">📋</div>
-      <h3>Aucune tâche assignée</h3>
-      <p>Cet ordre de réparation n'a pas encore de tâches assignées.</p>
     </div>
   </div>
 

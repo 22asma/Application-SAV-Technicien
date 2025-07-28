@@ -371,3 +371,91 @@
     align-items: flex-start;
   }
 }
+
+.techniciens-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.techniciens-label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9em;
+}
+
+.techniciens-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.technicien-badge {
+  background-color: #f0f7ff;
+  border: 1px solid #d0e3ff;
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 0.85em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.technicien-icon {
+  font-size: 1.1em;
+}
+
+/* Styles de base pour tous les statuts */
+.tache-statut {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* IN_PROGRESS → in-progress */
+.statut-in-progress {
+  background-color: #FFF3BF;
+  color: #E67700;
+  border: 1px solid #FFD43B;
+}
+
+/* COMPLETED → completed */
+.statut-completed {
+  background-color: #D3F9D8;
+  color: #2B8A3E;
+  border: 1px solid #40C057;
+}
+
+/* PAUSED → paused */
+.statut-paused {
+  background-color: #F1F3F5;
+  color: #495057;
+  border: 1px solid #DEE2E6;
+}
+
+/* NOT_STARTED → not-started */
+.statut-not-started {
+  background-color: #FFE3E3;
+  color: #C92A2A;
+  border: 1px solid #FF8787;
+}
+
+/* Statut inconnu */
+.statut-unknown {
+  background-color: #F8F9FA;
+  color: #495057;
+  border: 1px solid #DEE2E6;
+}
+
+/* Icônes des statuts */
+.statut-icon {
+  font-size: 0.9em;
+  margin-right: 4px;
+}

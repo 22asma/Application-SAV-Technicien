@@ -1,6 +1,9 @@
+// Modifications dans datatable.component.ts
+
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export interface DataTableColumn {
   key: string;
@@ -28,10 +31,14 @@ export interface PaginationParams {
   page: number;
   limit: number;
   searchQuery?: string;
-  dateFilter?: string;
-  monthFilter?: string;
-  yearFilter?: string;
   activeTab?: string;
+  dateFilter?: DateFilterOptions;
+}
+
+export interface DateFilterOptions {
+  day?: string;
+  month?: string;
+  year?: string;
 }
 
 @Component({
@@ -43,6 +50,7 @@ export interface PaginationParams {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    TranslateModule 
   ]
 })
 export class datatable implements OnInit {
@@ -56,205 +64,106 @@ export class datatable implements OnInit {
   @Input() showPagination: boolean = true;
   @Input() entriesPerPageOptions: number[] = [10, 25, 50, 100];
   @Input() showAddButton: boolean = false;
-  
-  // Propriétés pour la pagination backend
+  @Input() entriesPerPage: number = 10;
   @Input() totalEntries: number = 0;
   @Input() currentPage: number = 1;
   @Input() lastPage: number = 1;
-  @Input() useBackendPagination: boolean = false;
+  @Input() showDateFilterButton: boolean = true;
+  @Input() serverSideSearch: boolean = true; // Nouveau: pour indiquer si la recherche est côté serveur
   
   @Output() addClicked = new EventEmitter<void>();
   @Output() rowSelect = new EventEmitter<any[]>();
   @Output() tabChange = new EventEmitter<string>();
   @Output() exportData = new EventEmitter<string>();
-  @Output() filterChange = new EventEmitter<any>();
   @Output() pageChange = new EventEmitter<PaginationParams>();
 
-  // Variables internes
-  filteredData: any[] = [];
-  paginatedData: any[] = [];
-  searchQuery: string = '';
   activeTab: string = '';
-  entriesPerPage: number = 10;
-
-  // Filtres
-  dateFilter: string = '';
-  monthFilter: string = '';
-  yearFilter: string = '';
-  uniqueDates: string[] = [];
+  paginatedData: any[] = [];
+  dateFilter: DateFilterOptions = {};
+  showDateFilter: boolean = false;
+  filteredData: any[] = [];
+  searchQuery: string = '';
+  private searchTimeout: any;
+  
   months = [
-    { value: '01', label: 'Janvier' },
-    { value: '02', label: 'Février' },
-    { value: '03', label: 'Mars' },
-    { value: '04', label: 'Avril' },
-    { value: '05', label: 'Mai' },
-    { value: '06', label: 'Juin' },
-    { value: '07', label: 'Juillet' },
-    { value: '08', label: 'Août' },
-    { value: '09', label: 'Septembre' },
-    { value: '10', label: 'Octobre' },
-    { value: '11', label: 'Novembre' },
-    { value: '12', label: 'Décembre' }
+    { value: '1', label: 'January' },
+    { value: '2', label: 'February' },
+    { value: '3', label: 'March' },
+    { value: '4', label: 'April' },
+    { value: '5', label: 'May' },
+    { value: '6', label: 'June' },
+    { value: '7', label: 'July' },
+    { value: '8', label: 'August' },
+    { value: '9', label: 'September' },
+    { value: '10', label: 'October' },
+    { value: '11', label: 'November' },
+    { value: '12', label: 'December' }
   ];
-  years: number[] = [];
+  years = Array.from({length: 10}, (_, i) => new Date().getFullYear() - i);
+  days = Array.from({length: 31}, (_, i) => (i + 1).toString());
+
+  constructor(private translate: TranslateService) {}
 
   ngOnInit() {
     this.initializeData();
     this.initializeFilters();
   }
 
-  initializeData() {
-    if (this.useBackendPagination) {
-      // Pour la pagination backend, on utilise directement les données reçues
-      this.paginatedData = [...this.data];
-    } else {
-      // Pour la pagination frontend (comportement original)
-      this.filteredData = [...this.data];
-      this.totalEntries = this.data.length;
-      this.updatePagination();
-    }
-  }
-
   initializeFilters() {
-    if (!this.useBackendPagination) {
-      // Initialiser les filtres de date seulement pour la pagination frontend
-      this.uniqueDates = [...new Set(this.data.map(item => item.dateCreation))];
-      this.years = [...new Set(this.data.map(item => new Date(item.dateCreation).getFullYear()))];
-    }
-    
-    // Initialiser le premier onglet
     if (this.tabs.length > 0) {
       this.activeTab = this.tabs[0].key;
     }
   }
 
-  getMinCurrentPageEntries(): number {
-    if (this.useBackendPagination) {
-      return Math.min(this.currentPage * this.entriesPerPage, this.totalEntries);
-    }
-    return Math.min(this.currentPage * this.entriesPerPage, this.totalEntries);
+  toggleDateFilter() {
+    this.showDateFilter = !this.showDateFilter;
   }
 
-   onSearchClick(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  // Méthode pour gérer le focus sur la barre de recherche
-  onSearchFocus(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  // Dans votre datatable.component.ts, modifiez la méthode applyFilter() :
-
-applyFilter() {
-  if (this.useBackendPagination) {
-    // Pour la pagination backend, émettre l'événement de changement de page
+  applyDateFilter() {
     this.currentPage = 1;
     this.emitPageChange();
-  } else {
-    // Comportement pour la pagination frontend
-    this.filteredData = this.data.filter(item => {
-      let matches = true;
-
-      // Filtre de recherche
-      if (this.searchQuery && this.searchQuery.trim()) {
-        const searchLower = this.searchQuery.toLowerCase();
-        matches = matches && Object.values(item).some(value => 
-          value && value.toString().toLowerCase().includes(searchLower)
-        );
-      }
-
-      // Filtre par onglet
-      if (this.activeTab) {
-        matches = matches && item.statut === this.activeTab;
-      }
-
-      return matches;
-    });
-
-    this.totalEntries = this.filteredData.length;
-    this.currentPage = 1;
-    this.updatePagination();
+    this.showDateFilter = false;
   }
 
-  // Émettre l'événement de changement de filtre
-  this.filterChange.emit({
-    searchQuery: this.searchQuery,
-    activeTab: this.activeTab
-  });
-}
-
-// Assurez-vous que cette méthode existe et fonctionne correctement
-updatePagination() {
-  if (!this.useBackendPagination) {
-    const startIndex = (this.currentPage - 1) * this.entriesPerPage;
-    const endIndex = startIndex + this.entriesPerPage;
-    this.paginatedData = this.filteredData.slice(startIndex, endIndex);
-  }
-}
-
-  // Alternative avec debounce pour améliorer les performances
-  private searchTimeout: any;
-  
-  applyFilterWithDebounce() {
-    clearTimeout(this.searchTimeout);
-    this.searchTimeout = setTimeout(() => {
-      this.applyFilter();
-    }, 300); // Délai de 300ms
-  }
-
-  resetFilters() {
-    this.searchQuery = '';
-    this.dateFilter = '';
-    this.monthFilter = '';
-    this.yearFilter = '';
-    this.applyFilter();
+  clearDateFilter() {
+    this.dateFilter = {};
+    this.applyDateFilter();
   }
 
   onTabChange(tabKey: string) {
     this.activeTab = tabKey;
-    this.applyFilter();
+    if (this.serverSideSearch) {
+      this.applyFilter();
+    } else {
+      this.applyLocalFilter();
+    }
     this.tabChange.emit(tabKey);
   }
 
   onEntriesPerPageChange() {
     this.currentPage = 1;
-    if (this.useBackendPagination) {
-      this.emitPageChange();
-    } else {
-      this.updatePagination();
-    }
+    this.emitPageChange();
   }
 
   onPageChange(page: number) {
     this.currentPage = page;
-    if (this.useBackendPagination) {
-      this.emitPageChange();
-    } else {
-      this.updatePagination();
-    }
+    this.emitPageChange();
   }
-
+  
   private emitPageChange() {
     const params: PaginationParams = {
       page: this.currentPage,
       limit: this.entriesPerPage,
-      searchQuery: this.searchQuery,
-      dateFilter: this.dateFilter,
-      monthFilter: this.monthFilter,
-      yearFilter: this.yearFilter,
-      activeTab: this.activeTab
+      searchQuery: this.searchQuery.trim() || undefined,
+      activeTab: this.activeTab,
+      dateFilter: Object.keys(this.dateFilter).length ? this.dateFilter : undefined
     };
+    console.log('Emission pagination:', params);
     this.pageChange.emit(params);
   }
 
   getTotalPages(): number {
-    if (this.useBackendPagination) {
-      return this.lastPage;
-    }
-    return Math.ceil(this.totalEntries / this.entriesPerPage);
+    return this.lastPage;
   }
 
   getPageNumbers(): number[] {
@@ -277,12 +186,8 @@ updatePagination() {
   }
 
   getTabCount(tabKey: string): number {
-    if (this.useBackendPagination) {
-      // Pour la pagination backend, retourner le count depuis les tabs
-      const tab = this.tabs.find(t => t.key === tabKey);
-      return tab?.count || 0;
-    }
-    return this.data.filter(item => item.statut === tabKey).length;
+    const tab = this.tabs.find(t => t.key === tabKey);
+    return tab?.count || 0;
   }
 
   getCellValue(item: any, column: DataTableColumn): any {
@@ -293,7 +198,6 @@ updatePagination() {
     if (column.badgeColors && column.badgeColors[value]) {
       return column.badgeColors[value];
     }
-    // Fallback si pas de configuration personnalisée
     return `status-${value.toLowerCase().replace(' ', '-')}`;
   }
 
@@ -307,5 +211,97 @@ updatePagination() {
 
   exportToExcel() {
     this.exportData.emit('excel');
+  }
+
+  getPaginationInfo(): string {
+    const start = (this.currentPage - 1) * this.entriesPerPage + 1;
+    const end = Math.min(this.currentPage * this.entriesPerPage, this.totalEntries);
+    
+    return this.translate.instant('datatable.pagination_info', {
+      start: start,
+      end: end,
+      total: this.totalEntries
+    });
+  }
+
+  onSearchClick(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onSearchFocus(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  getMinCurrentPageEntries(): number {
+    return Math.min(this.currentPage * this.entriesPerPage, this.totalEntries);
+  }
+  
+  // Méthode pour la recherche côté serveur (modifiée)
+  applyFilter() {
+    if (this.serverSideSearch) {
+      this.currentPage = 1; 
+      this.emitPageChange(); 
+    } else {
+      this.applyLocalFilter();
+    }
+  }
+
+  // Méthode pour la recherche côté serveur avec debounce
+  applyFilterWithDebounce() {
+    if (this.serverSideSearch) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = setTimeout(() => {
+        this.applyFilter();
+      }, 900); // Augmenté à 500ms pour plus de stabilité
+    } else {
+      this.applyLocalFilter();
+    }
+  }
+
+  // Méthode pour le filtrage local (quand serverSideSearch = false)
+  private applyLocalFilter() {
+    let filtered = [...this.data];
+    
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(item => {
+        return this.columns.some(column => {
+          const value = item[column.key];
+          return value && value.toString().toLowerCase().includes(query);
+        });
+      });
+    }
+    
+    this.filteredData = filtered;
+    this.totalEntries = filtered.length;
+    this.updatePaginatedData();
+  }
+
+  private updatePaginatedData() {
+    if (!this.serverSideSearch) {
+      const startIndex = (this.currentPage - 1) * this.entriesPerPage;
+      const endIndex = startIndex + this.entriesPerPage;
+      this.paginatedData = this.filteredData.slice(startIndex, endIndex);
+      this.lastPage = Math.ceil(this.totalEntries / this.entriesPerPage);
+    } else {
+      this.paginatedData = this.data;
+    }
+  }
+
+  initializeData() {
+    if (this.serverSideSearch) {
+      this.paginatedData = this.data;
+    } else {
+      this.filteredData = [...this.data];
+      this.totalEntries = this.data.length;
+      this.updatePaginatedData();
+    }
+  }
+
+  // Nouvelle méthode appelée quand les données changent depuis le parent
+  ngOnChanges() {
+    this.initializeData();
   }
 }

@@ -2,6 +2,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 
 interface SideNavToggle {

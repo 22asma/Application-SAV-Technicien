@@ -13,9 +13,16 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class EditUser implements OnInit {
   userForm: FormGroup;
+  passwordForm: FormGroup;
   roles: Role[] = [];
   isLoading = false;
+  isPasswordLoading = false;
   errorMessage = '';
+  passwordErrorMessage = '';
+  passwordSuccessMessage = '';
+  showPasswordForm = false;
+  hidePassword = true;
+  hideConfirmPassword = true;
 
   constructor(
     private fb: FormBuilder,
@@ -25,14 +32,63 @@ export class EditUser implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { user: any }
   ) {
     this.userForm = this.fb.group({
-      username: [data.user.username, Validators.required],
-      roleId: [data.user.role?.id || '', Validators.required],
-      statut: [data.user.statut === 'Actif'] // Initialise avec true si Actif, false sinon
-    });
+    firstName: [data.user.firstName || data.user.firstname || '', Validators.required],
+    lastName: [data.user.lastName || data.user.lastname || '', Validators.required],
+    roleId: [data.user.role?.id || '', Validators.required],
+    statut: [data.user.statut || 'ACTIVE', Validators.required]
+   });
+
+    this.passwordForm = this.fb.group({
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, { validator: this.passwordMatchValidator });
   }
   
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.loadRoles();
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    return form.get('newPassword')?.value === form.get('confirmPassword')?.value 
+      ? null : { mismatch: true };
+  }
+
+  togglePasswordForm(): void {
+    this.showPasswordForm = !this.showPasswordForm;
+    if (this.showPasswordForm) {
+      this.passwordForm.reset();
+      this.passwordErrorMessage = '';
+      this.passwordSuccessMessage = '';
+    }
+  }
+
+  onChangePassword(): void {
+    if (this.passwordForm.valid) {
+      this.isPasswordLoading = true;
+      this.passwordErrorMessage = '';
+      this.passwordSuccessMessage = '';
+
+      const dto = {
+        newPassword: this.passwordForm.value.newPassword,
+        confirmPassword: this.passwordForm.value.confirmPassword
+      };
+
+      this.usersService.changePassword(this.data.user.id, dto).subscribe({
+        next: () => {
+          this.passwordSuccessMessage = 'Mot de passe changé avec succès';
+          this.isPasswordLoading = false;
+          setTimeout(() => {
+            this.showPasswordForm = false;
+            this.passwordForm.reset();
+          }, 2000);
+        },
+        error: (error) => {
+          console.error('Erreur:', error);
+          this.isPasswordLoading = false;
+          this.passwordErrorMessage = error.error?.message || 'Erreur lors du changement de mot de passe';
+        }
+      });
+    }
   }
 
   loadRoles(): void {
@@ -74,22 +130,22 @@ export class EditUser implements OnInit {
     this.errorMessage = '';
     
     const userData = {
-      username: this.userForm.value.username,
-      roleId: this.userForm.value.roleId  // Notez que c'est roleId directement, pas un objet role
+      firstName: this.userForm.value.firstName,
+      lastName: this.userForm.value.lastName,
+      roleId: this.userForm.value.roleId,
+      statut: this.userForm.value.statut // On envoie directement la valeur du select
     };
-
-    console.log('Sending PATCH with:', userData);
 
     this.usersService.editUser(this.data.user.id, userData).subscribe({
       next: (response) => {
-        console.log('Update successful:', response);
         this.dialogRef.close(response);
       },
       error: (error) => {
-        console.error('Update failed:', error);
-        this.errorMessage = error.error?.message || 'Échec de la mise à jour';
+        this.isLoading = false;
         if (error.status === 404) {
-          this.errorMessage = 'Utilisateur introuvable';
+          this.errorMessage = 'Utilisateur non trouvé. Veuillez rafraîchir la liste.';
+        } else {
+          this.errorMessage = error.error?.message || 'Échec de la mise à jour';
         }
       },
       complete: () => {
@@ -98,8 +154,7 @@ export class EditUser implements OnInit {
     });
   }
 }
-   onCancel(): void {
+  onCancel(): void {
     this.dialogRef.close();
   }
-
 }

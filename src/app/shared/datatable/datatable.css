@@ -34,38 +34,6 @@
   align-items: center;
 }
 
-/* Search Bar */
-.search-container {
-  position: relative;
-  flex: 1;
-  max-width: 300px;
-  min-width: 150px;
-  display: flex;
-  align-items: center;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 8px 12px;
-  height: 36px;
-}
-
-.search-container .icon-search {
-  width: 14px;
-  height: 14px;
-  margin-right: 8px;
-  color: #6b7280;
-}
-
-.search-container input {
-  border: none;
-  background: transparent;
-  outline: none;
-  width: 100%;
-  font-size: 14px;
-  color: #111827;
-  padding: 0;
-}
-
 /* Buttons */
 .btn {
   display: inline-flex;
@@ -127,52 +95,6 @@
   .controls-right {
     justify-content: flex-start;
   }
-}
-
-/* Search Bar */
-.search-container {
-  position: relative;
-  flex: 0 1 220px;
-  min-width: 150px;
-  display: flex;
-  align-items: center;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 8px 12px;
-  transition: all 0.2s ease;
-}
-
-.search-container:hover {
-  background: white;
-  border-color: #d1d5db;
-  box-shadow: 0 0 0 3px rgba(0, 104, 255, 0.1);
-}
-
-.search-container:focus-within {
-  background: white;
-  border-color: #0068FF;
-  box-shadow: 0 0 0 3px rgba(0, 104, 255, 0.2);
-}
-
-.search-container .icon-search {
-  width: 14px;
-  height: 14px;
-  margin-right: 6px;
-}
-
-.search-container input {
-  border: none;
-  background: transparent;
-  outline: none;
-  width: 100%;
-  font-size: 13px;
-  color: #111827;
-  padding: 2px 0;
-}
-
-.search-container input::placeholder {
-  color: #9ca3af;
 }
 
 /* Entries Control */
@@ -632,4 +554,133 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
+}
+
+/* Search Bar - Style amélioré */
+.search-container {
+  position: relative;
+  flex: 0 1 300px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #e0e3e8;
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.search-container:hover {
+  border-color: #c2c8d0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.search-container:focus-within {
+  border-color: #0068FF;
+  box-shadow: 0 0 0 3px rgba(0, 104, 255, 0.2);
+}
+
+.search-container .icon-search {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.search-container input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #111827;
+  padding: 2px 0;
+}
+
+.search-container input::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.search-container input:focus::placeholder {
+  opacity: 0.5;
+}
+
+/* datatable.css */
+.no-results-message {
+  padding: 20px;
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 16px 0;
+  border: 1px dashed #dee2e6;
+}
+
+.no-results-message i {
+  font-size: 48px;
+  color: #adb5bd;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.no-results-message p {
+  color: #6c757d;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 16px 0;
+  border: 1px dashed #dee2e6;
+}
+
+.empty-state i {
+  font-size: 64px;
+  color: #e5e7eb;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.empty-state p {
+  color: #9ca3af;
+  font-size: 18px;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #6b7280;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-search-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.clear-search-btn i {
+  font-size: 14px;
+}
+
+.search-container input {
+  padding-right: 35px; /* Espace pour le bouton X */
 }

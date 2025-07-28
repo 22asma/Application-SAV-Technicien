@@ -1,41 +1,50 @@
 <div class="datatable-container">
   <!-- Controls -->
   <div class="datatable-controls">
-  <div class="controls-left">
-
+    <div class="controls-left">
       <div class="controls-right">
         <div class="entries-control">
           <span>Afficher</span>
           <select [(ngModel)]="entriesPerPage" (change)="onEntriesPerPageChange()">
-           <option *ngFor="let option of entriesPerPageOptions" [value]="option">{{ option }}</option>
+            <option *ngFor="let option of entriesPerPageOptions" [value]="option">{{ option }}</option>
           </select>
           <span>entrées</span>
         </div>
       </div>
-</div>
+    </div>
     
-          <!-- Bouton Ajouter -->
-      <button 
-        class="btn btn-add" 
-        *ngIf="showAddButton"
-        (click)="addClicked.emit()"
-      >
-       <i class="icon icon-add"></i> 
-         Ajouter
-     </button>
+    <!-- Bouton Ajouter -->
+    <button 
+      class="btn btn-add" 
+      *ngIf="showAddButton"
+      (click)="addClicked.emit()"
+    >
+      <i class="icon icon-add"></i> 
+      Ajouter
+    </button>
+    
     <!-- Barre de recherche -->
-   <div class="search-container" *ngIf="showSearch">
-  <i class="icon icon-search"></i>
-  <input 
-    type="text" 
-    placeholder="Rechercher..." 
-    [(ngModel)]="searchQuery" 
-    (input)="applyFilter()"
-    (click)="$event.stopPropagation()"
-    (focus)="$event.stopPropagation()"
-    (keydown.enter)="$event.preventDefault()"
-  >
-</div>
+    <div class="search-container" *ngIf="showSearch">
+      <i class="icon icon-search"></i>
+      <input 
+        type="text" 
+        placeholder="Rechercher..." 
+        [(ngModel)]="searchQuery" 
+        (input)="serverSideSearch ? applyFilterWithDebounce() : applyFilter()"
+        (click)="$event.stopPropagation()"
+        (focus)="$event.stopPropagation()"
+        (keydown.enter)="$event.preventDefault()"
+      >
+      <!-- Bouton pour effacer la recherche -->
+      <button 
+        *ngIf="searchQuery.trim()" 
+        class="clear-search-btn"
+        (click)="searchQuery = ''; applyFilter()"
+        title="Effacer la recherche"
+      >
+        <i class="icon icon-x"></i>
+      </button>
+    </div>
 
     <!-- Bouton Filtre -->
     <button class="btn btn-outline filter-btn" *ngIf="showFilters">
@@ -49,7 +58,6 @@
       Exporter
     </button>
   </div>
-
 
   <!-- Filtres par statut (onglets) -->
   <div class="filter-tabs-container" *ngIf="tabs.length > 0">

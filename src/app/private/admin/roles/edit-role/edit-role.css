@@ -14,13 +14,13 @@
 
 .modal-content {
   background: white;
-  padding: 25px;
+  padding: 30px;
   border-radius: 12px;
-  width: 650px;
+  width: 1000px; /* Modal plus large */
   max-width: 90%;
-  max-height: 85vh;
+  max-height: 90vh; /* Plus grande hauteur */
   overflow-y: auto;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   animation: slideIn 0.3s ease-out;
 }
 
@@ -28,10 +28,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+  margin-bottom: 15px;
+  padding-bottom: 10px; 
   border-bottom: 1px solid #eee;
-  height: 50px;
+  min-height: 50px;
 }
 
 .modal-header h2 {
@@ -40,18 +40,19 @@
   color: #333;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: -15px;
+  gap: 8px;
+  margin-top: -25px;
 }
 
 .icon {
-  color: #1976d2;
+  color: #3f51b5;
+  font-size: 1.5rem;
 }
 
 .close-btn {
   color: #666;
   transition: all 0.2s;
-  margin-top: -15px;
+  margin-top: -25px;
 }
 
 .close-btn:hover {
@@ -68,73 +69,141 @@
 }
 
 .permissions-title {
-  font-size: 1.2rem;
-  margin: 20px 0 15px;
+  font-size: 1.3rem;
+  margin: 25px 0 20px;
   color: #444;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
+  margin-top: -20px;
 }
 
 .permissions-container {
-  max-height: 300px;
+  max-height: 400px; 
   overflow-y: auto;
-  border: 1px solid #eee;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 15px;
+  padding: 20px;
   background-color: #fafafa;
 }
 
-.permission-item {
-  padding: 10px 0;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #f0f0f0;
+/* Styles pour les permissions */
+.permission-group {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.permission-item:last-child {
+.main-permission-container {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.main-permission-container:hover {
+  background-color: #ebebeb;
+}
+
+.permission-header {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.expand-icon {
+  color: #3f51b5;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+  margin-right: 15px;
+}
+
+.expanded .expand-icon {
+  transform: rotate(180deg);
+}
+
+.permission-name {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+}
+
+.permission-checkbox {
+  margin-left: 15px;
+}
+
+/* Style amélioré pour les checkboxes */
+::ng-deep .mat-checkbox .mat-checkbox-frame {
+  border-color: #b0b0b0;
+  border-width: 1px;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+  background-color: #3f51b5;
+}
+
+/* Sous-permissions */
+.sub-permissions {
+  background-color: white;
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.sub-permissions.expanded {
+  max-height: 1000px; /* Valeur suffisamment grande */
+  padding: 10px 20px;
+  border-top: 1px solid #eee;
+}
+
+.sub-permission-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0 10px 40px;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background-color 0.2s ease;
+}
+
+.sub-permission-item:last-child {
   border-bottom: none;
 }
 
-.badge {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  padding: 4px 10px;
-  border-radius: 16px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 8px;
+.sub-permission-item:hover {
+  background-color: #f9f9f9;
 }
 
-.badge-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-}
-
+/* Footer */
 .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 20px;
-  padding-top: 20px;
+  margin-top: 20px; 
+  padding-top: 15px;
   border-top: 1px solid #eee;
-  height: 50px;
+  max-height: 20px;
+}
+
+.btn-cancel, .btn-save {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .btn-cancel {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  color: #666;
+  border: 1px solid #ddd;
 }
 
 .btn-save {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  background-color: #3f51b5;
+  color: white;
 }
 
 /* Animations */
@@ -145,7 +214,7 @@
 
 @keyframes slideIn {
   from { 
-    transform: translateY(-20px);
+    transform: translateY(-30px);
     opacity: 0;
   }
   to { 
@@ -173,83 +242,17 @@
   background: #a8a8a8;
 }
 
-/* Styles améliorés pour les permissions */
-.permission-group {
-  margin-bottom: 1.5rem;
-  border-left: 3px solid #3f51b5;
-  padding-left: 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.main-permission {
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  padding: 8px 12px;
-  border-radius: 6px;
-  background-color: rgba(63, 81, 181, 0.05);
-  display: flex;
-  align-items: center;
-}
-
-.main-permission:hover {
-  background-color: rgba(63, 81, 181, 0.1);
-}
-
-.sub-permissions {
-  margin-left: 2rem;
-  padding: 8px 0;
-  transition: opacity 0.3s ease;
-}
-
-.sub-permission-item {
-  margin: 0.5rem 0;
-  padding: 6px 12px;
-  border-radius: 6px;
-}
-
-.sub-permission-item:hover {
-  background-color: rgba(0, 0, 0, 0.02);
-}
-
-.permission-name {
-  font-size: 0.95rem;
-}
-
-/* Style pour l'état désactivé */
-.sub-permissions.disabled {
-  opacity: 0.7;
-}
-
-.sub-permissions.disabled .sub-permission-item:not(.has-selected) {
+/* Style pour les états désactivés */
+.sub-permissions.disabled .sub-permission-item {
+  opacity: 0.6;
   pointer-events: none;
 }
 
-/* Badges améliorés */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 10px;
-  font-size: 0.75rem;
-  color: #2e7d32;
-  background-color: #e8f5e9;
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-weight: 500;
+/* Style pour les permissions sélectionnées */
+.main-permission-container.selected {
+  background-color: rgba(63, 81, 181, 0.1);
 }
 
-.badge-icon {
-  font-size: 14px;
-  width: 14px;
-  height: 14px;
-  margin-right: 4px;
-}
-
-/* Animation pour les checkboxes */
-mat-checkbox {
-  transition: all 0.2s ease;
-}
-
-/* Style pour les permissions principales sélectionnées */
-.main-permission.selected {
-  background-color: rgba(63, 81, 181, 0.15);
+.sub-permission-item.selected {
+  background-color: rgba(63, 81, 181, 0.05);
 }

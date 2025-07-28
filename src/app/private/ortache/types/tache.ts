@@ -1,18 +1,27 @@
 export interface Tache {
   id: string;
-  titre: string;        // Au lieu de 'nom'
-  statut: StatutTache;  // Utilisez l'enum du backend
-  details: string;      // Au lieu de 'description'
+  titre: string;        
+  statut: StatutTache;  
+  details: string;      
   ordreReparationId: string;
-  // Ajoutez si nécessaire:
+  techniciens: Array<{
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    statut: string;
+    badgeId: string;
+    createdAt: string;
+    updatedAt: string;
+  }>;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 // Vous pouvez créer un enum pour les statuts si nécessaire
 export enum StatutTache {
-  NON_DEMAREE = 'Non démarrée',
-  EN_COURS = 'En cours',
-  TERMINEE = 'Terminée',
+  NON_DEMAREE = 'NON_DEMAREE',
+  EN_COURS = 'EN_COURS',
+  TERMINEE = 'TERMINEE',
   // Ajoutez d'autres valeurs si nécessaire
 }

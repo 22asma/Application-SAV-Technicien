@@ -4,13 +4,14 @@ import { Router } from '@angular/router';
 import { Observable, BehaviorSubject, throwError, of } from 'rxjs';
 import { tap, catchError, map, switchMap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(this.checkTokenValidity());
-  private apiUrl = 'http://localhost:3000/auth';
+  private apiUrl = environment.apiURL;
   private tokenExpirationTimer: any;
   private readonly TOKEN_KEY = 'access_token';
   private readonly USER_KEY = 'user_data';
@@ -36,17 +37,11 @@ export class AuthService {
     );
   }
 
-  register(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData).pipe(
-      catchError(error => throwError(() => this.handleAuthError(error)))
-    );
-  }
-
   logout(redirect: boolean = true): void {
     localStorage.removeItem('access_token');
     this.loggedIn.next(false);
     if (redirect) {
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/login']);
     }
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);

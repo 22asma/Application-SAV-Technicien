@@ -1,16 +1,59 @@
 <div class="technicien-container">
-  <div *ngIf="loading" class="loading-message">Chargement en cours...</div>
-  <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
-  
-  <app-datatable
-    *ngIf="!loading && !errorMessage"
-    [data]="techniciens"
-    [columns]="columns"
-    [actions]="actions"
-    [showSearch]="true"
-    [showFilters]="true"
-    [showExport]="true"
-    [showPagination]="true"
-    (exportData)="onExportData($event)"
-  ></app-datatable>
+  <!-- Message de chargement -->
+  <div *ngIf="loading" class="loading-message">
+    <i class="icon icon-spinner"></i> Chargement en cours...
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage && !loading" class="error-message">
+    {{ errorMessage }}
+    <button class="btn btn-outline" (click)="loadTechniciens()">
+      <i class="icon icon-refresh"></i> Réessayer
+    </button>
+  </div>
+
+  <!-- Datatable avec données -->
+  <div *ngIf="!loading && !errorMessage && techniciens.length > 0" class="table-wrapper">
+    <app-datatable
+      [data]="techniciens"
+      [columns]="columns"
+      [actions]="actions"
+      [currentPage]="currentPage"
+      [lastPage]="lastPage"
+      [entriesPerPage]="itemsPerPage"
+      [totalEntries]="totalEntries"
+      [showSearch]="true"
+      [showFilters]="false"
+      [showExport]="true"
+      [showPagination]="true"
+      [serverSideSearch]="true"
+      [entriesPerPageOptions]="[10, 25, 50, 100]"
+      (exportData)="onExportData($event)"
+      (rowSelect)="onRowSelect($event)"
+      (pageChange)="onPageChange($event)">
+    </app-datatable>
+  </div>
+
+  <!-- Message quand aucun résultat trouvé pour une recherche -->
+  <div *ngIf="!loading && !errorMessage && techniciens.length === 0 && noDataFound" class="no-search-results">
+    <div class="no-results-icon">
+      <i class="icon icon-search"></i>
+    </div>
+    <h3>Aucun résultat trouvé</h3>
+    <p>Aucun technicien ne correspond à votre recherche "{{ filters.keyword }}"</p>
+    <div class="no-results-actions">
+      <button class="btn btn-outline" (click)="clearSearch()">
+        <i class="icon icon-x"></i> Effacer la recherche
+      </button>
+    </div>
+  </div>
+
+  <!-- Message si aucune donnée en général (première fois) -->
+  <div *ngIf="!loading && !errorMessage && techniciens.length === 0 && !noDataFound && (!filters.keyword || filters.keyword.trim() === '')" class="no-data-message">
+    <div class="no-data-icon">
+      <i class="icon icon-users"></i>
+    </div>
+    <h3>Aucun technicien</h3>
+    <p>Il n'y a encore aucun technicien dans le système.</p>
+  </div>
 </div>

@@ -21,7 +21,7 @@ export class EditRole {
   selectedPermissions: string[] = [];
   availablePermissions: Permission[] = [];
   isNewRole: boolean = false;
-
+  expandedPermissions: {[key: string]: boolean} = {};
   // Dans EditRole component
 constructor(
   private rolesService: RolesService,
@@ -39,10 +39,22 @@ constructor(
 }
 
   ngOnInit(): void {
-    this.editedName = this.role.name;
-    this.selectedPermissions = this.role.rolePermissions?.map(rp => rp.permission.id) || [];
-    this.preparePermissionsList();
+  this.editedName = this.role.name;
+  this.selectedPermissions = this.role.rolePermissions?.map(rp => rp.permission.id) || [];
+  this.preparePermissionsList();
+  
+  this.allPermissions.forEach(permission => {
+    this.expandedPermissions[permission.id] = false;
+  });
+}
+
+ togglePermissionCollapse(permissionId: string, event?: MouseEvent): void {
+  if (event) {
+    event.stopPropagation();
   }
+  this.expandedPermissions[permissionId] = !this.expandedPermissions[permissionId];
+  console.log('Toggle collapse for', permissionId, 'new state:', this.expandedPermissions[permissionId]);
+}
 
   preparePermissionsList(): void {
     this.availablePermissions = this.allPermissions.map(permission => {
@@ -123,18 +135,13 @@ areSomeSubPermissionsSelected(mainPermission: any): boolean {
     this.dialogRef.close();
   }
 
-  // Ajoutez ces méthodes
 isMainPermissionDisabled(mainPermission: any): boolean {
-  // Désactiver si aucune sous-permission
   return !mainPermission.secondaryPermissions?.length;
 }
-// Modifiez la méthode togglePermissionGroup
-// Ajoutez cette méthode
+
 toggleMainPermission(mainPermission: any, isChecked: boolean): void {
-  // Mettre à jour la permission principale
   this.onPermissionChange(mainPermission.id, isChecked);
 
-  // Mettre à jour toutes les sous-permissions
   if (mainPermission.secondaryPermissions?.length) {
     mainPermission.secondaryPermissions.forEach((subPermission: any) => {
       this.onPermissionChange(subPermission.id, isChecked);
@@ -142,7 +149,6 @@ toggleMainPermission(mainPermission: any, isChecked: boolean): void {
   }
 }
 
-// Modifiez la méthode areAllSubPermissionsSelected
 areAllSubPermissionsSelected(mainPermission: any): boolean {
   if (!mainPermission.secondaryPermissions?.length) return false;
   return mainPermission.secondaryPermissions.every((sp: any) => 
@@ -150,9 +156,7 @@ areAllSubPermissionsSelected(mainPermission: any): boolean {
   );
 }
 
-// Modifiez isSubPermissionDisabled
 isSubPermissionDisabled(mainPermission: any): boolean {
-  // Ne pas désactiver si en mode édition avec des permissions déjà sélectionnées
   if (this.selectedPermissions.some(id => 
     mainPermission.secondaryPermissions?.some((sp: any) => sp.id === id)
   )) {

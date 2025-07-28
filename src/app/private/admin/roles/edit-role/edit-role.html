@@ -34,26 +34,35 @@
           <mat-icon class="icon">lock</mat-icon>
           Permissions disponibles
         </h3>
-        <div class="permissions-container">
+       <div class="permissions-container">
   <div *ngFor="let mainPermission of data.allPermissions" class="permission-group">
-    <div class="main-permission">
+    <div class="main-permission-container" 
+         [class.selected]="isPermissionSelected(mainPermission.id)"
+         (click)="togglePermissionCollapse(mainPermission.id, $event)">
+      
+      <div class="permission-header">
+        <mat-icon class="expand-icon" [class.expanded]="expandedPermissions[mainPermission.id]">
+          expand_more
+        </mat-icon>
+        <span class="permission-name">{{ mainPermission.name }}</span>
+      </div>
+      
       <mat-checkbox
-        [checked]="isPermissionSelected(mainPermission.id)"
+        class="permission-checkbox"
+        [checked]="areAllSubPermissionsSelected(mainPermission)"
         [indeterminate]="areSomeSubPermissionsSelected(mainPermission)"
         (change)="toggleMainPermission(mainPermission, $event.checked)"
+        (click)="$event.stopPropagation()"
         color="primary"
-      >
-        {{ mainPermission.name }}
-        <span *ngIf="isPermissionSelected(mainPermission.id)" class="badge">
-          <mat-icon class="badge-icon">check_circle</mat-icon>
-          Sélectionnée
-        </span>
-      </mat-checkbox>
+      ></mat-checkbox>
     </div>
     
-    <div class="sub-permissions" [class.disabled]="!isPermissionSelected(mainPermission.id)">
+    <div class="sub-permissions" 
+         [class.expanded]="expandedPermissions[mainPermission.id]"
+         [class.disabled]="!isPermissionSelected(mainPermission.id)">
       <div *ngFor="let subPermission of mainPermission.secondaryPermissions" 
-           class="sub-permission-item">
+           class="sub-permission-item"
+           [class.selected]="isPermissionSelected(subPermission.id)">
         <mat-checkbox
           [checked]="isPermissionSelected(subPermission.id)"
           [disabled]="!isPermissionSelected(mainPermission.id) && !isPermissionSelected(subPermission.id)"
@@ -61,10 +70,6 @@
           color="primary"
         >
           {{ subPermission.name }}
-          <span *ngIf="isPermissionSelected(subPermission.id)" class="badge">
-            <mat-icon class="badge-icon">check_circle</mat-icon>
-            Attribuée
-          </span>
         </mat-checkbox>
       </div>
     </div>
