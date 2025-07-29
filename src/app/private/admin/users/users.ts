@@ -45,6 +45,7 @@ export class Users implements OnInit {
         'Admin': 'badge-admin',
         'Technicien': 'badge-technicien',
         'Responsable': 'badge-responsable',
+        'Ressource Humaine': 'badge-rh',
         'Aucun rôle': 'badge-default'
       }
     },

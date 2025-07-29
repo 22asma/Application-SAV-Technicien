@@ -25,6 +25,7 @@ import { EditRole } from './roles/edit-role/edit-role';
 import { Profil } from './users/profil/profil';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { HasPermissionDirective } from '../../auth/directives/has-permission.directive';
 @NgModule({
   declarations: [
     Users,
@@ -58,6 +59,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatProgressSpinnerModule,
     MatCardModule,
     MatDividerModule,
+    HasPermissionDirective
   ]
 })
 export class AdminModule { }

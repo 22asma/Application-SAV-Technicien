@@ -1,14 +1,14 @@
 <mat-tab-group>
 
-  <mat-tab label="Utilisateurs">
+  <mat-tab label="Utilisateurs" *appHasPermission="['user.view']">
     <app-users></app-users>
   </mat-tab>
 
-  <mat-tab label="Liste des Roles">
+  <mat-tab label="Liste des Roles" *appHasPermission="['role.view']">
     <app-roles></app-roles>
   </mat-tab>
 
-  <mat-tab label="Permissions">
+  <mat-tab label="Permissions" *appHasPermission="['permissions.view']">
     <app-permissions></app-permissions>
   </mat-tab>
 

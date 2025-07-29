@@ -39,6 +39,15 @@
   font-weight: 500;
 }
 
+::ng-deep .badge-rh {
+  background-color: #ffc260;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
 ::ng-deep .badge-default {
   background-color: #6b7280;
   color: white;

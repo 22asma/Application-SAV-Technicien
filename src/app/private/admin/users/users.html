@@ -1,4 +1,4 @@
-<div class="users-container">
+<div class="users-container" *appHasPermission="['user.view', 'user.manage']">
   <!-- Message de chargement -->
   <div *ngIf="loading" class="loading-message">
     <i class="icon icon-spinner"></i> Chargement en cours...

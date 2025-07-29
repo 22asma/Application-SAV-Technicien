@@ -1,11 +1,11 @@
-<div class="modal-header">
+<div class="modal-header" *appHasPermission="['user.create']">
   <h2 mat-dialog-title>Ajouter un nouvel utilisateur</h2>
   <button mat-icon-button mat-dialog-close class="close-button">
     <mat-icon>close</mat-icon>
   </button>
 </div>
 
-<div class="modal-body" mat-dialog-content>
+<div class="modal-body" mat-dialog-content *appHasPermission="['user.create']">
   <!-- Message d'erreur global -->
   <div *ngIf="errorMessage" class="error-message">
     <mat-icon>error</mat-icon>
@@ -93,7 +93,7 @@
   </form>
 </div>
 
-<div class="modal-footer" mat-dialog-actions>
+<div class="modal-footer" mat-dialog-actions *appHasPermission="['user.create']">
   <button mat-stroked-button 
           type="button" 
           (click)="onCancel()"

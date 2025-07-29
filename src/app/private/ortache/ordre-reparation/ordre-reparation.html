@@ -1,4 +1,4 @@
-<div class="ordreReparation-container">
+<div class="ordreReparation-container" *appHasPermission="['or.view']">
   <!-- Message de chargement -->
   <div *ngIf="loading" class="loading-message">
     <i class="icon icon-spinner"></i> Chargement en cours...

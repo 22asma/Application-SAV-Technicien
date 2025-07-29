@@ -1,6 +1,6 @@
 
 <!-- Template HTML converti -->
-<div class="tech-modal-container">   
+<div class="tech-modal-container" *appHasPermission="['task.history']">   
   <div class="tech-modal-header">     
     <h2>Journal du technicien</h2>     
     <button (click)="onClose()" class="close-button">       

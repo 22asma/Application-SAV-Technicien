@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject, throwError, of } from 'rxjs';
 import { tap, catchError, map, switchMap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../../environments/environment.development';
+import { PermissionsService } from '../../private/admin/services/permissions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,90 +16,159 @@ export class AuthService {
   private tokenExpirationTimer: any;
   private readonly TOKEN_KEY = 'access_token';
   private readonly USER_KEY = 'user_data';
+  private userPermissions = new BehaviorSubject<string[]>([]);
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private jwtHelper: JwtHelperService
-  ) {}
+    private jwtHelper: JwtHelperService,
+  ) {
+    const storedPermissions = localStorage.getItem('user_permissions');
+    if (storedPermissions) {
+      this.userPermissions.next(JSON.parse(storedPermissions));
+    }
+  }
 
   login(username: string, password: string): Observable<{access_token: string}> {
-    return this.http.post<{access_token: string}>(`${this.apiUrl}/login`, { username, password }).pipe(
-      tap(response => {
-        this.storeAuthData(response.access_token);
-        localStorage.setItem('username', username);
-        this.loggedIn.next(true);
-        this.autoLogout();
+  return this.http.post<{access_token: string}>(`${this.apiUrl}/login`, { username, password }).pipe(
+    tap(response => {
+      this.storeAuthData(response.access_token);
+      localStorage.setItem('username', username);
+      this.loggedIn.next(true);
+    }),
+    switchMap(response => {
+      return this.fetchUserPermissions().pipe(
+        map(() => response),
+        catchError(error => {
+          console.error('[AuthService] Error fetching permissions:', error);
+          this.clearAuth();
+          return throwError(() => error);
+        })
+      );
+    }),
+    catchError(error => {
+      this.clearAuth();
+      return throwError(() => this.handleAuthError(error));
+    })
+  );
+}
+
+ private fetchUserPermissions(): Observable<void> {
+   const user = this.getCurrentUser();
+    
+    if (!user || !user.id) {
+      return throwError(() => 'User not authenticated');
+    }
+
+   return this.http.get<any>(`${this.apiUrl}/users/${user.id}`).pipe(
+      tap(userData => {
+        const permissionMap: { [key: string]: string } = {
+        'Créer un utilisateur': 'user.create',
+        'Voir la liste des utilisateurs': 'user.view',
+        'Supprimer un utilisateur': 'user.delete',
+        'Modifier un utilisateur': 'user.edit',
+        'Consulter historique des tâches': 'task.history',
+        'Voir la liste des tâches': 'task.view',
+        'Voir les détails de OR': 'or.detail',
+        'Consulter les OR': 'or.view',
+        'Modifier les options paramétrables': 'settings.options.edit',
+        'Voir les paramètres système': 'settings.view',
+        'Gérer Paramétres ': 'settings.manage',
+        'Gérer Liste OR': 'or.list.manage',
+        'Gérer Taches': 'task.manage',
+        'Gérer Utilisateurs': 'user.manage',
+        'Gérer Roles': 'role.manage',
+        'Gérer Permissions': 'permissions.manage',
+        'Voir la liste des Roles': 'role.view',
+        'Voir la liste des Permissions': 'permissions.view',
+        'Ajouter une permission main': 'permissions.create',
+        'Ajouter une sous permission': 'souspermissions.create',
+        'Ajouter un Role': 'role.create',
+        'Modifier un Role': 'role.edit',
+        'Voir la liste des techniciens': 'technicien.view'
+      };
+
+      const permissionsList = userData.role?.rolePermissions?.map((rp: any) => ({
+          id: rp.permission.id,
+          name: rp.permission.name
+        })) || [];
+
+      console.log('[AuthService] Simplified permissions list:', permissionsList);
+
+      const permissionNames = permissionsList
+          .map((p: any) => permissionMap[p.name])
+          .filter((p: string | undefined) => !!p);
+
+       this.userPermissions.next(permissionNames);
+        localStorage.setItem('user_permissions', JSON.stringify(permissionNames));
       }),
+      map(() => {}),
       catchError(error => {
-        this.clearAuth();
-        return throwError(() => this.handleAuthError(error));
+        console.error('[AuthService] Error in fetchUserPermissions:', error);
+        return throwError(() => error);
       })
     );
   }
+ 
 
-  logout(redirect: boolean = true): void {
-    localStorage.removeItem('access_token');
-    this.loggedIn.next(false);
-    if (redirect) {
-      this.router.navigate(['/login']);
-    }
-    if (this.tokenExpirationTimer) {
-      clearTimeout(this.tokenExpirationTimer);
-    }
-  }
-
-  isLoggedIn(): Observable<boolean> {
-    return this.loggedIn.asObservable();
-  }
-
- getCurrentUser(): any {
+getCurrentUser(): any {
   const token = this.getToken();
   if (!token) {
-    console.warn('Aucun token trouvé dans localStorage');
     return null;
   }
 
   if (this.jwtHelper.isTokenExpired(token)) {
-    console.warn('Token expiré');
     return null;
   }
 
   const decoded = this.jwtHelper.decodeToken(token);
-  console.log('Token décodé dans getCurrentUser:', decoded);
+  
+  const storedPermissions = localStorage.getItem('user_permissions');
+  const permissions = storedPermissions ? JSON.parse(storedPermissions) : [];
 
-  // Extraction du rôle avec debug
-  let role = decoded.role;
-  if (!role) {
-    console.warn('Rôle non trouvé dans la propriété "role"');
-    
-    if (decoded.realm_access?.roles) {
-      role = decoded.realm_access.roles[0];
-      console.warn('Rôle trouvé dans realm_access.roles');
-    } else if (decoded.authorities) {
-      role = decoded.authorities[0];
-      console.warn('Rôle trouvé dans authorities');
-    } else {
-      role = 'ROLE_NON_TROUVE';
-      console.error('Aucun rôle trouvé dans le token');
-    }
-  }
-
-  const userData = {
-    id: decoded.sub || decoded.userId || decoded.id,
+  return {
+    id: decoded.sub,
     username: decoded.username || decoded.preferred_username,
-    role: role,
-    // Ajoutez toutes les autres propriétés du token pour debug
-    _token_decoded: decoded // Temporaire pour debug
+    permissions: permissions
   };
-
-  console.log('Données utilisateur extraites:', userData);
-  return userData;
 }
 
+// Ajoutez aussi des logs dans les méthodes de permission
+hasPermission(permission: string): boolean {
+  const hasPerm = this.userPermissions.getValue().includes(permission);
+  return hasPerm;
+}
+
+hasAnyPermission(permissions: string[]): boolean {
+  const userPermissions = this.userPermissions.getValue();
+  const hasAny = permissions.some(p => userPermissions.includes(p));
+  return hasAny;
+}
+
+  getUserPermissions(): Observable<string[]> {
+    return this.userPermissions.asObservable();
+  }
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
+  
+logout(redirect: boolean = true): void {
+  localStorage.removeItem(this.TOKEN_KEY);
+  localStorage.removeItem(this.USER_KEY);
+  localStorage.removeItem('user_permissions');
+  localStorage.removeItem('username');
+
+  this.loggedIn.next(false);
+  this.userPermissions.next([]); 
+
+  if (redirect) {
+    this.router.navigate(['/auth/login']);
+  }
+   if (this.tokenExpirationTimer) {
+        clearTimeout(this.tokenExpirationTimer);
+    }
+    console.clear(); 
+}
 
   refreshToken(): Observable<string> {
     return this.http.post<{access_token: string}>(`${this.apiUrl}/refresh`, {}).pipe(

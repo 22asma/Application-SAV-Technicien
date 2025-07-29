@@ -1,5 +1,5 @@
-<div class="permissions-container">
-<div class="permissions-grid">
+<div class="permissions-container" *appHasPermission="['permissions.view']" >
+<div class="permissions-grid" *appHasPermission="['permissions.view']" >
   <!-- Cartes de permissions principales -->
   <div class="permission-card" *ngFor="let permission of permissionList">
     <div class="permission-card-header">

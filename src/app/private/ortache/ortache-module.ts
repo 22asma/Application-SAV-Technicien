@@ -10,6 +10,7 @@ import { OrdreReparation } from './ordre-reparation/ordre-reparation';
 import { datatable } from '../../shared/datatable/datatable';
 import { OrtacheRoutingModule } from './oetache-routing-module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { HasPermissionDirective } from '../../auth/directives/has-permission.directive';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCheckboxModule,
     datatable,
     OrtacheRoutingModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    HasPermissionDirective
 ]
 })
 export class OrtacheModule { }

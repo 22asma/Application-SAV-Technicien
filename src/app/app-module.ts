@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslationService } from '../assets/i18n/translation.service';
+import { HasPermissionDirective } from './auth/directives/has-permission.directive';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -57,7 +58,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatCardModule,
     MatDividerModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    HasPermissionDirective
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

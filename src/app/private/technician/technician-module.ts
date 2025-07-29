@@ -14,6 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { HasPermissionDirective } from '../../auth/directives/has-permission.directive';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    HasPermissionDirective
   ]
 })
 export class TechnicianModule { }

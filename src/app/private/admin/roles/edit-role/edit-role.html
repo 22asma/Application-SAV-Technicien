@@ -1,6 +1,6 @@
-<div class="modal-overlay" (click)="onCancel()">
+<div class="modal-overlay" (click)="onCancel()" *appHasPermission="['role.edit','role.create']">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
+    <div class="modal-header" *appHasPermission="['role.edit','role.create']">
       <h2>
         <mat-icon class="icon">edit</mat-icon>
         {{isNewRole ? 'Créer un nouveau rôle' : 'Modifier le rôle: ' + role.name}}
@@ -10,7 +10,7 @@
       </button>
     </div>
     
-    <div class="modal-body">
+    <div class="modal-body" *appHasPermission="['role.edit','role.create']">
       <div class="form-group">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Nom du rôle</mat-label>

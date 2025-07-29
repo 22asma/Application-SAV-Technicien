@@ -1,10 +1,10 @@
-<div class="modal-header">
+<div class="modal-header" *appHasPermission="['souspermissions.create', 'permissions.create']">
   <h2 class="modal-title">
     {{ isMainPermission ? 'Nouvelle permission principale' : 'Nouvelle sous-permission' }}
   </h2>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" *appHasPermission="['souspermissions.create', 'permissions.create']">
   <form [formGroup]="permissionForm">
     <div class="form-field">
       <label for="permissionName">Nom de la permission</label>
@@ -17,7 +17,7 @@
   </form>
 </div>
 
-<div class="modal-footer">
+<div class="modal-footer" *appHasPermission="['souspermissions.create', 'permissions.create']">
   <button class="btn btn-cancel" (click)="onCancel()">Annuler</button>
   <button 
     class="btn btn-submit" 

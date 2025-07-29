@@ -16,6 +16,7 @@ export interface InavbarData {
   title: string;
   expanded?: boolean;
   items?: InavbarData[];
+  permissions?: string[];
 }
 
 export const navbarData: InavbarData[] = [
@@ -27,22 +28,26 @@ export const navbarData: InavbarData[] = [
   {
     path: '/technician/technicien',
     title: 'Techniciens',
-    icon: 'fas fa-user-tie'
+    icon: 'fas fa-user-tie',
+    permissions: ['technicien.view']
   },
   {
     path: '/ortache/listeOR',
     title: 'Liste OR',
-    icon: 'fas fa-clipboard-list'
+    icon: 'fas fa-clipboard-list',
+    permissions: ['or.view']
   },
   {
     path: '/admin/administration',
     title: 'Administration',
     icon: 'fas fa-cog',
+    permissions: ['user.view']
   },
   { 
     path: '/parametres', 
     title: 'Paramétrages', 
-    icon: 'fas fa-sliders-h' 
+    icon: 'fas fa-sliders-h',
+    permissions: ['settings.view']
   },
   { 
     path: '/auth/login', 
