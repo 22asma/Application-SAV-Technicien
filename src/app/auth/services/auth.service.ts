@@ -5,7 +5,6 @@ import { Observable, BehaviorSubject, throwError, of } from 'rxjs';
 import { tap, catchError, map, switchMap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../../environments/environment.development';
-import { PermissionsService } from '../../private/admin/services/permissions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -110,13 +109,12 @@ export class AuthService {
     );
   }
  
-
-getCurrentUser(): any {
+  getCurrentUser(): any {
   const token = this.getToken();
   if (!token) {
     return null;
   }
-
+  
   if (this.jwtHelper.isTokenExpired(token)) {
     return null;
   }
@@ -129,9 +127,24 @@ getCurrentUser(): any {
   return {
     id: decoded.sub,
     username: decoded.username || decoded.preferred_username,
+    firstName: decoded.firstName || decoded.given_name, // Ajout du prénom
+    lastName: decoded.lastName || decoded.family_name, // Ajout du nom
+    role: decoded.role || decoded.roles?.[0], // Ajout du rôle
     permissions: permissions
   };
 }
+  
+ private storeAuthData(token: string): void {
+  localStorage.setItem(this.TOKEN_KEY, token);
+
+  const user = this.jwtHelper.decodeToken(token); // 👈 user défini ici
+  console.log('Token décodé:', user); // ✅ OK
+
+  if (user) {
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user)); // OK
+  }
+}
+
 
 // Ajoutez aussi des logs dans les méthodes de permission
 hasPermission(permission: string): boolean {
@@ -184,15 +197,6 @@ logout(redirect: boolean = true): void {
     );
   }
 
-  private storeAuthData(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
-    // Optionally store user data if your token contains it
-    const user = this.jwtHelper.decodeToken(token);
-    if (user) {
-      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-    }
-  }
-
   private clearAuth(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
@@ -234,4 +238,5 @@ logout(redirect: boolean = true): void {
         return error.error?.message || 'An unexpected error occurred';
     }
   }
+  
 }

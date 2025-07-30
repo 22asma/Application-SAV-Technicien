@@ -7,6 +7,7 @@ import moment from 'moment';
 
 interface IJournalEntry {
   date: string;
+  dateFormatted: string;
   type: string;
   rawType: PointageType; 
   tache?: string;
@@ -112,23 +113,25 @@ export class TechDetails {
   }
 
   private transformHistoryData(historyItems: any[]): IJournalEntry[] {
-    return historyItems.map(item => {
-      let taskDescription = '--';
-      if (item.task) {
-        taskDescription = item.task.titre || 
-                         item.task.details || 
-                         (item.task.description ? item.task.description.substring(0, 30) + '...' : '--');
-      }
+  return historyItems.map(item => {
+    const dateObj = new Date(item.heure);
+    let taskDescription = '--';
+    if (item.task) {
+      taskDescription = item.task.titre || 
+                       item.task.details || 
+                       (item.task.description ? item.task.description.substring(0, 30) + '...' : '--');
+    }
 
-      return {
-        date: new Date(item.heure).toLocaleString(),
-        type: this.getTypeLabel(item.type),
-        rawType: item.type as PointageType,
-        tache: taskDescription,
-        heure: new Date(item.heure).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-      };
-    });
-  }
+    return {
+      date: dateObj.toLocaleString(),
+      dateFormatted: dateObj.toLocaleDateString('fr-FR'), // Format français de la date
+      type: this.getTypeLabel(item.type),
+      rawType: item.type as PointageType,
+      tache: taskDescription,
+      heure: dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+    };
+  });
+}
 
   getTypeLabel(type: PointageType): string {
     const typeLabels: Record<PointageType, string> = {

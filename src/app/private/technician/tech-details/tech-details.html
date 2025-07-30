@@ -66,14 +66,16 @@
       <div *ngIf="!loading && !errorMessage" class="history-table-container">         
         <table class="history-table">           
           <thead>             
-            <tr>               
+            <tr>        
+              <th class="date-header">Date</th>       
               <th class="time-header">Heure</th>               
               <th class="type-header">Type</th>               
               <th class="task-header">Tâche</th>             
             </tr>           
           </thead>           
           <tbody>             
-            <tr *ngFor="let entry of journalData">               
+            <tr *ngFor="let entry of journalData">
+              <td class="date-cell">{{entry.dateFormatted}}</td>               
               <td class="time-cell">{{entry.heure}}</td>               
               <td class="type-cell">                 
                 <span class="type-badge" [ngClass]="getBadgeClass(entry.rawType)">                   
@@ -82,7 +84,8 @@
               </td>               
               <td class="task-cell">{{entry.tache}}</td>             
             </tr>             
-            <tr *ngIf="journalData.length === 0">               
+            <tr *ngIf="journalData.length === 0">
+              <td colspan="4" class="no-data"></td>               
               <td colspan="3" class="no-data">                 
                 <i class="material-icons">info</i>                 
                 <span>Aucun enregistrement pour cette période</span>               

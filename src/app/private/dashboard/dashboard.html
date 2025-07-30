@@ -1,0 +1,293 @@
+<div class="dashboard-container">
+  <!-- Header with Greetings and Top Widgets -->
+  <div class="dashboard-header">
+    <div class="greetings-section">
+      <div class="welcome-message">
+        <h1>Bienvenue dans votre espace de gestion</h1>
+        <p class="welcome-subtext">
+          Suivi et optimisation des interventions techniques
+        </p>
+      </div>
+    </div>
+    
+    <div class="top-widgets">
+      <div class="top-widget">
+        <div class="widget-icon orders">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <div class="widget-content">
+          <h3>{{ stats.totalOR }}</h3>
+          <p>Total OR</p>
+        </div>
+      </div>
+      
+      <div class="top-widget">
+        <div class="widget-icon tasks">
+          <i class="fas fa-tasks"></i>
+        </div>
+        <div class="widget-content">
+          <h3>{{ getTotalTaches() }}</h3>
+          <p>Total Tâches</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Chargement des données...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage" class="error-container">
+    <p>{{ errorMessage }}</p>
+    <button (click)="refreshDashboard()">Réessayer</button>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && !errorMessage" class="dashboard-content">
+    
+    <!-- Main Stats Cards -->
+    <div class="main-stats-grid">
+      <!-- Technicien du mois -->
+      <div class="stat-card highlight">
+        <div class="stat-icon crown">👑</div>
+        <div class="stat-content">
+          <h3>Mohamed Ali</h3>
+          <p>Technicien du mois (42 tâches)</p>
+        </div>
+      </div>
+      
+      <!-- Technicien rapide -->
+      <div class="stat-card">
+        <div class="stat-icon fast">⚡</div>
+        <div class="stat-content">
+          <h3>Sophie Martin</h3>
+          <p>Record: 1h22/tâche</p>
+        </div>
+      </div>
+      
+      <!-- Techniciens pointés -->
+      <div class="stat-card">
+        <div class="stat-icon checked">✓</div>
+        <div class="stat-content">
+          <h3>18</h3>
+          <p>Techniciens pointés</p>
+        </div>
+      </div>
+
+      <!-- Retards -->
+      <div class="stat-card warning">
+        <div class="stat-icon late">⌛</div>
+        <div class="stat-content">
+          <h3>3</h3>
+          <p>Retards ce mois</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Row - Pie Chart and Summary Side by Side -->
+    <div class="top-row-section">
+      <!-- Pie Chart - Répartition des tâches -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Répartition des tâches</h3>
+          <div class="chart-period-selector">
+            <button class="period-btn active">Mois</button>
+            <button class="period-btn">Trimestre</button>
+          </div>
+        </div>
+        <div class="chart-content">
+          <div class="pie-chart-container">
+            <div class="pie-chart">
+              <div class="pie-slice" style="--percentage:65%; --color:#10B981;"></div>
+              <div class="pie-slice" style="--percentage:25%; --color:#F59E0B;"></div>
+              <div class="pie-slice" style="--percentage:10%; --color:#EF4444;"></div>
+              <div class="pie-center">
+                <span>156</span>
+                <small>Total</small>
+              </div>
+            </div>
+            <div class="pie-legend">
+              <div class="legend-item">
+                <div class="legend-color" style="background: #10B981;"></div>
+                <div class="legend-text">
+                  <span>Terminées</span>
+                  <strong>102 (65%)</strong>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background: #F59E0B;"></div>
+                <div class="legend-text">
+                  <span>En cours</span>
+                  <strong>39 (25%)</strong>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background: #EF4444;"></div>
+                <div class="legend-text">
+                  <span>En attente</span>
+                  <strong>15 (10%)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Section -->
+      <div class="summary-section">
+        <div class="section-header">
+          <h3><i class="fas fa-chart-line"></i> Résumé de la journée</h3>
+        </div>
+        <div class="summary-content">
+          <div class="summary-item">
+            <div class="summary-icon" style="background: #4299e1;">
+              <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="summary-text">
+              <span class="summary-label">Total OR:</span>
+              <span class="summary-value">{{ stats.totalOR }}</span>
+            </div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-icon" style="background: #10B981;">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="summary-text">
+              <span class="summary-label">Techniciens actifs:</span>
+              <span class="summary-value">{{ stats.techniciensActifs }}/{{ stats.totalTechniciens }}</span>
+            </div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-icon" style="background: #F59E0B;">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="summary-text">
+              <span class="summary-label">Tâches planifiées:</span>
+              <span class="summary-value">{{ stats.tachesPlanifiees }}</span>
+            </div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-icon" style="background: #EF4444;">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="summary-text">
+              <span class="summary-label">Interventions urgentes:</span>
+              <span class="summary-value">{{ stats.interventionsUrgentes }}</span>
+            </div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-icon" style="background: #667EEA;">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="summary-text">
+              <span class="summary-label">Temps moyen d'intervention:</span>
+              <span class="summary-value">{{ stats.tempsMoyenIntervention }}</span>
+            </div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-icon" style="background: #9F7AEA;">
+              <i class="fas fa-smile"></i>
+            </div>
+            <div class="summary-text">
+              <span class="summary-label">Satisfaction client:</span>
+              <span class="summary-value">{{ stats.satisfactionClient }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row - Bar Chart, Alerts and Actions -->
+    <div class="bottom-row-section">
+      <!-- Bar Chart - OR terminés -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>OR complétés par semaine</h3>
+          <div class="chart-period-selector">
+            <button class="period-btn">Semaine</button>
+            <button class="period-btn active">Mois</button>
+            <button class="period-btn">Année</button>
+          </div>
+        </div>
+        <div class="chart-content">
+          <div class="bar-chart">
+            <div class="bar-chart-grid">
+              <div class="grid-line"></div>
+              <div class="grid-line"></div>
+              <div class="grid-line"></div>
+              <div class="grid-line"></div>
+            </div>
+            <div class="bar-chart-bars">
+              <div class="bar-container" *ngFor="let item of orCompletedData">
+                <div class="bar" [style.height.%]="(item.value/maxOrValue)*100"></div>
+                <span class="bar-label">{{item.label}}</span>
+                <span class="bar-value">{{item.value}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Alerts and Actions -->
+      <div class="right-column">
+        <!-- Alerts Section -->
+          <div class="alerts-section">
+        <div class="section-header">
+          <h3><i class="fas fa-exclamation-triangle"></i> Alertes</h3>
+        </div>
+        <div class="alerts-list">
+          <!-- Alertes statiques supplémentaires -->
+          <div class="alert-item critical">
+            <div class="alert-icon">
+              <i class="fas fa-fire"></i>
+            </div>
+            <span>3 OR en retard de plus de 7 jours</span>
+            <div class="alert-badge">Urgent</div>
+          </div>
+          
+          <div class="alert-item info">
+            <div class="alert-icon">
+              <i class="fas fa-user-clock"></i>
+            </div>
+            <span>2 techniciens n'ont pas pointé aujourd'hui</span>
+          </div>
+          
+          <!-- Alertes dynamiques -->
+          <div *ngFor="let alerte of alertes" class="alert-item">
+            <div class="alert-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <span>{{ alerte }}</span>
+          </div>
+        </div>
+      </div>
+
+        <!-- Quick Actions -->
+        <div class="actions-section">
+          <div class="section-header">
+            <h3><i class="fas fa-bolt"></i> Actions rapides</h3>
+          </div>
+          <div class="actions-grid">
+            <button class="action-btn" (click)="exportTechniciens()" [disabled]="loadingExport">
+              <i class="fas fa-file-export"></i>
+              <span>Exporter Techniciens</span>
+            </button>
+            
+            <button class="action-btn" (click)="exportOR()" [disabled]="loadingExport">
+              <i class="fas fa-file-export"></i>
+              <span>Exporter OR</span>
+            </button>
+          </div>
+          
+          <div *ngIf="loadingExport" class="export-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Export en cours...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

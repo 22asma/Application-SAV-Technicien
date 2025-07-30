@@ -42,7 +42,7 @@ export class App implements OnInit{
   this.showLayout = !url.startsWith('/auth');
 
   if (url.startsWith('/private') && localStorage.getItem('isLoggedIn') !== 'true') {
-    this.router.navigate(['/technician/technicien']);
+    this.router.navigate(['/dashboard']);
   }
 
   this.cdRef.detectChanges(); // force Angular à relancer la vérification

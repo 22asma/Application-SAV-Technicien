@@ -30,7 +30,7 @@ export class Login {
       password: ['', Validators.required],
       rememberMe: [false]
     });
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/technician/technicien';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
   }
 
   onSubmit() {
