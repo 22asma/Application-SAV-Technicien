@@ -1,6 +1,6 @@
 // Modifications dans datatable.component.ts
 
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -300,8 +300,14 @@ export class datatable implements OnInit {
     }
   }
 
-  // Nouvelle méthode appelée quand les données changent depuis le parent
-  ngOnChanges() {
-    this.initializeData();
+  nngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['data'] || 
+      changes['entriesPerPage'] || 
+      changes['currentPage'] || 
+      changes['totalEntries']
+    ) {
+      this.initializeData(); // met à jour le tableau et les infos affichées
+    }
   }
 }

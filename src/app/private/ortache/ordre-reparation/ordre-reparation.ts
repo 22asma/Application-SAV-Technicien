@@ -96,20 +96,23 @@ export class OrdreReparation implements OnInit {
     });
   }
  
-   onPageChange(params: PaginationParams): void {
-    console.log('Paramètres reçus:', params);
-    
-    // Mettre à jour les filtres
-    this.filters = {
-      ...this.filters,
-      page: params.page,
-      items: params.limit,
-      keyword: params.searchQuery || ''
-    };
-    
-    // Charger les nouvelles données
-    this.loadORs();
-  }
+  onPageChange(params: PaginationParams): void {
+  console.log('Paramètres reçus:', params);
+
+  // Met à jour les filtres
+  this.filters = {
+    ...this.filters,
+    page: params.page,
+    items: params.limit,
+    keyword: params.searchQuery || ''
+  };
+
+  // 🔁 Ces valeurs doivent aussi être mises à jour manuellement :
+  this.currentPage = params.page;
+  this.itemsPerPage = params.limit;
+
+  this.loadORs();
+}
 
   onSearch(keyword: string): void {
     this.filters.keyword = keyword;

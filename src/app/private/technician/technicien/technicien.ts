@@ -110,22 +110,23 @@ export class Technicien {
     });
   }
 
-  // Méthode appelée par le datatable lors du changement de page/recherche
-  onPageChange(params: PaginationParams): void {
-    console.log('Paramètres reçus:', params);
-    
-    // Mettre à jour les filtres
-    this.filters = {
-      ...this.filters,
-      page: params.page,
-      items: params.limit,
-      keyword: params.searchQuery || ''
-    };
-    
-    // Charger les nouvelles données
-    this.loadTechniciens();
-  }
+ onPageChange(params: PaginationParams): void {
+  console.log('Paramètres reçus:', params);
 
+  // Met à jour les filtres
+  this.filters = {
+    ...this.filters,
+    page: params.page,
+    items: params.limit,
+    keyword: params.searchQuery || ''
+  };
+
+  // 🔁 Ces valeurs doivent aussi être mises à jour manuellement :
+  this.currentPage = params.page;
+  this.itemsPerPage = params.limit;
+
+  this.loadTechniciens();
+}
   onSearch(keyword: string): void {
     this.filters.keyword = keyword;
     this.filters.page = 1;

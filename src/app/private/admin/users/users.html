@@ -18,10 +18,11 @@
       [data]="users"
       [columns]="userColumns"
       [actions]="userActions"
-      [currentPage]="currentPage"
-      [lastPage]="lastPage"
       [entriesPerPage]="itemsPerPage"
       [totalEntries]="totalEntries"
+      [currentPage]="currentPage"
+      [lastPage]="lastPage"
+      (pageChange)="onPageChange($event)"
       [showSearch]="true"
       [showFilters]="false"
       [showExport]="true"
@@ -32,8 +33,7 @@
       (addClicked)="onAddClicked()"
       (exportData)="onExportData($event)"
       (rowSelect)="onRowSelect($event)"
-      (filterChange)="onFilterChange($event)"
-      (pageChange)="onPageChange($event)">
+      (filterChange)="onFilterChange($event)">
     </app-datatable>
   </div>
 
