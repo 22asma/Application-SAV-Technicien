@@ -84,3 +84,16 @@
   gap: 8px;
   margin-bottom: 16px;
 }
+
+/* Ajoutez ces styles à votre fichier CSS */
+.mat-checkbox {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.mat-hint {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 8px;
+  display: block;
+}

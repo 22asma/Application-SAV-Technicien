@@ -684,3 +684,500 @@
 .search-container input {
   padding-right: 35px; /* Espace pour le bouton X */
 }
+
+/* Styles pour les boutons de filtre */
+.filter-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.filter-btn.active {
+  background-color: #0068FF;
+  border-color: #0068FF;
+  color: white;
+}
+
+.filter-btn.active .icon-filter,
+.filter-btn.active .icon-calendar {
+  filter: brightness(0) invert(1);
+}
+
+/* Icône calendrier */
+.icon-calendar {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Badge pour indiquer les filtres actifs */
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background-color: #0068FF;
+  color: white;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+/* Menu déroulant des filtres */
+.filter-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  min-width: 280px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-top: 8px;
+  padding: 16px;
+  transform-origin: top right;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.filter-menu h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Options de filtre */
+.filter-options {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.filter-option input[type="checkbox"] {
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.filter-option input[type="checkbox"]:checked {
+  background-color: #0068FF;
+  border-color: #0068FF;
+}
+
+.filter-option input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.filter-option label {
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.filter-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* Picker de date range */
+.date-range-picker {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.date-input {
+  flex: 1;
+}
+
+.date-input label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.date-input input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.date-input input:focus {
+  outline: none;
+  border-color: #0068FF;
+  box-shadow: 0 0 0 3px rgba(0, 104, 255, 0.1);
+}
+
+/* Actions des filtres */
+.filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.filter-actions .btn {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.btn-clear {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.btn-clear:hover {
+  background: #f3f4f6;
+}
+
+.btn-apply {
+  background: #0068FF;
+  border: 1px solid #0068FF;
+  color: white;
+}
+
+.btn-apply:hover {
+  background: #005ce6;
+  border-color: #005ce6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filter-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .date-range-picker {
+    flex-direction: column;
+  }
+}
+/* Style spécifique pour le bouton de filtre de statut */
+.status-filter-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-filter-btn:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.status-filter-btn.active {
+  background-color: #0068FF;
+  border-color: #0068FF;
+  color: white;
+}
+
+.status-filter-btn.active .icon-filter {
+  filter: brightness(0) invert(1);
+}
+
+/* Menu déroulant spécifique pour le filtre de statut */
+.status-filter-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  min-width: 220px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-top: 8px;
+  padding: 16px;
+}
+
+.status-filter-menu h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Options de filtre de statut */
+.status-filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.status-filter-option {
+  display: flex;
+  align-items: center;
+}
+
+.status-filter-option input[type="checkbox"] {
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.status-filter-option input[type="checkbox"]:checked {
+  background-color: #0068FF;
+  border-color: #0068FF;
+}
+
+.status-filter-option input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.status-filter-option label {
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.status-filter-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* Badge pour indiquer les statuts sélectionnés */
+.status-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background-color: #0068FF;
+  color: white;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+/* Actions du filtre de statut */
+.status-filter-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.status-filter-actions .btn {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.status-filter-clear {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.status-filter-clear:hover {
+  background: #f3f4f6;
+}
+
+.status-filter-apply {
+  background: #0068FF;
+  border: 1px solid #0068FF;
+  color: white;
+}
+
+.status-filter-apply:hover {
+  background: #005ce6;
+  border-color: #005ce6;
+}
+
+/* Style pour les options de statut avec compteur */
+.status-option-with-count {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.status-option-label {
+  display: flex;
+  align-items: center;
+}
+
+.status-option-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.status-filter-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  min-width: 220px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-top: 8px;
+  padding: 16px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.status-filter-btn.active {
+  background-color: #0068FF;
+  border-color: #0068FF;
+  color: white;
+}
+
+.status-filter-btn.active .icon-filter {
+  filter: brightness(0) invert(1);
+}
+/* Style commun pour les menus de filtre */
+.filter-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  min-width: 280px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-top: 8px;
+  padding: 16px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+/* Style spécifique pour le filtre de statut */
+.status-filter .filter-options {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.status-filter .filter-option {
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+}
+
+.status-filter .filter-option input[type="checkbox"] {
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+}
+
+.filter-btn.active {
+  background-color: #0068FF;
+  border-color: #0068FF;
+  color: white;
+}
+
+.filter-btn.active .icon-filter {
+  filter: brightness(0) invert(1);
+}

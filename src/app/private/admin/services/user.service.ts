@@ -124,9 +124,8 @@ changePassword(userId: string, dto: ChangePasswordDto): Observable<any> {
     params = params.set('page', page.toString());
     params = params.set('items', items.toString());
     
-    // ID du rôle Technicien (à remplacer par la valeur correcte)
-    const technicienRoleId = '19789728-f206-48f9-abae-1db706effbff';
-    params = params.set('roleId', technicienRoleId);
+    // Paramètre exact comme dans votre curl
+    params = params.set('isTechnician', 'true'); // Notez le 'true' en string
 
     if (filters.keyword) {
       params = params.set('keyword', filters.keyword);
@@ -134,17 +133,16 @@ changePassword(userId: string, dto: ChangePasswordDto): Observable<any> {
 
     return this.httpclient.get<PaginatedUsersResponse>(`${this.baseUrl}/users`, { params }).pipe(
       tap(response => {
-      console.log('Réponse pagination complète :', response);
-      console.log('Détail pagination :', {
-        result: response.result,
-        total: response.total,
-        page: response.page,
-        lastPage: response.lastPage,
-        nextPage: response.nextPage
-      });
-    }),
+        console.log('Techniciens reçus:', response.result);
+        // Vérifiez que les données contiennent bien isTechnician: true
+        response.result.forEach(tech => {
+          if (!tech.isTechnician) {
+            console.warn('Utilisateur non technicien reçu:', tech);
+          }
+        });
+      }),
       catchError(error => {
-        console.error('Erreur lors de la récupération des techniciens:', error);
+        console.error('Erreur:', error);
         throw error;
       })
     );
@@ -187,9 +185,8 @@ exportTechniciensToExcel(filters: UserFilters = {}): Observable<Blob> {
   params = params.set('page', page.toString());
   params = params.set('items', items.toString());
   
-  // ID du rôle Technicien
-  const technicienRoleId = '19789728-f206-48f9-abae-1db706effbff';
-  params = params.set('roleId', technicienRoleId);
+  // Utiliser le filtre isTechnician au lieu du rôle
+  params = params.set('isTechnician', 'true');
 
   if (filters.keyword) {
     params = params.set('keyword', filters.keyword);

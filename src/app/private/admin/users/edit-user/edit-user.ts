@@ -35,7 +35,8 @@ export class EditUser implements OnInit {
     firstName: [data.user.firstName || data.user.firstname || '', Validators.required],
     lastName: [data.user.lastName || data.user.lastname || '', Validators.required],
     roleId: [data.user.role?.id || '', Validators.required],
-    statut: [data.user.statut || 'ACTIVE', Validators.required]
+    statut: [data.user.statut || 'ACTIVE', Validators.required],
+    isTechnician: [data.user.isTechnician || false]
    });
 
     this.passwordForm = this.fb.group({
@@ -133,7 +134,8 @@ export class EditUser implements OnInit {
       firstName: this.userForm.value.firstName,
       lastName: this.userForm.value.lastName,
       roleId: this.userForm.value.roleId,
-      statut: this.userForm.value.statut // On envoie directement la valeur du select
+      statut: this.userForm.value.statut,
+      isTechnician: this.userForm.value.isTechnician
     };
 
     this.usersService.editUser(this.data.user.id, userData).subscribe({

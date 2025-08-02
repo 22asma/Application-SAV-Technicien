@@ -31,6 +31,7 @@ export class AddUser implements OnInit {
       username: ['', [Validators.required, Validators.minLength(3)]],
       roleId: ['', Validators.required],
       badgeId: [''],
+      isTechnician: [false],
       password: ['', [
         Validators.required, 
         Validators.minLength(8),
@@ -88,9 +89,9 @@ export class AddUser implements OnInit {
       this.errorMessage = '';
       
       const formData = {
-        ...this.userForm.value,
-        // Assurez-vous que le badgeId est undefined s'il est vide
-        badgeId: this.userForm.value.badgeId || undefined
+       ...this.userForm.value,
+       badgeId: this.userForm.value.badgeId || undefined,
+       isTechnician: this.userForm.value.isTechnician || false // Assure une valeur par défaut
       };
 
       this.usersService.addUser(formData).subscribe({

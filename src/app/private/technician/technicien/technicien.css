@@ -94,3 +94,49 @@
     max-width: 200px;
   }
 }
+/* Styles pour les badges de rôles */
+::ng-deep .badge-admin {
+  background-color: #ff6060;
+  color: white;
+}
+
+::ng-deep .badge-technicien {
+  background-color: #60a7ff;
+  color: white;
+}
+
+::ng-deep .badge-responsable {
+  background-color: #e760ff;
+  color: white;
+}
+
+::ng-deep .badge-rh {
+  background-color: #ffc260;
+  color: white;
+}
+
+::ng-deep .badge-default {
+  background-color: #27ff84;
+  color: white;
+}
+
+/* Styles existants pour les autres badges */
+::ng-deep .badge-technician {
+  background-color: #3b82f6;
+  color: white;
+}
+
+::ng-deep .badge-not-technician {
+  background-color: #6b7280;
+  color: white;
+}
+
+::ng-deep .status-termine {
+  background-color: #10b981;
+  color: white;
+}
+
+::ng-deep .status-en-attente {
+  background-color: #f59e0b;
+  color: white;
+}

@@ -1,6 +1,6 @@
 // Modifications dans datatable.component.ts
 
-import { Component, Input, Output, EventEmitter, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, SimpleChanges, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -32,13 +32,17 @@ export interface PaginationParams {
   limit: number;
   searchQuery?: string;
   activeTab?: string;
-  dateFilter?: DateFilterOptions;
+  statusFilter?: string;
+  dateRange?: {
+    start?: Date | null;
+    end?: Date | null;
+  };
 }
 
-export interface DateFilterOptions {
-  day?: string;
-  month?: string;
-  year?: string;
+export interface StatusFilterOption {
+  value: string;
+  label: string;
+  count?: number;
 }
 
 @Component({
@@ -69,40 +73,29 @@ export class datatable implements OnInit {
   @Input() currentPage: number = 1;
   @Input() lastPage: number = 1;
   @Input() showDateFilterButton: boolean = true;
-  @Input() serverSideSearch: boolean = true; // Nouveau: pour indiquer si la recherche est côté serveur
-  
+  @Input() serverSideSearch: boolean = true; 
+  @Input() statusFilterOptions: StatusFilterOption[] = [];
+  @Input() dateRangeFilterEnabled: boolean = true;
+  @Input() showDateFilter: boolean = false;
+
   @Output() addClicked = new EventEmitter<void>();
   @Output() rowSelect = new EventEmitter<any[]>();
   @Output() tabChange = new EventEmitter<string>();
   @Output() exportData = new EventEmitter<string>();
   @Output() pageChange = new EventEmitter<PaginationParams>();
+  @Output() statusFilter = new EventEmitter<string[]>();
+  @Output() dateRangeFilter = new EventEmitter<{start: Date|null, end: Date|null}>();
 
   activeTab: string = '';
   paginatedData: any[] = [];
-  dateFilter: DateFilterOptions = {};
-  showDateFilter: boolean = false;
   filteredData: any[] = [];
   searchQuery: string = '';
   private searchTimeout: any;
-  
-  months = [
-    { value: '1', label: 'January' },
-    { value: '2', label: 'February' },
-    { value: '3', label: 'March' },
-    { value: '4', label: 'April' },
-    { value: '5', label: 'May' },
-    { value: '6', label: 'June' },
-    { value: '7', label: 'July' },
-    { value: '8', label: 'August' },
-    { value: '9', label: 'September' },
-    { value: '10', label: 'October' },
-    { value: '11', label: 'November' },
-    { value: '12', label: 'December' }
-  ];
-  years = Array.from({length: 10}, (_, i) => new Date().getFullYear() - i);
-  days = Array.from({length: 31}, (_, i) => (i + 1).toString());
+  showStatusFilter: boolean = false;
+  selectedStatuses: string[] = [];
+  dateRange: { start: Date | null, end: Date | null } = { start: null, end: null };
 
-  constructor(private translate: TranslateService) {}
+  constructor(private translate: TranslateService,private elementRef: ElementRef) {}
 
   ngOnInit() {
     this.initializeData();
@@ -115,20 +108,12 @@ export class datatable implements OnInit {
     }
   }
 
-  toggleDateFilter() {
-    this.showDateFilter = !this.showDateFilter;
-  }
-
   applyDateFilter() {
     this.currentPage = 1;
     this.emitPageChange();
     this.showDateFilter = false;
   }
 
-  clearDateFilter() {
-    this.dateFilter = {};
-    this.applyDateFilter();
-  }
 
   onTabChange(tabKey: string) {
     this.activeTab = tabKey;
@@ -148,18 +133,6 @@ export class datatable implements OnInit {
   onPageChange(page: number) {
     this.currentPage = page;
     this.emitPageChange();
-  }
-  
-  private emitPageChange() {
-    const params: PaginationParams = {
-      page: this.currentPage,
-      limit: this.entriesPerPage,
-      searchQuery: this.searchQuery.trim() || undefined,
-      activeTab: this.activeTab,
-      dateFilter: Object.keys(this.dateFilter).length ? this.dateFilter : undefined
-    };
-    console.log('Emission pagination:', params);
-    this.pageChange.emit(params);
   }
 
   getTotalPages(): number {
@@ -310,4 +283,101 @@ export class datatable implements OnInit {
       this.initializeData(); // met à jour le tableau et les infos affichées
     }
   }
+
+ toggleStatusFilter() {
+  this.showStatusFilter = !this.showStatusFilter;
+  // Ferme l'autre filtre si ouvert
+  if (this.showStatusFilter && this.showDateFilter) {
+    this.showDateFilter = false;
+  }
+} 
+  toggleDateRangeFilter() {
+    this.showDateFilter = !this.showDateFilter;
+    if (this.showDateFilter && this.showStatusFilter) {
+      this.showStatusFilter = false;
+    }
+  }
+
+  clearDateRangeFilter() {
+    this.dateRange = { start: null, end: null };
+    this.applyDateRangeFilter();
+  }
+
+// Ajoutez cette méthode pour gérer le filtre de statut multiple :
+applyStatusFilterMultiple() {
+  this.statusFilter.emit(this.selectedStatuses);
+  this.showStatusFilter = false;
+}
+
+
+onStatusChange(status: string, isChecked: boolean) {
+  if (isChecked) {
+    if (!this.selectedStatuses.includes(status)) {
+      this.selectedStatuses.push(status);
+    }
+  } else {
+    this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+  }
+  console.log('Statuts sélectionnés:', this.selectedStatuses);
+}
+
+// Ajoutez cette méthode pour vérifier si un statut est sélectionné :
+isStatusSelected(status: string): boolean {
+  return this.selectedStatuses.includes(status);
+}
+
+// Modifiez toggleStatusSelection pour supporter la sélection multiple :
+toggleStatusSelection(status: string) {
+  if (this.selectedStatuses.includes(status)) {
+    this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+  } else {
+    this.selectedStatuses.push(status);
+  }
+  console.log('Statuts sélectionnés après toggle:', this.selectedStatuses);
+}
+
+applyStatusFilter() {
+  this.currentPage = 1;
+  this.statusFilter.emit([...this.selectedStatuses]);
+  this.emitPageChange();
+  this.showStatusFilter = false; // Ferme le menu après application
+}
+// Modifiez clearStatusFilter :
+clearStatusFilter() {
+  this.selectedStatuses = [];
+  this.statusFilter.emit([]);
+  this.applyStatusFilter();
+}
+
+// Dans la méthode emitPageChange(), modifiez pour envoyer tous les statuts :
+private emitPageChange() {
+  const params: PaginationParams = {
+    page: this.currentPage,
+    limit: this.entriesPerPage,
+    searchQuery: this.searchQuery.trim() || undefined,
+    activeTab: this.activeTab,
+    statusFilter: this.selectedStatuses.length > 0 ? this.selectedStatuses.join(',') : undefined,
+    dateRange: (this.dateRange.start || this.dateRange.end) ? {
+      start: this.dateRange.start || undefined,
+      end: this.dateRange.end || undefined
+    } : undefined
+  };
+  this.pageChange.emit(params);
+}
+
+// Corrigez la méthode applyDateRangeFilter :
+applyDateRangeFilter() {
+  this.currentPage = 1;
+  this.dateRangeFilter.emit(this.dateRange);
+  this.emitPageChange();
+  this.showDateFilter = false;
+}
+
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  if (!this.elementRef.nativeElement.contains(event.target)) {
+    this.showStatusFilter = false;
+    this.showDateFilter = false;
+  }
+}
 }

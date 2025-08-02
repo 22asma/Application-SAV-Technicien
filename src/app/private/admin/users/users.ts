@@ -32,9 +32,9 @@ export class Users implements OnInit {
   
   // Configuration des colonnes
   userColumns: DataTableColumn[] = [
-    { key: 'username', label: 'Username', sortable: true, type: 'text', width: '17%' },
-    { key: 'lastName', label: 'Nom', sortable: true, type: 'text', width: '17%' },
-    { key: 'firstName', label: 'Prénom', sortable: true, type: 'text', width: '17%' },
+    { key: 'username', label: 'Username', sortable: true, type: 'text', width: '14%' },
+    { key: 'lastName', label: 'Nom', sortable: true, type: 'text', width: '15%' },
+    { key: 'firstName', label: 'Prénom', sortable: true, type: 'text', width: '15%' },
     {
       key: 'roleName',
       label: 'Rôle',
@@ -46,8 +46,19 @@ export class Users implements OnInit {
         'Technicien': 'badge-technicien',
         'Responsable': 'badge-responsable',
         'Ressource Humaine': 'badge-rh',
-        'Aucun rôle': 'badge-default'
+        'Technicien Supérieur': 'badge-default'
       }
+    },
+     {
+      key: 'isTechnician',
+      label: 'Technicien',
+      sortable: true,
+      type: 'badge',
+      width: '12%',
+      badgeColors: {
+        'true': 'badge-technician',
+        'false': 'badge-not-technician'
+      },
     },
     {
       key: 'statut',
@@ -95,7 +106,8 @@ export class Users implements OnInit {
           nom: user.lastname, 
           prenom: user.firstname,
           roleName: user.role?.name || 'Aucun rôle',
-          statut: user.statut?.toUpperCase() || 'INACTIF'
+          statut: user.statut?.toUpperCase() || 'INACTIF',
+           isTechnician: user.isTechnician || false
         }));
         
         this.total = response.total;

@@ -144,3 +144,31 @@
     max-width: 200px;
   }
 }
+
+.no-data-today {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.no-data-today .no-data-icon {
+  font-size: 3rem;
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.no-data-today h3 {
+  color: #343a40;
+  margin-bottom: 0.5rem;
+}
+
+.no-data-today p {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+}
+
+.no-data-actions .btn {
+  margin: 0 0.5rem;
+}

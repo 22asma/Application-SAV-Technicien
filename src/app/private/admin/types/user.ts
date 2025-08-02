@@ -8,6 +8,7 @@ export interface User {
   password?: string;
   statut?: string;
   roleName?: string;
+  isTechnician?: boolean;
   role?: {
     id: string;
     name: string;

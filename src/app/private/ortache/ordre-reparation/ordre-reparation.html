@@ -28,10 +28,15 @@
       [showPagination]="true"
       [serverSideSearch]="true"
       [entriesPerPageOptions]="[10, 25, 50, 100]"
+      [statusFilterOptions]="statusFilterOptions"
+      [dateRangeFilterEnabled]="true"
+      [showDateFilterButton]="true"
       (exportData)="onExportData($event)"
       (rowSelect)="onRowSelect($event)"
       (filterChange)="onFilterChange($event)"
-      (pageChange)="onPageChange($event)">
+      (pageChange)="onPageChange($event)"
+      (statusFilter)="onStatusFilterChange($event)"
+      (dateRangeFilter)="onDateRangeFilter($event)">
     </app-datatable>
   </div>
 
@@ -41,10 +46,13 @@
       <i class="icon icon-search"></i>
     </div>
     <h3>Aucun résultat trouvé</h3>
-    <p>Aucun ordre de réparation ne correspond à votre recherche "{{ filters.keyword }}"</p>
+    <p>Aucun ordre de réparation ne correspond à vos critères de recherche</p>
     <div class="no-results-actions">
       <button class="btn btn-outline" (click)="clearSearch()">
         <i class="icon icon-x"></i> Effacer la recherche
+      </button>
+      <button class="btn btn-primary" (click)="clearAllFilters()">
+        <i class="icon icon-refresh"></i> Réinitialiser tous les filtres
       </button>
     </div>
   </div>
@@ -52,7 +60,7 @@
   <!-- Message si aucune donnée en général (première fois) -->
   <div *ngIf="!loading && !errorMessage && ordreReparation.length === 0 && !noDataFound && (!filters.keyword || filters.keyword.trim() === '')" class="no-data-message">
     <div class="no-data-icon">
-      <i class="icon icon-file-text"></i> <!-- Icône plus appropriée -->
+      <i class="icon icon-file-text"></i>
     </div>
     <h3>Aucun ordre de réparation</h3>
     <p>Il n'y a encore aucun ordre de réparation dans le système.</p>

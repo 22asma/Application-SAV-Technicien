@@ -18,6 +18,9 @@ export interface OrdreReparationFilters {
   searchQuery?: string;
   statut?: string;
   keyword?: string;
+  startDate?: string;
+  endDate?: string;
+  OrStatut?: string[];
 }
 
 @Injectable({
@@ -38,25 +41,46 @@ export class ORService {
     params = params.set('page', page.toString());
     params = params.set('items', items.toString());
 
+    // Filtre par mot-clé
     if (filters.keyword) {
-    params = params.set('keyword', filters.keyword);
+      params = params.set('keyword', filters.keyword);
     }
     
+    // Filtre par statut unique (pour compatibilité)
     if (filters.statut) {
-      params = params.set('statut', filters.statut);
+      params = params.set('OrStatuts', filters.statut);
     }
+
+    // Filtre par statuts multiples (nouveau)
+    if (filters.OrStatut && filters.OrStatut.length > 0) {
+      // Le backend attend OrStatuts comme paramètre (avec "s")
+      filters.OrStatut.forEach(statut => {
+        params = params.append('OrStatuts', statut);
+      });
+    }
+
+    // Filtres de dates
+    if (filters.startDate) {
+      params = params.set('startDate', filters.startDate);
+    }
+
+    if (filters.endDate) {
+      params = params.set('endDate', filters.endDate);
+    }
+
+    console.log('Paramètres envoyés au backend:', params.toString());
 
     return this.http.get<PaginatedOrdreReparationsResponse>(this.baseUrl, { params }).pipe(
       tap(response => {
-      console.log('Réponse pagination complète OR:', response);
-      console.log('Détail pagination :', {
-        result: response.result,
-        total: response.total,
-        page: response.page,
-        lastPage: response.lastPage,
-        nextPage: response.nextPage
-      });
-    }),
+        console.log('Réponse pagination complète OR:', response);
+        console.log('Détail pagination :', {
+          result: response.result,
+          total: response.total,
+          page: response.page,
+          lastPage: response.lastPage,
+          nextPage: response.nextPage
+        });
+      }),
       catchError(error => {
         console.error('Erreur chargement OR:', error);
         throw error;
@@ -74,24 +98,37 @@ export class ORService {
   }
 
   exportToExcel(filters: OrdreReparationFilters = {}): Observable<Blob> {
-  let params = new HttpParams();
+    let params = new HttpParams();
 
-  // Paramètres de base
-  if (filters.page) params = params.set('page', filters.page.toString());
-  if (filters.items) params = params.set('items', filters.items.toString());
-  
-  // Filtres supplémentaires
-  if (filters.keyword) params = params.set('keyword', filters.keyword);
-  if (filters.statut) params = params.set('statut', filters.statut);
+    // Paramètres de base
+    if (filters.page) params = params.set('page', filters.page.toString());
+    if (filters.items) params = params.set('items', filters.items.toString());
+    
+    // Filtres supplémentaires
+    if (filters.keyword) params = params.set('keyword', filters.keyword);
+    
+    // Gestion des statuts pour l'export
+    if (filters.statut) {
+      params = params.set('OrStatuts', filters.statut);
+    }
+    if (filters.OrStatut && filters.OrStatut.length > 0) {
+      filters.OrStatut.forEach(statut => {
+        params = params.append('OrStatuts', statut);
+      });
+    }
 
-  return this.http.get(`${this.baseUrl}/export`, { 
-    params,
-    responseType: 'blob'
-  }).pipe(
-    catchError(error => {
-      console.error('Erreur export OR:', error);
-      throw error;
-    })
-  );
-}
+    // Filtres de dates pour l'export
+    if (filters.startDate) params = params.set('startDate', filters.startDate);
+    if (filters.endDate) params = params.set('endDate', filters.endDate);
+
+    return this.http.get(`${this.baseUrl}/export`, { 
+      params,
+      responseType: 'blob'
+    }).pipe(
+      catchError(error => {
+        console.error('Erreur export OR:', error);
+        throw error;
+      })
+    );
+  }
 }

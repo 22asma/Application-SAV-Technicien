@@ -4,4 +4,6 @@ export interface ORinterface {
   vehicule?: string;
   client?: string;
   statut?: string;
+  createdAt?: string;
+  dateOR?: string;
 }

@@ -30,9 +30,19 @@ export class Technicien {
   };
   
   columns: DataTableColumn[] = [
-    { key: 'username', label: 'Nom d\'utilisateur', type: 'text', width: '20%' },
-    { key: 'lastName', label: 'Nom', type: 'text', width: '20%' },
-    { key: 'firstName', label: 'Prénom', type: 'text', width: '20%' },
+    { key: 'username', label: 'Nom d\'utilisateur', type: 'text', width: '18%' },
+    { key: 'lastName', label: 'Nom', type: 'text', width: '18%' },
+    { key: 'firstName', label: 'Prénom', type: 'text', width: '18%' },
+    { 
+      key: 'roleName', 
+      label: 'Rôle', 
+      type: 'badge',
+      width: '15%',
+      badgeColors: {
+        'Technicien': 'badge-technicien',
+        'Technicien Supérieur': 'badge-default'
+      }
+    },
     { 
       key: 'statut', 
       label: 'STATUT', 
@@ -62,12 +72,10 @@ export class Technicien {
     this.loadTechniciens();
   }
 
-   loadTechniciens(): void {
+ loadTechniciens(): void {
     this.loading = true;
     this.errorMessage = '';
     this.noDataFound = false;
-    
-    console.log('Envoi requête:', this.filters);
     
     this.usersService.getTechniciens(this.filters).subscribe({
       next: (response) => {
@@ -82,10 +90,12 @@ export class Technicien {
 
         this.techniciens = response.result.map(tech => ({
           id: tech.id,
-          lastName: tech.lastName || 'N/A',
-          firstName: tech.firstName || 'N/A',
+          lastName: tech.lastName || tech.lastName || 'N/A',
+          firstName: tech.firstName || tech.firstName || 'N/A',
           username: tech.username,
-          statut: tech.statut?.toUpperCase() || 'INACTIF'
+          statut: tech.statut?.toUpperCase() || 'INACTIF',
+          isTechnician: true,
+          roleName: tech.role?.name || 'Aucun rôle' // Ajout du nom du rôle
         }));
 
         this.total = response.total;
