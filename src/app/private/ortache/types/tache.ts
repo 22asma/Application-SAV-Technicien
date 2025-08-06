@@ -20,8 +20,9 @@ export interface Tache {
 
 // Vous pouvez créer un enum pour les statuts si nécessaire
 export enum StatutTache {
-  NON_DEMAREE = 'NON_DEMAREE',
-  EN_COURS = 'EN_COURS',
-  TERMINEE = 'TERMINEE',
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  PAUSED ='PAUSED'
   // Ajoutez d'autres valeurs si nécessaire
 }

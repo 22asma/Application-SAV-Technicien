@@ -24,7 +24,6 @@
       [lastPage]="lastPage"
       (pageChange)="onPageChange($event)"
       [showSearch]="true"
-      [showFilters]="false"
       [showExport]="true"
       [showPagination]="true"
       [showAddButton]="true"
@@ -35,7 +34,11 @@
       (addClicked)="onAddClicked()"
       (exportData)="onExportData($event)"
       (rowSelect)="onRowSelect($event)"
-      (filterChange)="onFilterChange($event)">
+      (filterChange)="onFilterChange($event)"
+      [showAddButton]="true"
+      [searchValue]="searchValue"
+      [showFilters]="true"
+      (searchCleared)="onSearchCleared()">
     </app-datatable>
   </div>
 

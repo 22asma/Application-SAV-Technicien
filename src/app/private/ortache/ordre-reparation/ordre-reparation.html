@@ -23,7 +23,7 @@
       [currentPage]="currentPage"
       [lastPage]="lastPage"
       [showSearch]="true"
-      [showFilters]="false"
+      [showFilters]="true"
       [showExport]="true"
       [showPagination]="true"
       [serverSideSearch]="true"
@@ -36,7 +36,10 @@
       (filterChange)="onFilterChange($event)"
       (pageChange)="onPageChange($event)"
       (statusFilter)="onStatusFilterChange($event)"
-      (dateRangeFilter)="onDateRangeFilter($event)">
+      (dateRangeFilter)="onDateRangeFilter($event)"
+      [showFilters]="true"
+      (searchCleared)="onSearchCleared()"
+      [searchValue]="searchValue">
     </app-datatable>
   </div>
 

@@ -32,7 +32,10 @@
       [entriesPerPageOptions]="[10, 25, 50, 100]"
       (exportData)="onExportData($event)"
       (rowSelect)="onRowSelect($event)"
-      (pageChange)="onPageChange($event)">
+      (pageChange)="onPageChange($event)"
+      [showFilters]="true"
+      (searchCleared)="onSearchCleared()"
+      [searchValue]="searchValue">
     </app-datatable>
   </div>
 

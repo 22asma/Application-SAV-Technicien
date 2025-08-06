@@ -101,6 +101,7 @@ export class TechDetails {
       endDate
     ).subscribe({
       next: (response) => {
+        console.log('Données reçues:', response);
         this.journalData = this.transformHistoryData(response);
         this.loading = false;
       },
@@ -115,7 +116,21 @@ export class TechDetails {
   private transformHistoryData(historyItems: any[]): IJournalEntry[] {
   return historyItems.map(item => {
     const dateObj = new Date(item.heure);
+
     let taskDescription = '--';
+
+    const isTaskRelatedType = [
+      PointageType.WORKING,
+      PointageType.PAUSE_TACHE,
+      PointageType.REPRISE_TACHE,
+      PointageType.FIN_TACHE
+    ].includes(item.type as PointageType);
+
+    if (isTaskRelatedType && !item.task) {
+      taskDescription = '[Tâche manquante]'; // Plus explicite
+      console.warn(`Type ${item.type} sans tâche à ${item.heure}`);
+    }
+
     if (item.task) {
       taskDescription = item.task.titre || 
                        item.task.details || 
@@ -124,7 +139,7 @@ export class TechDetails {
 
     return {
       date: dateObj.toLocaleString(),
-      dateFormatted: dateObj.toLocaleDateString('fr-FR'), // Format français de la date
+      dateFormatted: dateObj.toLocaleDateString('fr-FR'),
       type: this.getTypeLabel(item.type),
       rawType: item.type as PointageType,
       tache: taskDescription,
@@ -132,6 +147,7 @@ export class TechDetails {
     };
   });
 }
+
 
   getTypeLabel(type: PointageType): string {
     const typeLabels: Record<PointageType, string> = {

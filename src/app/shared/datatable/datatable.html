@@ -37,10 +37,11 @@
       >
       <!-- Bouton pour effacer la recherche -->
       <button 
-        *ngIf="searchQuery.trim()" 
-        class="clear-search-btn"
-        (click)="searchQuery = ''; applyFilter()"
-        title="Effacer la recherche"
+       *ngIf="searchQuery.trim()" 
+       class="clear-search-btn"
+       (click)="clearSearch()"
+       title="Effacer la recherche"
+       type="button"
       >
         <i class="icon icon-x"></i>
       </button>

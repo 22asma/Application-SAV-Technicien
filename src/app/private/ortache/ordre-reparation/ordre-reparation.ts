@@ -75,7 +75,7 @@ export class OrdreReparation implements OnInit {
   lastPage: number = 1;
   totalEntries: number = 0;
   noDataFound = false;
-
+  searchValue: string = '';
   // Filtres
   filters: OrdreReparationFilters & {
     startDate?: string;
@@ -120,6 +120,7 @@ export class OrdreReparation implements OnInit {
         }
         
         this.loading = false;
+        this.searchValue = this.filters.keyword || '';
       },
       error: (error) => {
         console.error('Erreur lors du chargement:', error);
@@ -172,7 +173,7 @@ export class OrdreReparation implements OnInit {
     // Met à jour les variables locales
     this.currentPage = params.page;
     this.itemsPerPage = params.limit;
-
+    this.searchValue = params.searchQuery || '';
     console.log('Filtres finaux envoyés au backend:', this.filters);
     this.loadORs();
   }
@@ -340,4 +341,13 @@ export class OrdreReparation implements OnInit {
     return '';
   }
 }
+
+ onSearchCleared(): void {
+    this.searchValue = '';
+    this.filters.keyword = '';
+    this.filters.page = 1;
+    this.currentPage = 1;
+    this.noDataFound = false;
+    this.loadORs();
+  }
 }

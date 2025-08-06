@@ -22,7 +22,7 @@ export class Users implements OnInit {
   lastPage: number = 1;
   totalEntries: number = 0;
   noDataFound = false;
-  
+  searchValue: string = '';
   filters: UserFilters = {
     page: 1,
     items: 10,
@@ -89,7 +89,27 @@ export class Users implements OnInit {
   ngOnInit(): void {
     this.loadUsers();
   }
+ onPageChange(params: PaginationParams): void {
+    console.log('Paramètres reçus:', params);
 
+    // Met à jour les filtres exactement comme reçus
+    this.filters = {
+      ...this.filters,
+      page: params.page,
+      items: params.limit,
+      keyword: params.searchQuery || ''
+    };
+
+    // Synchronise la valeur de recherche affichée
+    this.searchValue = params.searchQuery || '';
+
+    this.currentPage = params.page;
+    this.itemsPerPage = params.limit;
+
+    this.loadUsers();
+  }
+
+  // Modifiez loadUsers pour préserver la valeur de recherche
   loadUsers(): void {
     this.loading = true;
     this.errorMessage = '';
@@ -107,15 +127,17 @@ export class Users implements OnInit {
           prenom: user.firstname,
           roleName: user.role?.name || 'Aucun rôle',
           statut: user.statut?.toUpperCase() || 'INACTIF',
-           isTechnician: user.isTechnician || false
+          isTechnician: user.isTechnician || false
         }));
         
         this.total = response.total;
         this.totalEntries = response.total;
         this.currentPage = response.page;
         this.lastPage = response.lastPage;
-        console.log('Données brutes reçues:', response.result);
-        // Vérifier si c'est une recherche qui ne donne aucun résultat
+        
+        // Maintient la valeur de recherche affichée
+        this.searchValue = this.filters.keyword || '';
+        
         if (response.result.length === 0 && this.filters.keyword && this.filters.keyword.trim() !== '') {
           this.noDataFound = true;
         }
@@ -133,24 +155,27 @@ export class Users implements OnInit {
     });
   }
 
-  onPageChange(params: PaginationParams): void {
-  console.log('Paramètres reçus:', params);
+  // Méthode pour gérer l'effacement de la recherche
+  onSearchCleared(): void {
+    this.searchValue = '';
+    this.filters.keyword = '';
+    this.filters.page = 1;
+    this.currentPage = 1;
+    this.noDataFound = false;
+    this.loadUsers();
+  }
 
-  // Met à jour les filtres
-  this.filters = {
-    ...this.filters,
-    page: params.page,
-    items: params.limit,
-    keyword: params.searchQuery || ''
-  };
-
-  // 🔁 Ces valeurs doivent aussi être mises à jour manuellement :
-  this.currentPage = params.page;
-  this.itemsPerPage = params.limit;
-
+clearSearch(): void {
+  this.filters.keyword = '';
+  this.filters.page = 1;
+  this.noDataFound = false;
   this.loadUsers();
 }
 
+// 🔥 AJOUT : Méthode pour gérer l'effacement depuis le datatable
+onSearchClear(): void {
+  this.clearSearch();
+}
 
   onSearch(keyword: string): void {
     this.filters.keyword = keyword;
@@ -273,11 +298,4 @@ private handleExportResponse(blob: Blob): void {
     console.log('Filtres changés:', filters);
   }
 
-  // Méthode pour réinitialiser la recherche
-  clearSearch(): void {
-    this.filters.keyword = '';
-    this.filters.page = 1;
-    this.noDataFound = false;
-    this.loadUsers();
-  }
 }

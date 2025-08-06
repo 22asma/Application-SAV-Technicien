@@ -77,6 +77,7 @@ export class datatable implements OnInit {
   @Input() statusFilterOptions: StatusFilterOption[] = [];
   @Input() dateRangeFilterEnabled: boolean = true;
   @Input() showDateFilter: boolean = false;
+  @Input() searchValue: string = '';
 
   @Output() addClicked = new EventEmitter<void>();
   @Output() rowSelect = new EventEmitter<any[]>();
@@ -85,11 +86,11 @@ export class datatable implements OnInit {
   @Output() pageChange = new EventEmitter<PaginationParams>();
   @Output() statusFilter = new EventEmitter<string[]>();
   @Output() dateRangeFilter = new EventEmitter<{start: Date|null, end: Date|null}>();
-
+  @Output() searchCleared = new EventEmitter<void>();
   activeTab: string = '';
   paginatedData: any[] = [];
   filteredData: any[] = [];
-  searchQuery: string = '';
+  searchQuery: string = ''; 
   private searchTimeout: any;
   showStatusFilter: boolean = false;
   selectedStatuses: string[] = [];
@@ -98,6 +99,7 @@ export class datatable implements OnInit {
   constructor(private translate: TranslateService,private elementRef: ElementRef) {}
 
   ngOnInit() {
+    this.searchQuery = this.searchValue || '';
     this.initializeData();
     this.initializeFilters();
   }
@@ -210,28 +212,18 @@ export class datatable implements OnInit {
   getMinCurrentPageEntries(): number {
     return Math.min(this.currentPage * this.entriesPerPage, this.totalEntries);
   }
-  
-  // Méthode pour la recherche côté serveur (modifiée)
-  applyFilter() {
-    if (this.serverSideSearch) {
-      this.currentPage = 1; 
-      this.emitPageChange(); 
-    } else {
-      this.applyLocalFilter();
-    }
-  }
 
-  // Méthode pour la recherche côté serveur avec debounce
-  applyFilterWithDebounce() {
-    if (this.serverSideSearch) {
-      clearTimeout(this.searchTimeout);
-      this.searchTimeout = setTimeout(() => {
-        this.applyFilter();
-      }, 900); // Augmenté à 500ms pour plus de stabilité
-    } else {
-      this.applyLocalFilter();
-    }
+  // Méthode pour appliquer le filtre avec debounce
+applyFilterWithDebounce() {
+  if (this.serverSideSearch) {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.applyFilter();
+    }, 500);
+  } else {
+    this.applyLocalFilter();
   }
+}
 
   // Méthode pour le filtrage local (quand serverSideSearch = false)
   private applyLocalFilter() {
@@ -270,17 +262,6 @@ export class datatable implements OnInit {
       this.filteredData = [...this.data];
       this.totalEntries = this.data.length;
       this.updatePaginatedData();
-    }
-  }
-
-  nngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['data'] || 
-      changes['entriesPerPage'] || 
-      changes['currentPage'] || 
-      changes['totalEntries']
-    ) {
-      this.initializeData(); // met à jour le tableau et les infos affichées
     }
   }
 
@@ -349,7 +330,17 @@ clearStatusFilter() {
   this.applyStatusFilter();
 }
 
-// Dans la méthode emitPageChange(), modifiez pour envoyer tous les statuts :
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes['data'] || changes['entriesPerPage'] || changes['currentPage'] || changes['totalEntries']) {
+    this.initializeData();
+  }
+  
+  // Synchronise la valeur de recherche avec le parent
+  if (changes['searchValue']) {
+    this.searchQuery = this.searchValue || '';
+  }
+}
+
 private emitPageChange() {
   const params: PaginationParams = {
     page: this.currentPage,
@@ -365,6 +356,22 @@ private emitPageChange() {
   this.pageChange.emit(params);
 }
 
+// Méthode pour appliquer le filtre immédiatement
+applyFilter() {
+  if (this.serverSideSearch) {
+    this.currentPage = 1;
+    this.emitPageChange();
+  } else {
+    this.applyLocalFilter();
+  }
+}
+
+clearSearch() {
+  this.searchQuery = '';
+  this.applyFilter();
+  // Émettez un événement pour notifier le parent
+  this.searchCleared.emit();
+}
 // Corrigez la méthode applyDateRangeFilter :
 applyDateRangeFilter() {
   this.currentPage = 1;

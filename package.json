@@ -29,6 +29,7 @@
     "@syncfusion/ej2-lists": "^30.1.37",
     "@syncfusion/ej2-popups": "^30.1.37",
     "@syncfusion/ej2-splitbuttons": "^30.1.37",
+    "chart.js": "^4.5.0",
     "moment": "^2.30.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

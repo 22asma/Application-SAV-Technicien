@@ -22,7 +22,7 @@ export class Technicien {
   lastPage = 1;
   totalEntries = 0;
   noDataFound = false;
-
+  searchValue: string = '';
   filters: UserFilters = {
     page: 1,
     items: 10,
@@ -106,7 +106,7 @@ export class Technicien {
         if (this.techniciens.length === 0) {
           this.noDataFound = true;
         }
-        
+        this.searchValue = this.filters.keyword || '';
         this.loading = false;
       },
       error: (err) => {
@@ -131,15 +131,25 @@ export class Technicien {
     keyword: params.searchQuery || ''
   };
 
-  // 🔁 Ces valeurs doivent aussi être mises à jour manuellement :
   this.currentPage = params.page;
   this.itemsPerPage = params.limit;
+  this.searchValue = params.searchQuery || '';
 
   this.loadTechniciens();
 }
   onSearch(keyword: string): void {
     this.filters.keyword = keyword;
     this.filters.page = 1;
+    this.loadTechniciens();
+  }
+
+  // Méthode pour gérer l'effacement de la recherche
+  onSearchCleared(): void {
+    this.searchValue = '';
+    this.filters.keyword = '';
+    this.filters.page = 1;
+    this.currentPage = 1;
+    this.noDataFound = false;
     this.loadTechniciens();
   }
 

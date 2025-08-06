@@ -11,283 +11,387 @@
     </div>
     
     <div class="top-widgets">
-      <div class="top-widget">
-        <div class="widget-icon orders">
-          <i class="fas fa-clipboard-list"></i>
+      <!-- Widget OR aujourd'hui -->
+      <div class="top-widget" [class.loading]="loading">
+        <div class="widget-icon today-orders">
+          <i class="fas fa-calendar-day"></i>
         </div>
         <div class="widget-content">
-          <h3>{{ stats.totalOR }}</h3>
-          <p>Total OR</p>
+          <h3>{{ stats.totalORToday }}</h3>
+          <p>OR créés aujourd'hui</p>
         </div>
       </div>
       
-      <div class="top-widget">
-        <div class="widget-icon tasks">
+      <!-- Widget Tâches aujourd'hui -->
+      <div class="top-widget" [class.loading]="loading">
+        <div class="widget-icon today-tasks">
           <i class="fas fa-tasks"></i>
         </div>
         <div class="widget-content">
-          <h3>{{ getTotalTaches() }}</h3>
-          <p>Total Tâches</p>
+          <h3>{{ stats.totalTachesToday }}</h3>
+          <p>Tâches aujourd'hui</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
-    <div class="loading-spinner"></div>
-    <p>Chargement des données...</p>
-  </div>
-
-  <!-- Error State -->
-  <div *ngIf="errorMessage" class="error-container">
-    <p>{{ errorMessage }}</p>
-    <button (click)="refreshDashboard()">Réessayer</button>
-  </div>
-
-  <!-- Dashboard Content -->
-  <div *ngIf="!loading && !errorMessage" class="dashboard-content">
+  <!-- Section des widgets techniciens -->
+  <div class="technicians-widgets-section">
+    <h2 class="section-title">
+      <i class="fas fa-users"></i>
+      Statistiques Techniciens
+    </h2>
     
-    <!-- Main Stats Cards -->
-    <div class="main-stats-grid">
-      <!-- Technicien du mois -->
-      <div class="stat-card highlight">
-        <div class="stat-icon crown">👑</div>
-        <div class="stat-content">
-          <h3>Mohamed Ali</h3>
-          <p>Technicien du mois (42 tâches)</p>
+    <div class="technicians-widgets-grid">
+      <!-- Widget 1: Nombre total de techniciens -->
+      <div class="technician-widget total-technicians" [class.loading]="technicianStatsLoading">
+        <div class="widget-icon-tech total-icon">
+          <i class="fas fa-user-cog"></i>
+        </div>
+        <div class="widget-content-tech">
+          <h3>{{ technicianStats.totalTechnicians }}</h3>
+          <p>Techniciens au total</p>
+          <div class="widget-footer">
+            <small>Équipe complète</small>
+          </div>
         </div>
       </div>
-      
-      <!-- Technicien rapide -->
-      <div class="stat-card">
-        <div class="stat-icon fast">⚡</div>
-        <div class="stat-content">
-          <h3>Sophie Martin</h3>
-          <p>Record: 1h22/tâche</p>
+
+      <!-- Widget 2: Techniciens pointés aujourd'hui -->
+      <div class="technician-widget active-technicians" [class.loading]="technicianStatsLoading">
+        <div class="widget-icon-tech active-icon">
+          <i class="fas fa-user-check"></i>
         </div>
-      </div>
-      
-      <!-- Techniciens pointés -->
-      <div class="stat-card">
-        <div class="stat-icon checked">✓</div>
-        <div class="stat-content">
-          <h3>18</h3>
+        <div class="widget-content-tech">
+          <h3>{{ technicianStats.activeTechnicians }}</h3>
           <p>Techniciens pointés</p>
+          <div class="widget-footer">
+            <small>Aujourd'hui</small>
+            <div class="active-rate">
+              <span class="rate-value">
+                {{ technicianStats.totalTechnicians > 0 ? ((technicianStats.activeTechnicians / technicianStats.totalTechnicians) * 100).toFixed(0) : 0 }}%
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Retards -->
-      <div class="stat-card warning">
-        <div class="stat-icon late">⌛</div>
-        <div class="stat-content">
-          <h3>3</h3>
-          <p>Retards ce mois</p>
+      <!-- Widget 3: Technicien avec le plus de tâches terminées -->
+      <div class="technician-widget top-performer" [class.loading]="technicianStatsLoading">
+        <div class="widget-icon-tech performer-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <div class="widget-content-tech">
+          <div *ngIf="technicianStats.topTasksCompleter; else noTopCompleter">
+            <h3>{{ technicianStats.topTasksCompleter.completedTasks }}</h3>
+            <p>{{ technicianStats.topTasksCompleter.name }}</p>
+            <div class="widget-footer">
+              <small>Tâches terminées</small>
+              <div class="performance-badge top">
+                <i class="fas fa-star"></i>
+                Top performer
+              </div>
+            </div>
+          </div>
+          <ng-template #noTopCompleter>
+            <h3>-</h3>
+            <p>Aucune donnée</p>
+            <div class="widget-footer">
+              <small>Pas assez de données</small>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Widget 4: Technicien le plus rapide -->
+      <div class="technician-widget fastest-worker" [class.loading]="technicianStatsLoading">
+        <div class="widget-icon-tech fastest-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div class="widget-content-tech">
+          <div *ngIf="technicianStats.fastestWorker; else noFastestWorker">
+            <h3>{{ getFormattedAverageTime(technicianStats.fastestWorker.averageTime) }}</h3>
+            <p>{{ technicianStats.fastestWorker.name }}</p>
+            <div class="widget-footer">
+              <small>Temps moyen par tâche</small>
+              <div class="performance-badge fastest">
+                <i class="fas fa-rocket"></i>
+                Plus rapide
+              </div>
+            </div>
+          </div>
+          <ng-template #noFastestWorker>
+            <h3>-</h3>
+            <p>Aucune donnée</p>
+            <div class="widget-footer">
+              <small>Pas assez de données</small>
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Top Row - Pie Chart and Summary Side by Side -->
-    <div class="top-row-section">
-      <!-- Pie Chart - Répartition des tâches -->
-      <div class="chart-container">
-        <div class="chart-header">
-          <h3>Répartition des tâches</h3>
-          <div class="chart-period-selector">
-            <button class="period-btn active">Mois</button>
-            <button class="period-btn">Trimestre</button>
-          </div>
-        </div>
-        <div class="chart-content">
-          <div class="pie-chart-container">
-            <div class="pie-chart">
-              <div class="pie-slice" style="--percentage:65%; --color:#10B981;"></div>
-              <div class="pie-slice" style="--percentage:25%; --color:#F59E0B;"></div>
-              <div class="pie-slice" style="--percentage:10%; --color:#EF4444;"></div>
-              <div class="pie-center">
-                <span>156</span>
-                <small>Total</small>
-              </div>
+  <!-- Charts Section -->
+  <div class="charts-section">
+    <div class="charts-grid">
+      <div class="chart-alerts-container">
+      <!-- Pie Chart Card -->
+        <div class="chart-card"> 
+          <div class="chart-header">
+            <h2>Répartition des OR par Statut</h2>
+            <div class="chart-controls">
+
+            <div class="period-selector">
+              <button 
+                class="period-btn" 
+                [class.active]="selectedPeriod === 'today'"
+                (click)="onPeriodChange('today')">
+                Aujourd'hui
+              </button>
+              <button 
+                 class="period-btn" 
+                 [class.active]="selectedPeriod === 'month'"
+                 (click)="onPeriodChange('month')">
+                 Mois
+              </button>
             </div>
-            <div class="pie-legend">
-              <div class="legend-item">
-                <div class="legend-color" style="background: #10B981;"></div>
-                <div class="legend-text">
-                  <span>Terminées</span>
-                  <strong>102 (65%)</strong>
-                </div>
+      
+      <!-- Sélecteur de mois (visible seulement si période = mois) -->
+             <div class="month-selector" *ngIf="selectedPeriod === 'month'">
+               <input 
+                 type="month" 
+                 [value]="getFormattedMonth()"
+                 (change)="onMonthChange($event)"
+                 class="month-input">
               </div>
-              <div class="legend-item">
-                <div class="legend-color" style="background: #F59E0B;"></div>
-                <div class="legend-text">
-                  <span>En cours</span>
-                  <strong>39 (25%)</strong>
-                </div>
-              </div>
-              <div class="legend-item">
-                <div class="legend-color" style="background: #EF4444;"></div>
-                <div class="legend-text">
-                  <span>En attente</span>
-                  <strong>15 (10%)</strong>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
+  </div>
+  
+  <div class="chart-content-simple">
+    <!-- Conteneur du graphique -->
+    <div class="chart-container">
+      <canvas #pieChartCanvas></canvas>
+    </div>
+    
+    <!-- Statistiques simplifiées -->
+    <div class="simple-stats">
+      <div class="simple-stat">
+        <span class="stat-dot en-attente"></span>
+        <span class="stat-value">{{ pieChartStats.NOT_STARTED }}</span>
       </div>
-
-      <!-- Summary Section -->
-      <div class="summary-section">
-        <div class="section-header">
-          <h3><i class="fas fa-chart-line"></i> Résumé de la journée</h3>
-        </div>
-        <div class="summary-content">
-          <div class="summary-item">
-            <div class="summary-icon" style="background: #4299e1;">
-              <i class="fas fa-clipboard-list"></i>
-            </div>
-            <div class="summary-text">
-              <span class="summary-label">Total OR:</span>
-              <span class="summary-value">{{ stats.totalOR }}</span>
-            </div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-icon" style="background: #10B981;">
-              <i class="fas fa-users"></i>
-            </div>
-            <div class="summary-text">
-              <span class="summary-label">Techniciens actifs:</span>
-              <span class="summary-value">{{ stats.techniciensActifs }}/{{ stats.totalTechniciens }}</span>
-            </div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-icon" style="background: #F59E0B;">
-              <i class="fas fa-calendar-check"></i>
-            </div>
-            <div class="summary-text">
-              <span class="summary-label">Tâches planifiées:</span>
-              <span class="summary-value">{{ stats.tachesPlanifiees }}</span>
-            </div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-icon" style="background: #EF4444;">
-              <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <div class="summary-text">
-              <span class="summary-label">Interventions urgentes:</span>
-              <span class="summary-value">{{ stats.interventionsUrgentes }}</span>
-            </div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-icon" style="background: #667EEA;">
-              <i class="fas fa-clock"></i>
-            </div>
-            <div class="summary-text">
-              <span class="summary-label">Temps moyen d'intervention:</span>
-              <span class="summary-value">{{ stats.tempsMoyenIntervention }}</span>
-            </div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-icon" style="background: #9F7AEA;">
-              <i class="fas fa-smile"></i>
-            </div>
-            <div class="summary-text">
-              <span class="summary-label">Satisfaction client:</span>
-              <span class="summary-value">{{ stats.satisfactionClient }}%</span>
-            </div>
-          </div>
-        </div>
+      <div class="simple-stat">
+        <span class="stat-dot en-cours"></span>
+        <span class="stat-value">{{ pieChartStats.IN_PROGRESS }}</span>
+      </div>
+      <div class="simple-stat">
+        <span class="stat-dot termine"></span>
+        <span class="stat-value">{{ pieChartStats.COMPLETED }}</span>
       </div>
     </div>
-
-    <!-- Bottom Row - Bar Chart, Alerts and Actions -->
-    <div class="bottom-row-section">
-      <!-- Bar Chart - OR terminés -->
-      <div class="chart-container">
+    
+    <div class="simple-total">
+      Total: {{ getTotalORForPieChart() }} OR
+    </div>
+  </div>
+        </div>
+      <!-- Partie Alertes -->
+        <div class="alerts-part">
+         <h3 class="alerts-title">
+            <i class="fas fa-exclamation-triangle"></i> Alertes
+          </h3>
+  
+  <!-- Techniciens non pointés -->
+        <div class="alert-item unclocked">
+          <div class="alert-icon">
+           <i class="fas fa-user-clock"></i>
+           </div>
+         <div class="alert-content">
+         <div class="alert-value">{{ alertStats.unclockedTechnicians }}</div>
+          <div class="alert-label">Techniciens non pointés</div>
+         </div>
+        </div>
+  
+   <!-- Techniciens en retard -->
+       <div class="alert-item late">
+           <div class="alert-icon">
+           <i class="fas fa-running"></i>
+          </div>
+         <div class="alert-content">
+         <div class="alert-value">{{ alertStats.lateTechnicians }}</div>
+         <div class="alert-label">Retards de pointage</div>
+      <!-- Liste des techniciens en retard -->
+         <div class="late-technicians-list" *ngIf="alertStats.lateTechnicians > 0">
+          <div class="late-technician" *ngFor="let tech of alertStats.lateTechniciansList">
+          {{ tech.firstName }} {{ tech.lastName }}
+          </div>
+        </div>
+       </div>
+       </div>
+        </div>
+      </div>
+      <!-- Bar Chart Card pour les tâches -->
+      <div class="chart-card tasks-chart-card">
         <div class="chart-header">
-          <h3>OR complétés par semaine</h3>
-          <div class="chart-period-selector">
-            <button class="period-btn">Semaine</button>
-            <button class="period-btn active">Mois</button>
-            <button class="period-btn">Année</button>
+          <h2>
+            <i class="fas fa-chart-bar chart-icon"></i>
+            Statistiques des Tâches
+          </h2>
+          <div class="chart-badge">
+            <i class="fas fa-tasks"></i>
+            <span>{{ getTotalTasksForBarChart() }} tâches</span>
           </div>
         </div>
-        <div class="chart-content">
-          <div class="bar-chart">
-            <div class="bar-chart-grid">
-              <div class="grid-line"></div>
-              <div class="grid-line"></div>
-              <div class="grid-line"></div>
-              <div class="grid-line"></div>
+        
+        <div class="chart-content-tasks">
+          <!-- Bar Chart Container -->
+          <div class="bar-chart-section">
+            <div class="chart-container bar-chart-container">
+              <canvas #barChartCanvas></canvas>
             </div>
-            <div class="bar-chart-bars">
-              <div class="bar-container" *ngFor="let item of orCompletedData">
-                <div class="bar" [style.height.%]="(item.value/maxOrValue)*100"></div>
-                <span class="bar-label">{{item.label}}</span>
-                <span class="bar-value">{{item.value}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column - Alerts and Actions -->
-      <div class="right-column">
-        <!-- Alerts Section -->
-          <div class="alerts-section">
-        <div class="section-header">
-          <h3><i class="fas fa-exclamation-triangle"></i> Alertes</h3>
-        </div>
-        <div class="alerts-list">
-          <!-- Alertes statiques supplémentaires -->
-          <div class="alert-item critical">
-            <div class="alert-icon">
-              <i class="fas fa-fire"></i>
-            </div>
-            <span>3 OR en retard de plus de 7 jours</span>
-            <div class="alert-badge">Urgent</div>
-          </div>
-          
-          <div class="alert-item info">
-            <div class="alert-icon">
-              <i class="fas fa-user-clock"></i>
-            </div>
-            <span>2 techniciens n'ont pas pointé aujourd'hui</span>
-          </div>
-          
-          <!-- Alertes dynamiques -->
-          <div *ngFor="let alerte of alertes" class="alert-item">
-            <div class="alert-icon">
-              <i class="fas fa-bell"></i>
-            </div>
-            <span>{{ alerte }}</span>
-          </div>
-        </div>
-      </div>
-
-        <!-- Quick Actions -->
-        <div class="actions-section">
-          <div class="section-header">
-            <h3><i class="fas fa-bolt"></i> Actions rapides</h3>
-          </div>
-          <div class="actions-grid">
-            <button class="action-btn" (click)="exportTechniciens()" [disabled]="loadingExport">
-              <i class="fas fa-file-export"></i>
-              <span>Exporter Techniciens</span>
-            </button>
             
-            <button class="action-btn" (click)="exportOR()" [disabled]="loadingExport">
-              <i class="fas fa-file-export"></i>
-              <span>Exporter OR</span>
-            </button>
+            <!-- Progress indicators -->
+            <div class="progress-indicators">
+              <div class="progress-item">
+                <div class="progress-label">
+                  <span class="progress-dot completed"></span>
+                  <span>Taux de completion</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill completed" [style.width.%]="getCompletionRate()"></div>
+                </div>
+                <span class="progress-value">{{ getCompletionRate() }}%</span>
+              </div>
+              
+              <div class="progress-item">
+                <div class="progress-label">
+                  <span class="progress-dot in-progress"></span>
+                  <span>En cours de traitement</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill in-progress" [style.width.%]="getInProgressRate()"></div>
+                </div>
+                <span class="progress-value">{{ getInProgressRate() }}%</span>
+              </div>
+            </div>
           </div>
           
-          <div *ngIf="loadingExport" class="export-loading">
-            <i class="fas fa-spinner fa-spin"></i>
-            <span>Export en cours...</span>
+          <!-- Statistiques détaillées des tâches -->
+          <div class="task-stats-grid">
+            <!-- Répartition par statut -->
+            <div class="task-stat-card status-card">
+              <div class="card-header">
+                <h4><i class="fas fa-pie-chart"></i> Répartition par Statut</h4>
+              </div>
+              <div class="task-status-list">
+                <div class="task-status-item todo">
+                  <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-label">À faire</span>
+                  </div>
+                  <span class="status-count">{{ barChartStats.NOT_STARTED }}</span>
+                </div>
+                <div class="task-status-item progress">
+                  <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-label">En cours</span>
+                  </div>
+                  <span class="status-count">{{ barChartStats.IN_PROGRESS }}</span>
+                </div>
+                <div class="task-status-item completed">
+                  <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-label">Terminé</span>
+                  </div>
+                  <span class="status-count">{{ barChartStats.COMPLETED }}</span>
+                </div>
+                <div class="task-status-item paused">
+                  <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-label">En pause</span>
+                  </div>
+                  <span class="status-count">{{ barChartStats.PAUSED }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Temps moyen -->
+            <div class="task-stat-card metric-card" *ngIf="taskStats.averageDuration > 0">
+              <div class="card-header">
+                <h4><i class="fas fa-clock"></i> Temps Moyen</h4>
+              </div>
+              <div class="metric-display">
+                <div class="metric-value">
+                  <span class="metric-number">{{ getFormattedDuration(taskStats.averageDuration) }}</span>
+                  <small>par tâche</small>
+                </div>
+                <div class="metric-icon">
+                  <i class="fas fa-stopwatch"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tâche la plus longue -->
+            <div class="task-stat-card detail-card" *ngIf="taskStats.longestTask">
+              <div class="card-header">
+                <h4><i class="fas fa-hourglass-end"></i> Tâche la Plus Longue</h4>
+              </div>
+              <div class="task-detail">
+                <div class="task-title">{{ taskStats.longestTask.titre }}</div>
+                <div class="task-duration-info">
+                  <span class="duration-badge longest">
+                    {{ getTaskDurationInfo(taskStats.longestTask).formattedDuration }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tâche la plus rapide -->
+            <div class="task-stat-card detail-card" *ngIf="taskStats.fastestTask">
+              <div class="card-header">
+                <h4><i class="fas fa-bolt"></i> Tâche la Plus Rapide</h4>
+              </div>
+              <div class="task-detail">
+                <div class="task-title">{{ taskStats.fastestTask.titre }}</div>
+                <div class="task-duration-info">
+                  <span class="duration-badge fastest">
+                    {{ getTaskDurationInfo(taskStats.fastestTask).formattedDuration }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card statistiques globales -->
+            <div class="task-stat-card summary-card">
+              <div class="card-header">
+                <h4><i class="fas fa-chart-line"></i> Résumé</h4>
+              </div>
+              <div class="summary-stats">
+                <div class="summary-item">
+                  <span class="summary-label">Total tâches</span>
+                  <span class="summary-value">{{ taskStats.totalTasks }}</span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">Période</span>
+                  <span class="summary-value">{{ getPeriodLabel() }}</span>
+                </div>
+                <div class="summary-item" *ngIf="taskStats.averageDuration > 0">
+                  <span class="summary-label">Temps total estimé</span>
+                  <span class="summary-value">{{ getFormattedDuration(taskStats.averageDuration * taskStats.totalTasks) }}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Chargement des données...</p>
     </div>
   </div>
 </div>
