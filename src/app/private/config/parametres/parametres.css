@@ -2,7 +2,7 @@
 .container {
   padding: 24px;
   margin: 0 auto;
-  max-width: 1400px; /* Largeur maximale augmentée */
+  max-width: 1400px;
 }
 
 /* Carte plus spacieuse avec ombre et bordure arrondie */
@@ -31,6 +31,45 @@ mat-card-subtitle {
   color: #666;
 }
 
+/* Conteneur de chargement */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  gap: 16px;
+}
+
+.loading-container p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Conteneur d'erreur */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  gap: 16px;
+  text-align: center;
+}
+
+.error-container mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+.error-container p {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+}
+
 /* Sections plus aérées */
 .param-section {
   margin-bottom: 32px;
@@ -38,6 +77,7 @@ mat-card-subtitle {
   padding: 20px;
   border-radius: 8px;
   border: 1px solid #eee;
+  position: relative;
 }
 
 .param-section h3 {
@@ -45,6 +85,34 @@ mat-card-subtitle {
   font-weight: 500;
   margin-top: 0;
   color: #444;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Badges pour distinguer les types de paramètres */
+.dynamic-badge {
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+}
+
+.static-badge {
+  background: linear-gradient(135deg, #ea00ff, #b000f5);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
 }
 
 /* Lignes de paramètres plus espacées */
@@ -55,10 +123,19 @@ mat-card-subtitle {
   padding: 16px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   gap: 24px;
+  transition: all 0.3s ease;
 }
 
 .param-row:last-child {
   border-bottom: none;
+}
+
+.param-row:hover {
+  background-color: rgba(0, 104, 255, 0.02);
+  margin: 0 -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 6px;
 }
 
 /* Texte plus lisible */
@@ -91,6 +168,10 @@ mat-slide-toggle {
   transform: scale(1.1);
 }
 
+mat-slide-toggle[disabled] {
+  opacity: 0.6;
+}
+
 /* Champs de formulaire améliorés */
 mat-form-field {
   width: 150px;
@@ -114,11 +195,31 @@ button[mat-raised-button] {
   border-radius: 8px;
   transition: all 0.3s ease;
   box-shadow: 0 3px 6px rgba(63, 81, 181, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-button[mat-raised-button]:hover {
+button[mat-raised-button]:hover:not([disabled]) {
   transform: translateY(-2px);
   box-shadow: 0 5px 10px rgba(63, 81, 181, 0.3);
+}
+
+button[mat-raised-button][disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button[mat-raised-button] mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Animation pour les changements */
@@ -129,6 +230,17 @@ button[mat-raised-button]:hover {
 
 .param-row {
   animation: fadeIn 0.3s ease forwards;
+}
+
+/* Styles pour les snackbars */
+.success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
 }
 
 /* Responsive pour petits écrans */
@@ -154,5 +266,11 @@ button[mat-raised-button]:hover {
   
   mat-card-actions {
     justify-content: center;
+  }
+  
+  .param-section h3 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }

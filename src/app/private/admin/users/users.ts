@@ -5,6 +5,8 @@ import { AddUser } from './add-user/add-user';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from '../types/user';
 import { EditUser } from './edit-user/edit-user';
+import { TranslateService } from '@ngx-translate/core';
+import { QrCode } from './qr-code/qr-code';
 
 @Component({
   selector: 'app-users',
@@ -30,86 +32,195 @@ export class Users implements OnInit {
     roleId: ''
   };
   
-  // Configuration des colonnes
-  userColumns: DataTableColumn[] = [
-    { key: 'username', label: 'Username', sortable: true, type: 'text', width: '14%' },
-    { key: 'lastName', label: 'Nom', sortable: true, type: 'text', width: '15%' },
-    { key: 'firstName', label: 'Prénom', sortable: true, type: 'text', width: '15%' },
-    {
-      key: 'roleName',
-      label: 'Rôle',
-      sortable: true,
-      type: 'badge',
-      width: '15%',
-      badgeColors: {
-        'Admin': 'badge-admin',
-        'Technicien': 'badge-technicien',
-        'Responsable': 'badge-responsable',
-        'Ressource Humaine': 'badge-rh',
-        'Technicien Supérieur': 'badge-default'
-      }
-    },
-     {
-      key: 'isTechnician',
-      label: 'Technicien',
-      sortable: true,
-      type: 'badge',
-      width: '12%',
-      badgeColors: {
-        'true': 'badge-technician',
-        'false': 'badge-not-technician'
-      },
-    },
-    {
-      key: 'statut',
-      label: 'Statut',
-      sortable: true,
-      type: 'badge',
-      width: '15%',
-      badgeColors: {
-        'INACTIVE': 'status-en-attente',
-        'ACTIVE': 'status-termine'
-      }
-    }
-  ];
-
-  userActions: DataTableAction[] = [
-    {
-      icon: 'icon-edit',
-      label: 'Modifier',
-      callback: (item: User) => this.editUser(item)
-    }
-  ];
+  // Initialize with empty arrays, will be populated after translations load
+  userColumns: DataTableColumn[] = [];
+  userActions: DataTableAction[] = [];
+  isTranslationsLoaded = false;
 
   constructor(
     private usersService: UsersService,
-    private dialog: MatDialog
-  ) {}
+    private dialog: MatDialog,
+    private translate: TranslateService
+  ) {
+    this.translate.get('users.columns.username').subscribe(translation => {
+    console.log('Translation loaded:', translation);
+  });
+  }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // Wait for translations to load before initializing
+    await this.initializeTranslations();
     this.loadUsers();
   }
- onPageChange(params: PaginationParams): void {
-    console.log('Paramètres reçus:', params);
 
-    // Met à jour les filtres exactement comme reçus
+  async initializeTranslations(): Promise<void> {
+    try {
+      // Ensure French language is loaded
+      await this.translate.use('fr').toPromise();
+      
+      // Wait a bit more to ensure all translations are loaded
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Initialize columns with translations
+      this.userColumns = [
+        { 
+          key: 'username', 
+          label: this.translate.instant('users.columns.username') || 'Username', 
+          sortable: true, 
+          type: 'text', 
+          width: '14%' 
+        },
+        { 
+          key: 'lastName', 
+          label: this.translate.instant('users.columns.lastName') || 'Nom', 
+          sortable: true, 
+          type: 'text', 
+          width: '15%' 
+        },
+        { 
+          key: 'firstName', 
+          label: this.translate.instant('users.columns.firstName') || 'Prénom', 
+          sortable: true, 
+          type: 'text', 
+          width: '15%' 
+        },
+        {
+          key: 'roleName',
+          label: this.translate.instant('users.columns.role') || 'Rôle',
+          sortable: true,
+          type: 'badge',
+          width: '15%',
+          badgeColors: {
+            'Admin': 'badge-admin',
+            'Technicien': 'badge-technicien',
+            'Responsable': 'badge-responsable',
+            'Ressource Humaine': 'badge-rh',
+            'Technicien Supérieur': 'badge-default'
+          }
+        },
+        {
+          key: 'isTechnician',
+          label: this.translate.instant('users.columns.isTechnician') || 'Technicien',
+          sortable: true,
+          type: 'badge',
+          width: '12%',
+          badgeColors: {
+            'true': 'badge-technician',
+            'false': 'badge-not-technician'
+          },
+        },
+        {
+          key: 'statut',
+          label: this.translate.instant('users.columns.status') || 'Statut',
+          sortable: true,
+          type: 'badge',
+          width: '15%',
+          badgeColors: {
+            'INACTIVE': 'status-en-attente',
+            'ACTIVE': 'status-termine'
+          }
+        }
+      ];
+
+      this.userActions = [
+        {
+          icon: 'icon-edit',
+          label: this.translate.instant('users.actions.edit') || 'Modifier',
+          callback: (item: User) => this.editUser(item)
+        }
+      ];
+
+      this.isTranslationsLoaded = true;
+      console.log('Translations initialized:', {
+        username: this.translate.instant('users.columns.username'),
+        lastName: this.translate.instant('users.columns.lastName')
+      });
+    } catch (error) {
+      console.error('Error loading translations:', error);
+      // Fallback to default labels if translations fail
+      this.initializeDefaultColumns();
+    }
+  }
+
+  private initializeDefaultColumns(): void {
+    this.userColumns = [
+      { key: 'username', label: 'Username', sortable: true, type: 'text', width: '14%' },
+      { key: 'lastName', label: 'Nom', sortable: true, type: 'text', width: '15%' },
+      { key: 'firstName', label: 'Prénom', sortable: true, type: 'text', width: '15%' },
+      {
+        key: 'roleName',
+        label: 'Rôle',
+        sortable: true,
+        type: 'badge',
+        width: '15%',
+        badgeColors: {
+          'Admin': 'badge-admin',
+          'Technicien': 'badge-technicien',
+          'Responsable': 'badge-responsable',
+          'Ressource Humaine': 'badge-rh',
+          'Technicien Supérieur': 'badge-default'
+        }
+      },
+      {
+        key: 'isTechnician',
+        label: 'Technicien',
+        sortable: true,
+        type: 'badge',
+        width: '12%',
+        badgeColors: {
+          'true': 'badge-technician',
+          'false': 'badge-not-technician'
+        },
+      },
+      {
+        key: 'statut',
+        label: 'Statut',
+        sortable: true,
+        type: 'badge',
+        width: '15%',
+        badgeColors: {
+          'INACTIVE': 'status-en-attente',
+          'ACTIVE': 'status-termine'
+        }
+      }
+    ];
+
+    this.userActions = [
+      {
+        icon: 'icon-edit',
+        label: 'Modifier',
+        callback: (item: User) => this.editUser(item)
+      }
+    ];
+  }
+
+  getTranslatedRole(roleName: string): string {
+    const rolesMap: {[key: string]: string} = {
+      'Admin': this.translate.instant('users.roles.admin') || 'Admin',
+      'Technicien': this.translate.instant('users.roles.technician') || 'Technicien',
+      'Responsable': this.translate.instant('users.roles.manager') || 'Responsable',
+      'Ressource Humaine': this.translate.instant('users.roles.hr') || 'Ressource Humaine',
+      'Technicien Supérieur': this.translate.instant('users.roles.senior_technician') || 'Technicien Supérieur'
+    };
+    return rolesMap[roleName] || roleName;
+  }
+  
+  // ... rest of your existing methods remain the same
+  
+  onPageChange(params: PaginationParams): void {
+    console.log('Paramètres reçus:', params);
     this.filters = {
       ...this.filters,
       page: params.page,
       items: params.limit,
       keyword: params.searchQuery || ''
     };
-
-    // Synchronise la valeur de recherche affichée
     this.searchValue = params.searchQuery || '';
-
     this.currentPage = params.page;
     this.itemsPerPage = params.limit;
-
     this.loadUsers();
   }
 
-  // Modifiez loadUsers pour préserver la valeur de recherche
   loadUsers(): void {
     this.loading = true;
     this.errorMessage = '';
@@ -134,8 +245,6 @@ export class Users implements OnInit {
         this.totalEntries = response.total;
         this.currentPage = response.page;
         this.lastPage = response.lastPage;
-        
-        // Maintient la valeur de recherche affichée
         this.searchValue = this.filters.keyword || '';
         
         if (response.result.length === 0 && this.filters.keyword && this.filters.keyword.trim() !== '') {
@@ -206,35 +315,47 @@ onSearchClear(): void {
   }
 
   hideUser(user: User): void {
-    const action = user.statut === 'ACTIF' ? 'désactiver' : 'activer';
-    const message = `Êtes-vous sûr de vouloir ${action} ${user.lastName} ${user.firstName}?`;
-    
-    if (confirm(message)) {
-      this.usersService.hideUser(user.id!).subscribe({
-        next: (response) => {
-          console.log('Statut de l\'utilisateur modifié:', response);
-          this.loadUsers();
-        },
-        error: (error) => {
-          console.error('Erreur lors du changement de statut:', error);
-          this.errorMessage = 'Erreur lors du changement de statut de l\'utilisateur';
-        }
-      });
-    }
+  const action = user.statut === 'ACTIF' 
+    ? this.translate.instant('users.actions.toggle_status.deactivate') 
+    : this.translate.instant('users.actions.toggle_status.activate');
+  
+  const message = this.translate.instant(
+    'users.confirm_status_change', 
+    { action: action, name: `${user.lastName} ${user.firstName}` }
+  );
+  
+  if (confirm(message)) {
+    this.usersService.hideUser(user.id!).subscribe({
+      next: (response) => {
+        console.log('Statut de l\'utilisateur modifié:', response);
+        this.loadUsers();
+      },
+      error: (error) => {
+        console.error('Erreur lors du changement de statut:', error);
+        this.errorMessage = this.translate.instant('users.errors.status_change');
+      }
+    });
   }
+}
 
-  deleteUser(user: User): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer définitivement ${user.lastName} ${user.firstName}?`)) {
-      this.usersService.deleteUser(user.id!).subscribe({
-        next: () => {
-          this.loadUsers();
-        },
-        error: (error) => {
-          console.error('Erreur lors de la suppression:', error);
-        }
-      });
-    }
+deleteUser(user: User): void {
+  const message = this.translate.instant(
+    'users.confirm_delete',
+    { name: `${user.lastName} ${user.firstName}` }
+  );
+  
+  if (confirm(message)) {
+    this.usersService.deleteUser(user.id!).subscribe({
+      next: () => {
+        this.loadUsers();
+      },
+      error: (error) => {
+        console.error('Erreur lors de la suppression:', error);
+        this.errorMessage = this.translate.instant('users.errors.delete');
+      }
+    });
   }
+}
 
   onAddClicked(): void {
     const dialogRef = this.dialog.open(AddUser, {
@@ -297,5 +418,51 @@ private handleExportResponse(blob: Blob): void {
   onFilterChange(filters: any): void {
     console.log('Filtres changés:', filters);
   }
+  
+  // Ajoutez cette méthode à votre classe Users
+showBarcodeModal(user: User): void {
+  const dialogRef = this.dialog.open(QrCode, {
+    width: '400px',
+    data: { 
+      badgeId: user.badgeId || user.id, // Utilise badgeId ou id comme fallback
+      userName: `${user.firstName} ${user.lastName}`
+    }
+  });
+}
 
+handleBarcodeClick(user: any): void {
+  console.log('Bouton code-barres cliqué pour l\'utilisateur:', user);
+  
+  if (!user) {
+    console.error('Aucun utilisateur trouvé');
+    return;
+  }
+
+  if (!this.dialog) {
+    console.error('MatDialog non disponible');
+    return;
+  }
+
+  try {
+    const dialogRef = this.dialog.open(QrCode, {
+      width: '350px',
+      maxWidth: '90vw',
+      panelClass: 'barcode-modal',
+      data: { 
+        badgeId: user.badgeId || user.id?.toString() || 'DEFAULT',
+        userName: `${user.firstName || user.firstname || ''} ${user.lastName || user.lastname || ''}`.trim()
+      }
+    });
+
+    dialogRef.afterClosed().subscribe({
+      next: (result) => {
+        console.log('Modal barcode fermé', result);
+      },
+      error: (err) => console.error('Erreur fermeture modal:', err)
+    });
+
+  } catch (error) {
+    console.error('Erreur ouverture modal barcode:', error);
+  }
+}
 }

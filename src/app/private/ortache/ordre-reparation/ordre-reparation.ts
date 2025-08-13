@@ -5,9 +5,9 @@ import { DataTableAction, DataTableColumn, PaginationParams } from '../../../sha
 import { MatDialog } from '@angular/material/dialog';
 import { Taches } from '../taches/taches';
 import { OrdreReparationFilters, ORService } from '../services/ordre-reparation.service';
-import * as XLSX from 'xlsx';
 import { ORinterface } from '../types/ORinterface';
-import { DatePipe } from '@angular/common';
+import { QrCode } from '../../admin/users/qr-code/qr-code';
+import JsBarcode from 'jsbarcode';
 
 // Interface locale pour les options de filtre de statut
 export interface StatusFilterOption {
@@ -350,4 +350,45 @@ export class OrdreReparation implements OnInit {
     this.noDataFound = false;
     this.loadORs();
   }
+
+  handleBarcodeClick(or: ORinterface): void {
+  if (!or?.id) {
+    console.error('Aucun ID trouvé pour cet OR');
+    return;
+  }
+
+  const dialogRef = this.dialog.open(QrCode, {
+    width: '400px', // Largeur fixe
+    panelClass: 'or-barcode-modal',
+    data: { 
+      badgeId: `${or.id.toString().padStart(6, '0')}`, // Format: OR-000123
+      title: 'Ordre de Réparation'
+    }
+  });
+
+  // Solution pour forcer le rendu après ouverture
+  dialogRef.afterOpened().subscribe(() => {
+    const container = document.querySelector('.or-barcode-modal .barcode-container');
+    if (container) {
+      container.innerHTML = ''; // Nettoyer le conteneur
+      this.generateBarcode(container, `${or.id!.toString().padStart(6, '0')}`);
+    }
+  });
+}
+
+private generateBarcode(container: Element, code: string): void {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  container.appendChild(svg);
+  
+  JsBarcode(svg, code, {
+    format: 'CODE128',
+    lineColor: '#000',
+    width: 2,
+    height: 80,
+    displayValue: true,
+    fontSize: 14,
+    margin: 10
+  });
+}
+
 }

@@ -1,14 +1,14 @@
 <div class="users-container" *appHasPermission="['user.view', 'user.manage']">
   <!-- Message de chargement -->
   <div *ngIf="loading" class="loading-message">
-    <i class="icon icon-spinner"></i> Chargement en cours...
+    <i class="icon icon-spinner"></i> {{ 'users.loading' | translate }}
   </div>
 
   <!-- Message d'erreur -->
   <div *ngIf="errorMessage && !loading" class="error-message">
     {{ errorMessage }}
     <button class="btn btn-outline" (click)="loadUsers()">
-      <i class="icon icon-refresh"></i> Réessayer
+      <i class="icon icon-refresh"></i> {{ 'users.retry' | translate }}
     </button>
   </div>
 
@@ -35,10 +35,10 @@
       (exportData)="onExportData($event)"
       (rowSelect)="onRowSelect($event)"
       (filterChange)="onFilterChange($event)"
-      [showAddButton]="true"
       [searchValue]="searchValue"
       [showFilters]="true"
-      (searchCleared)="onSearchCleared()">
+      (searchCleared)="onSearchCleared()"
+      (barcodeClicked)="handleBarcodeClick($event)">
     </app-datatable>
   </div>
 
@@ -47,14 +47,14 @@
     <div class="no-results-icon">
       <i class="icon icon-search"></i>
     </div>
-    <h3>Aucun résultat trouvé</h3>
-    <p>Aucun utilisateur ne correspond à votre recherche "{{ filters.keyword }}"</p>
+    <h3>{{ 'users.no_results.title' | translate }}</h3>
+    <p>{{ 'users.no_results.message' | translate:{search: filters.keyword} }}</p>
     <div class="no-results-actions">
       <button class="btn btn-outline" (click)="clearSearch()">
-        <i class="icon icon-x"></i> Effacer la recherche
+        <i class="icon icon-x"></i> {{ 'users.no_results.clear_search' | translate }}
       </button>
       <button class="btn btn-primary" (click)="onAddClicked()">
-        <i class="icon icon-plus"></i> Ajouter un utilisateur
+        <i class="icon icon-plus"></i> {{ 'users.no_results.add_user' | translate }}
       </button>
     </div>
   </div>
@@ -64,10 +64,10 @@
     <div class="no-data-icon">
       <i class="icon icon-users"></i>
     </div>
-    <h3>Aucun utilisateur</h3>
-    <p>Il n'y a encore aucun utilisateur dans le système.</p>
+    <h3>{{ 'users.no_data.title' | translate }}</h3>
+    <p>{{ 'users.no_data.message' | translate }}</p>
     <button class="btn btn-primary" (click)="onAddClicked()">
-      <i class="icon icon-plus"></i> Ajouter le premier utilisateur
+      <i class="icon icon-plus"></i> {{ 'users.no_data.add_first' | translate }}
     </button>
   </div>
 </div>

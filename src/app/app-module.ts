@@ -13,13 +13,12 @@ import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common
 import { JwtInterceptor } from './auth/services/jwt.interceptor';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { Dashboard } from './private/dashboard/dashboard';
-import { Parametres } from './private/parametres/parametres';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslationService } from '../assets/i18n/translation.service';
 import { HasPermissionDirective } from './auth/directives/has-permission.directive';
@@ -36,7 +35,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     Header,
     Footer,
     Dashboard,
-    Parametres,
   ],
   imports: [
     BrowserModule,

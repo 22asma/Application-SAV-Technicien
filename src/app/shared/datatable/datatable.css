@@ -1232,3 +1232,48 @@
 .search-container input {
   padding-right: 40px !important;
 }
+/* Style de base pour toutes les icônes d'actions (doit déjà exister) */
+.action-btn .icon {
+  font-size: 1.2rem;
+  color: #6c757d; /* Couleur grise par défaut */
+  transition: color 0.2s;
+}
+
+/* Style au survol (doit déjà exister) */
+.action-btn:hover .icon {
+  color: #515f6d; /* Couleur bleue au survol */
+}
+
+/* Style spécifique pour l'icône code-barres */
+.icon-barcode {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}
+
+.icon-barcode::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  /* Création du motif code-barres avec des bandes */
+  mask-image: 
+    linear-gradient(to right, 
+      transparent 0%, 
+      black 10%, 
+      black 30%, 
+      transparent 40%,
+      transparent 50%,
+      black 60%,
+      black 70%,
+      transparent 80%,
+      transparent 90%,
+      black 100%
+    );
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+}

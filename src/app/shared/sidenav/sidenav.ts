@@ -44,7 +44,7 @@ export const navbarData: InavbarData[] = [
     permissions: ['user.view']
   },
   { 
-    path: '/parametres', 
+    path: 'config/parametres', 
     title: 'Paramétrages', 
     icon: 'fas fa-sliders-h',
     permissions: ['settings.view']

@@ -87,6 +87,8 @@ export class datatable implements OnInit {
   @Output() statusFilter = new EventEmitter<string[]>();
   @Output() dateRangeFilter = new EventEmitter<{start: Date|null, end: Date|null}>();
   @Output() searchCleared = new EventEmitter<void>();
+  @Output() barcodeClicked = new EventEmitter<any>();
+
   activeTab: string = '';
   paginatedData: any[] = [];
   filteredData: any[] = [];
@@ -386,5 +388,10 @@ onDocumentClick(event: MouseEvent) {
     this.showStatusFilter = false;
     this.showDateFilter = false;
   }
+}
+
+handleBarcodeClick(item: any) {
+  console.log('Bouton code-barres cliqué pour l\'élément:', item);
+  this.barcodeClicked.emit(item); // Émettez l'événement vers le parent
 }
 }

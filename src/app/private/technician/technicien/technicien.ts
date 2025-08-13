@@ -3,8 +3,8 @@ import { DataTableAction, DataTableColumn, PaginationParams } from '../../../sha
 import { MatDialog } from '@angular/material/dialog';
 import { TechDetails } from '../tech-details/tech-details';
 import { UserFilters, UsersService } from '../../admin/services/user.service';
-import * as XLSX from 'xlsx';
-import { first } from 'rxjs';
+import { QrCode } from '../../admin/users/qr-code/qr-code';
+import { User } from '../../admin/types/user';
 
 @Component({
   selector: 'app-technicien',
@@ -90,6 +90,7 @@ export class Technicien {
 
         this.techniciens = response.result.map(tech => ({
           id: tech.id,
+          badgeId: tech.badgeId,
           lastName: tech.lastName || tech.lastName || 'N/A',
           firstName: tech.firstName || tech.firstName || 'N/A',
           username: tech.username,
@@ -232,4 +233,33 @@ private handleExportResponse(blob: Blob): void {
     this.noDataFound = false;
     this.loadTechniciens();
   }
+
+  // Ajoutez cette méthode à votre classe Users
+  showBarcodeModal(user: User): void {
+    const dialogRef = this.dialog.open(QrCode, {
+      width: '400px',
+      data: { 
+        badgeId: user.badgeId || user.id, // Utilise badgeId ou id comme fallback
+        userName: `${user.firstName} ${user.lastName}`
+      }
+    });
+  }
+  
+  handleBarcodeClick(technicien: any): void {
+  console.log('Données du technicien:', technicien); // Vérifiez les données dans la console
+  
+  if (!technicien?.badgeId) {
+    console.error('Aucun badgeId trouvé pour ce technicien');
+    alert('Ce technicien n\'a pas de badge ID défini');
+    return;
+  }
+
+  this.dialog.open(QrCode, {
+    width: '350px',
+    data: { 
+      badgeId: technicien.badgeId, // Utilisez uniquement badgeId sans fallback
+      userName: `${technicien.firstName} ${technicien.lastName}`
+    }
+  });
+}
 }

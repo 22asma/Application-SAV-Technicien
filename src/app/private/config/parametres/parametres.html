@@ -1,0 +1,126 @@
+<div class="container" *appHasPermission="['settings.options.edit','settings.view']">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Paramètres de l'application</mat-card-title>
+      <mat-card-subtitle>Configurez les préférences du système</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Indicateur de chargement -->
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Chargement de la configuration...</p>
+      </div>
+
+      <div *ngIf="!isLoading && configuration">
+        <!-- Section des paramètres dynamiques (depuis le backend) -->
+        <div class="param-section">
+          <h3>Gestion des tâches <span class="dynamic-badge">Synchronisé</span></h3>
+          <mat-divider></mat-divider>
+
+          <div class="param-row">
+            <div class="param-label">
+              <span>Autoriser tâches parallèles</span>
+              <small>Permet plusieurs tâches actives en parallèle pour un technicien</small>
+            </div>
+            <mat-slide-toggle 
+              [checked]="configuration.parallelTasksPerTechnician"
+              (change)="configuration.parallelTasksPerTechnician = $event.checked"
+              [disabled]="isLoading">
+            </mat-slide-toggle>
+          </div>
+
+          <div class="param-row">
+            <div class="param-label">
+              <span>Autoriser tâche multi-technicien</span>
+              <small>Permet à plusieurs techniciens de travailler sur la même tâche</small>
+            </div>
+            <mat-slide-toggle 
+              [checked]="configuration.multiTechniciansPerTask"
+              (change)="configuration.multiTechniciansPerTask = $event.checked"
+              [disabled]="isLoading">
+            </mat-slide-toggle>
+          </div>
+
+          <div class="param-row">
+            <div class="param-label">
+              <span>Clôture uniquement par créateur</span>
+              <small>Seul le technicien ayant démarré la tâche peut la clôturer</small>
+            </div>
+            <mat-slide-toggle 
+              [checked]="configuration.onlyCreatorEndTask"
+              (change)="configuration.onlyCreatorEndTask = $event.checked"
+              [disabled]="isLoading">
+            </mat-slide-toggle>
+          </div>
+        </div>
+
+        <!-- Section des paramètres temporels (statiques) -->
+        <div class="param-section">
+          <h3>Paramètres temporels <span class="static-badge">Local</span></h3>
+          <mat-divider></mat-divider>
+
+          <div class="param-row">
+            <div class="param-label">
+              <span>Heure début journée</span>
+              <small>Heure standard de début de la journée de travail</small>
+            </div>
+            <mat-form-field>
+              <input matInput type="time" [(ngModel)]="parametresStatiques.heureDebutJournee">
+            </mat-form-field>
+          </div>
+
+          <div class="param-row">
+            <div class="param-label">
+              <span>Heure fin journée</span>
+              <small>Heure standard de fin de la journée de travail</small>
+            </div>
+            <mat-form-field>
+              <input matInput type="time" [(ngModel)]="parametresStatiques.heureFinJournee">
+            </mat-form-field>
+          </div>
+
+          <div class="param-row">
+            <div class="param-label">
+              <span>Durée pause par défaut (minutes)</span>
+              <small>Durée par défaut d'une pause</small>
+            </div>
+            <mat-form-field>
+              <input matInput type="number" [(ngModel)]="parametresStatiques.dureePauseParDefaut">
+            </mat-form-field>
+          </div>
+
+          <div class="param-row">
+            <div class="param-label">
+              <span>Durée max inactivité (minutes)</span>
+              <small>Temps max d'inactivité avant alerte</small>
+            </div>
+            <mat-form-field>
+              <input matInput type="number" [(ngModel)]="parametresStatiques.dureeMaxInactivite">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message d'erreur si la configuration n'est pas chargée -->
+      <div *ngIf="!isLoading && !configuration" class="error-container">
+        <mat-icon color="warn">error</mat-icon>
+        <p>Impossible de charger la configuration</p>
+        <button mat-button color="primary" (click)="chargerConfiguration()">
+          Réessayer
+        </button>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="enregistrerParametres()"
+        [disabled]="isLoading || !configuration">
+        <mat-icon *ngIf="isLoading">refresh</mat-icon>
+        {{ isLoading ? 'Sauvegarde...' : 'Enregistrer' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

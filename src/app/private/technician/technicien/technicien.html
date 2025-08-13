@@ -35,7 +35,8 @@
       (pageChange)="onPageChange($event)"
       [showFilters]="true"
       (searchCleared)="onSearchCleared()"
-      [searchValue]="searchValue">
+      [searchValue]="searchValue"
+      (barcodeClicked)="handleBarcodeClick($event)">
     </app-datatable>
   </div>
 

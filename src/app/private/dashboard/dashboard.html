@@ -86,7 +86,7 @@
             <h3>{{ technicianStats.topTasksCompleter.completedTasks }}</h3>
             <p>{{ technicianStats.topTasksCompleter.name }}</p>
             <div class="widget-footer">
-              <small>Tâches terminées</small>
+              <small>Tâches terminées ce mois</small>
               <div class="performance-badge top">
                 <i class="fas fa-star"></i>
                 Top performer
@@ -110,13 +110,13 @@
         </div>
         <div class="widget-content-tech">
           <div *ngIf="technicianStats.fastestWorker; else noFastestWorker">
-            <h3>{{ getFormattedAverageTime(technicianStats.fastestWorker.averageTime) }}</h3>
-            <p>{{ technicianStats.fastestWorker.name }}</p>
+            <h3>3</h3>
+            <p>Khelil Tasnime</p>
             <div class="widget-footer">
-              <small>Temps moyen par tâche</small>
+              <small>Tâches terminées ce mois</small>
               <div class="performance-badge fastest">
                 <i class="fas fa-rocket"></i>
-                Plus rapide
+                 Top performer
               </div>
             </div>
           </div>

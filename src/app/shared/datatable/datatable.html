@@ -4,11 +4,11 @@
     <div class="controls-left">
       <div class="controls-right">
         <div class="entries-control">
-          <span>Afficher</span>
+          <span>{{ 'datatable.show' | translate }}</span>
           <select [(ngModel)]="entriesPerPage" (change)="onEntriesPerPageChange()">
             <option *ngFor="let option of entriesPerPageOptions" [value]="option">{{ option }}</option>
           </select>
-          <span>entrées</span>
+          <span>{{ 'datatable.entries' | translate }}</span>
         </div>
       </div>
     </div>
@@ -20,7 +20,7 @@
       (click)="addClicked.emit()"
     >
       <i class="icon icon-add"></i> 
-      Ajouter
+      {{ 'datatable.add' | translate }}
     </button>
     
     <!-- Barre de recherche -->
@@ -28,102 +28,110 @@
       <i class="icon icon-search"></i>
       <input 
         type="text" 
-        placeholder="Rechercher..." 
+        [placeholder]="'datatable.search' | translate" 
         [(ngModel)]="searchQuery" 
         (input)="serverSideSearch ? applyFilterWithDebounce() : applyFilter()"
         (click)="$event.stopPropagation()"
         (focus)="$event.stopPropagation()"
         (keydown.enter)="$event.preventDefault()"
       >
-      <!-- Bouton pour effacer la recherche -->
       <button 
        *ngIf="searchQuery.trim()" 
        class="clear-search-btn"
        (click)="clearSearch()"
-       title="Effacer la recherche"
+       [title]="'datatable.clear' | translate"
        type="button"
       >
         <i class="icon icon-x"></i>
       </button>
     </div>
-    <!-- Bouton Filtre Statut -->
-<div class="filter-dropdown" *ngIf="statusFilterOptions.length > 0">
-  <button 
-    class="btn btn-outline filter-btn" 
-    (click)="toggleStatusFilter()"
-    [class.active]="showStatusFilter"
-  >
-    <i class="icon icon-filter"></i>
-    Statut
-    <span class="filter-badge" *ngIf="selectedStatuses.length > 0">
-      {{selectedStatuses.length}}
-    </span>
-  </button>
-  
-  <div class="filter-menu status-filter" *ngIf="showStatusFilter">
-    <div class="filter-header">
-      <h4>Filtrer par statut</h4>
-    </div>
-    <div class="filter-options">
-      <div *ngFor="let option of statusFilterOptions" class="filter-option">
-        <input 
-          type="checkbox" 
-          [id]="'status-' + option.value"
-          [checked]="isStatusSelected(option.value)"
-          (change)="onStatusChange(option.value, $any($event.target).checked)"
-        >
-        <label [for]="'status-' + option.value">
-          {{option.label}}
-          <span *ngIf="option.count" class="count">({{option.count}})</span>
-        </label>
-      </div>
-    </div>
-    <div class="filter-actions">
-      <button class="btn btn-clear" (click)="clearStatusFilter()">
-        Effacer
-        <span *ngIf="selectedStatuses.length > 0">({{selectedStatuses.length}})</span>
-      </button>
-      <button class="btn btn-apply" (click)="applyStatusFilter()">
-        Appliquer
-        <span *ngIf="selectedStatuses.length > 0">({{selectedStatuses.length}} sélectionné{{selectedStatuses.length > 1 ? 's' : ''}})</span>
-      </button>
-    </div>
-  </div>
-</div>
 
-     <!-- Bouton Filtre Date -->
-<div class="filter-dropdown" *ngIf="dateRangeFilterEnabled && showDateFilterButton">
-  <button class="btn btn-outline filter-btn" (click)="toggleDateRangeFilter()">
-    <i class="icon icon-calendar"></i>
-    Date
-    <span *ngIf="dateRange.start || dateRange.end" class="filter-badge">1</span>
-  </button>
-  
-  <div class="filter-menu date-filter" *ngIf="showDateFilter">
-    <div class="filter-header">
-      <h4>Filtrer par période</h4>
-    </div>
-    <div class="date-range-picker">
-      <div class="date-input">
-        <label>Du</label>
-        <input type="date" [(ngModel)]="dateRange.start">
+    <!-- Bouton Filtre Statut -->
+    <div class="filter-dropdown" *ngIf="statusFilterOptions.length > 0">
+      <button 
+        class="btn btn-outline filter-btn" 
+        (click)="toggleStatusFilter()"
+        [class.active]="showStatusFilter"
+      >
+        <i class="icon icon-filter"></i>
+        {{ 'datatable.status' | translate }}
+        <span class="filter-badge" *ngIf="selectedStatuses.length > 0">
+          {{selectedStatuses.length}}
+        </span>
+      </button>
+      
+      <div class="filter-menu status-filter" *ngIf="showStatusFilter">
+        <div class="filter-header">
+          <h4>{{ 'datatable.filter_by_status' | translate }}</h4>
+        </div>
+        <div class="filter-options">
+          <div *ngFor="let option of statusFilterOptions" class="filter-option">
+            <input 
+              type="checkbox" 
+              [id]="'status-' + option.value"
+              [checked]="isStatusSelected(option.value)"
+              (change)="onStatusChange(option.value, $any($event.target).checked)"
+            >
+            <label [for]="'status-' + option.value">
+              {{option.label}}
+              <span *ngIf="option.count" class="count">({{option.count}})</span>
+            </label>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn btn-clear" (click)="clearStatusFilter()">
+            {{ 'datatable.clear' | translate }}
+            <span *ngIf="selectedStatuses.length > 0">({{selectedStatuses.length}})</span>
+          </button>
+          <button class="btn btn-apply" (click)="applyStatusFilter()">
+            {{ 'datatable.apply' | translate }}
+            <span *ngIf="selectedStatuses.length > 0">
+              ({{selectedStatuses.length}} {{ selectedStatuses.length > 1 ? 
+                ('datatable.selected_plural' | translate) : 
+                ('datatable.selected' | translate) }})
+            </span>
+          </button>
+        </div>
       </div>
-      <div class="date-input">
-        <label>Au</label>
-        <input type="date" [(ngModel)]="dateRange.end">
+    </div>
+
+    <!-- Bouton Filtre Date -->
+    <div class="filter-dropdown" *ngIf="dateRangeFilterEnabled && showDateFilterButton">
+      <button class="btn btn-outline filter-btn" (click)="toggleDateRangeFilter()">
+        <i class="icon icon-calendar"></i>
+        {{ 'datatable.date' | translate }}
+        <span *ngIf="dateRange.start || dateRange.end" class="filter-badge">1</span>
+      </button>
+      
+      <div class="filter-menu date-filter" *ngIf="showDateFilter">
+        <div class="filter-header">
+          <h4>{{ 'datatable.filter_by_date' | translate }}</h4>
+        </div>
+        <div class="date-range-picker">
+          <div class="date-input">
+            <label>{{ 'datatable.from' | translate }}</label>
+            <input type="date" [(ngModel)]="dateRange.start">
+          </div>
+          <div class="date-input">
+            <label>{{ 'datatable.to' | translate }}</label>
+            <input type="date" [(ngModel)]="dateRange.end">
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn btn-clear" (click)="clearDateRangeFilter()">
+            {{ 'datatable.clear' | translate }}
+          </button>
+          <button class="btn btn-apply" (click)="applyDateRangeFilter()">
+            {{ 'datatable.apply' | translate }}
+          </button>
+        </div>
       </div>
     </div>
-    <div class="filter-actions">
-      <button class="btn btn-clear" (click)="clearDateRangeFilter()">Effacer</button>
-      <button class="btn btn-apply" (click)="applyDateRangeFilter()">Appliquer</button>
-    </div>
-  </div>
-</div>
 
     <!-- Bouton Export -->
     <button class="btn btn-outline export-btn" *ngIf="showExport" (click)="exportToExcel()">
       <i class="icon icon-file-excel"></i>
-      Exporter
+      {{ 'datatable.export' | translate }}
     </button>
   </div>
 
@@ -148,9 +156,11 @@
       <thead>
         <tr>
           <th *ngFor="let column of columns" [style.width]="column.width">
-            {{ column.label }}
+            <ng-container *ngIf="typeof column.label === 'string'">
+              {{ column.label }}
+            </ng-container>
           </th>
-          <th *ngIf="actions.length > 0">ACTIONS</th>
+          <th *ngIf="actions.length > 0">{{ 'datatable.actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -189,19 +199,37 @@
           </td>
           
           <!-- Actions -->
-          <td class="actions-column" *ngIf="actions.length > 0">
-            <div class="actions-menu">
-              <ng-container *ngFor="let action of actions">
-                <button 
-                  *ngIf="shouldShowAction(action, item)"
-                  class="action-btn" 
-                  (click)="executeAction(action, item)"
-                  [title]="action.label"
-                >
-                  <i class="icon" [ngClass]="action.icon"></i>
-                </button>
-              </ng-container>
-            </div>
+<!-- Actions -->
+<td class="actions-column" *ngIf="actions.length > 0">
+  <div class="actions-menu">
+    <!-- Bouton code-barres (peut être placé avant ou après les autres actions) -->
+    <button 
+      class="action-btn barcode-btn" 
+      (click)="handleBarcodeClick(item)"
+      title="Scanner"
+    >
+      <i class="icon icon-barcode"></i>
+    </button>
+
+    <ng-container *ngFor="let action of actions">
+      <button 
+        *ngIf="shouldShowAction(action, item)"
+        class="action-btn" 
+        (click)="executeAction(action, item)"
+        [title]="action.label"
+      >
+        <i class="icon" [ngClass]="action.icon"></i>
+      </button>
+    </ng-container>
+  </div>
+</td>
+
+        </tr>
+        
+        <!-- Message quand il n'y a pas de données -->
+        <tr *ngIf="paginatedData.length === 0">
+          <td [attr.colspan]="columns.length + (actions.length > 0 ? 1 : 0)" class="no-data">
+            {{ 'datatable.no_data' | translate }}
           </td>
         </tr>
       </tbody>
@@ -211,8 +239,7 @@
   <!-- Footer -->
   <div class="datatable-footer" *ngIf="showPagination">
     <div class="entries-info">
-      Affichage de {{ (currentPage - 1) * entriesPerPage + 1 }} à 
-      {{ getMinCurrentPageEntries() }} sur {{ totalEntries }} entrées
+      {{ getPaginationInfo() }}
     </div>
     <div class="pagination">
       <button 
