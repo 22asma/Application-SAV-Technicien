@@ -26,6 +26,12 @@ export const navbarData: InavbarData[] = [
     icon: 'fas fa-home'
   },
   {
+    path: '/technician/presenceTech',
+    title: 'Pointage Journalier',
+    icon: 'fas fa-calendar-check',
+    permissions: ['technicien.view']
+  },
+  {
     path: '/technician/technicien',
     title: 'Techniciens',
     icon: 'fas fa-user-tie',

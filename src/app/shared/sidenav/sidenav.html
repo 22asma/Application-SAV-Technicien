@@ -31,7 +31,7 @@
         </a>
       </li>
 
-<ng-container *ngFor="let item of navData.slice(1, 5)">
+<ng-container *ngFor="let item of navData.slice(1, 6)">
     <li class="sidenav-nav-item" *appHasPermission="item.permissions || []">
       <a class="sidenav-nav-link" 
          [routerLink]="[item.path]"
@@ -54,12 +54,12 @@
     <a class="sidenav-nav-link" 
        (click)="logout()" 
        style="cursor: pointer;">
-      <i class="sidenav-link-icon" [class]="navData[5].icon"></i>
+      <i class="sidenav-link-icon" [class]="navData[6].icon"></i>
       <span class="sidenav-link-text" @fadeInOut *ngIf="!collapsed || pinned">
-        {{navData[5].title |translate}}
+        {{navData[6].title |translate}}
       </span>
       <div class="tooltip" *ngIf="collapsed && !pinned">
-        {{navData[5].title}}
+        {{navData[6].title}}
       </div>
     </a>
   </li>

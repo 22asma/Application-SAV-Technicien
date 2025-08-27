@@ -2,9 +2,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Technicien } from './technicien/technicien';
+import { PresenceTech } from './presence-tech/presence-tech';
 
 const routes: Routes = [
-  { path: 'technicien', component: Technicien }
+  { path: 'technicien', component: Technicien },
+  { path: 'presenceTech', component: PresenceTech }
 ];
 
 @NgModule({

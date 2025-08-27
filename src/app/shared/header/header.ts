@@ -201,6 +201,7 @@ selectLanguage(language: any, event?: Event): void {
   
   const routeMap: { [key: string]: string } = {
     'dashboard': 'Dashboard',
+    'presenceTech': 'Pointage Journalier',
     'users': 'Gestion des utilisateurs',
     'technicien': 'Liste des Techniciens',
     'listeOR': 'Ordres de Réparation',

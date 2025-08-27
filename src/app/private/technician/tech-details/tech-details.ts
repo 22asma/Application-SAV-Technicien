@@ -30,7 +30,9 @@ export enum PointageType {
   WORKING = 'WORKING',
   PAUSE_TACHE = 'TASK_PAUSED',
   REPRISE_TACHE = 'TASK_RESUME',
-  FIN_TACHE = 'END_TASK'
+  FIN_TACHE = 'END_TASK',
+  RESTART_TACHE = 'TASK_RESTART',   
+  JOIN_TACHE = 'JOIN_TASK' 
 }
 
 @Component({
@@ -158,7 +160,10 @@ export class TechDetails {
       [PointageType.WORKING]: 'Tâche démarrée',
       [PointageType.PAUSE_TACHE]: 'Tâche en pause',
       [PointageType.REPRISE_TACHE]: 'Tâche en reprise',
-      [PointageType.FIN_TACHE]: 'Tâche terminée'
+      [PointageType.FIN_TACHE]: 'Tâche terminée',
+      [PointageType.RESTART_TACHE]: 'Tâche Redémarrée',
+      [PointageType.JOIN_TACHE]: 'Réjoindre Tâche'
+
     };
     
     return typeLabels[type] || 'Inconnu';

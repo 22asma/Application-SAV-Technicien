@@ -444,13 +444,19 @@ handleBarcodeClick(user: any): void {
   }
 
   try {
+    const badgeId = user.badgeId || user.id?.toString() || 'DEFAULT';
+    
     const dialogRef = this.dialog.open(QrCode, {
-      width: '350px',
+      // Suppression de la largeur fixe pour permettre l'auto-sizing
       maxWidth: '90vw',
-      panelClass: 'barcode-modal',
+      minWidth: '300px',
+      panelClass: 'auto-size-barcode-modal',
+      autoFocus: false,
       data: { 
-        badgeId: user.badgeId || user.id?.toString() || 'DEFAULT',
-        userName: `${user.firstName || user.firstname || ''} ${user.lastName || user.lastname || ''}`.trim()
+        badgeId: badgeId,
+        userName: `${user.firstName || user.firstname || ''} ${user.lastName || user.lastname || ''}`.trim(),
+        num: user.num,
+        title: 'Badge Utilisateur'
       }
     });
 

@@ -15,11 +15,13 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { HasPermissionDirective } from '../../auth/directives/has-permission.directive';
+import { PresenceTech } from './presence-tech/presence-tech';
 
 @NgModule({
   declarations: [
     Technicien,
     TechDetails,
+    PresenceTech,
   ],
   imports: [
     CommonModule,

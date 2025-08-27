@@ -53,3 +53,49 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .cdk-overlay-dark-backdrop {
   background: rgba(0, 0, 0, 0.6) !important;
 }
+/* Styles globaux pour les modaux de barcode auto-sizing */
+/* À ajouter dans votre fichier styles.css global ou dans le composant parent */
+
+.auto-size-barcode-modal .mat-mdc-dialog-container,
+.auto-size-or-barcode-modal .mat-mdc-dialog-container {
+  /* Permet au conteneur du dialog d'ajuster sa taille */
+  width: auto !important;
+  min-width: 300px;
+  max-width: 90vw;
+  box-sizing: border-box;
+}
+
+.auto-size-barcode-modal .mat-mdc-dialog-content,
+.auto-size-or-barcode-modal .mat-mdc-dialog-content {
+  /* Évite le défilement horizontal */
+  overflow-x: visible;
+  padding: 0;
+  margin: 0;
+}
+
+.auto-size-or-barcode-modal .mat-mdc-dialog-container {
+  /* Plus d'espace pour les OR qui ont tendance à être plus longs */
+  min-width: 400px;
+  max-width: 95vw;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+  .auto-size-barcode-modal .mat-mdc-dialog-container,
+  .auto-size-or-barcode-modal .mat-mdc-dialog-container {
+    min-width: 280px;
+    max-width: 95vw;
+    width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .auto-size-barcode-modal .mat-mdc-dialog-container,
+  .auto-size-or-barcode-modal .mat-mdc-dialog-container {
+    min-width: 100vw;
+    max-width: 100vw;
+    width: 100vw;
+    margin: 0;
+    border-radius: 0;
+  }
+}

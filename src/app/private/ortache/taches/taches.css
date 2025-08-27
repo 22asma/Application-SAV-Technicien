@@ -459,3 +459,348 @@
   font-size: 0.9em;
   margin-right: 4px;
 }
+
+/* Styles existants + nouveaux styles pour la timeline */
+
+/* Bouton timeline dans la tâche */
+.tache-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.btn-timeline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-timeline:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.btn-timeline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-timeline mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+/* Overlay de la timeline */
+.timeline-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal de la timeline */
+.timeline-modal {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header de la timeline */
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fafafa;
+  border-radius: 8px 8px 0 0;
+}
+
+.timeline-header h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  font-size: 18px;
+}
+
+.close-timeline {
+  color: #666;
+}
+
+/* Contenu de la timeline */
+.timeline-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  max-height: 60vh;
+}
+
+.timeline-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px;
+  color: #666;
+}
+
+.no-history {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px;
+  color: #999;
+  text-align: center;
+}
+
+.no-history mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #ccc;
+}
+
+/* Liste de la timeline */
+.timeline-list {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline-entry {
+  position: relative;
+  margin-bottom: 24px;
+  padding-left: 20px;
+}
+
+/* Marqueur de la timeline */
+.timeline-marker {
+  position: absolute;
+  left: -35px;
+  top: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  z-index: 2;
+}
+
+/* Connecteur entre les éléments */
+.timeline-connector {
+  position: absolute;
+  left: -20px;
+  top: 38px;
+  width: 2px;
+  height: 24px;
+  background: #ddd;
+  z-index: 1;
+}
+
+/* Contenu de chaque élément de timeline */
+.timeline-content-item {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 12px;
+  transition: all 0.2s ease;
+}
+
+.timeline-content-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-header-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.timeline-type {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.timeline-time {
+  font-size: 12px;
+  color: #666;
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.timeline-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timeline-task,
+.timeline-tech {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #555;
+}
+
+.timeline-task mat-icon,
+.timeline-tech mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #777;
+}
+
+/* Classes spécifiques pour chaque type d'action */
+.timeline-start .timeline-marker {
+  background: #28a745;
+  color: white;
+}
+
+.timeline-start .timeline-content-item {
+  border-left: 4px solid #28a745;
+}
+
+.timeline-pause .timeline-marker {
+  background: #ffc107;
+  color: #333;
+}
+
+.timeline-pause .timeline-content-item {
+  border-left: 4px solid #ffc107;
+}
+
+.timeline-restart .timeline-marker {
+  background: #a407ff;
+  color: #333;
+}
+
+.timeline-restart .timeline-content-item {
+  border-left: 4px solid #a407ff;
+}
+
+.timeline-join .timeline-marker {
+  background: #e6ff07;
+  color: #333;
+}
+
+.timeline-join .timeline-content-item {
+  border-left: 4px solid #e6ff07;
+}
+
+.timeline-resume .timeline-marker {
+  background: #17a2b8;
+  color: white;
+}
+
+.timeline-resume .timeline-content-item {
+  border-left: 4px solid #17a2b8;
+}
+
+.timeline-end .timeline-marker {
+  background: #dc3545;
+  color: white;
+}
+
+.timeline-end .timeline-content-item {
+  border-left: 4px solid #dc3545;
+}
+
+.timeline-default .timeline-marker {
+  background: #6c757d;
+  color: white;
+}
+
+.timeline-default .timeline-content-item {
+  border-left: 4px solid #6c757d;
+}
+
+/* Footer de la timeline */
+.timeline-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e0e0e0;
+  background: #fafafa;
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Responsive pour la timeline */
+@media (max-width: 768px) {
+  .timeline-modal {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .timeline-list {
+    padding-left: 20px;
+  }
+  
+  .timeline-marker {
+    left: -25px;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+  
+  .timeline-connector {
+    left: -13px;
+  }
+}
+
+/* Animation d'entrée pour la timeline */
+.timeline-entry {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Amélioration du header de tâche pour inclure le bouton timeline */
+.tache-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.tache-titre {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

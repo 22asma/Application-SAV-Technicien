@@ -47,7 +47,7 @@ export class Technicien {
       key: 'statut', 
       label: 'STATUT', 
       type: 'badge', 
-      width: '20%',
+      width: '14%',
       badgeColors: {
         'INACTIVE': 'status-en-attente',
         'ACTIVE': 'status-termine'
@@ -245,21 +245,45 @@ private handleExportResponse(blob: Blob): void {
     });
   }
   
-  handleBarcodeClick(technicien: any): void {
-  console.log('Données du technicien:', technicien); // Vérifiez les données dans la console
+ handleBarcodeClick(user: any): void {
+  console.log('Bouton code-barres cliqué pour l\'utilisateur:', user);
   
-  if (!technicien?.badgeId) {
-    console.error('Aucun badgeId trouvé pour ce technicien');
-    alert('Ce technicien n\'a pas de badge ID défini');
+  if (!user) {
+    console.error('Aucun utilisateur trouvé');
     return;
   }
 
-  this.dialog.open(QrCode, {
-    width: '350px',
-    data: { 
-      badgeId: technicien.badgeId, // Utilisez uniquement badgeId sans fallback
-      userName: `${technicien.firstName} ${technicien.lastName}`
-    }
-  });
+  if (!this.dialog) {
+    console.error('MatDialog non disponible');
+    return;
+  }
+
+  try {
+    const badgeId = user.badgeId || user.id?.toString() || 'DEFAULT';
+    
+    const dialogRef = this.dialog.open(QrCode, {
+      // Suppression de la largeur fixe pour permettre l'auto-sizing
+      maxWidth: '90vw',
+      minWidth: '300px',
+      panelClass: 'auto-size-barcode-modal',
+      autoFocus: false,
+      data: { 
+        badgeId: badgeId,
+        userName: `${user.firstName || user.firstname || ''} ${user.lastName || user.lastname || ''}`.trim(),
+        num: user.num,
+        title: 'Badge Utilisateur'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe({
+      next: (result) => {
+        console.log('Modal barcode fermé', result);
+      },
+      error: (err) => console.error('Erreur fermeture modal:', err)
+    });
+
+  } catch (error) {
+    console.error('Erreur ouverture modal barcode:', error);
+  }
 }
 }

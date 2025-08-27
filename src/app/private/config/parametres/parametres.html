@@ -53,6 +53,19 @@
               [disabled]="isLoading">
             </mat-slide-toggle>
           </div>
+
+          <div class="param-row">
+             <div class="param-label">
+               <span>Autoriser redémarrage de tâche</span>
+               <small>Permet de redémarrer une tâche clôturée</small>
+             </div>
+             <mat-slide-toggle 
+               [checked]="configuration.restartTask"
+               (change)="configuration.restartTask = $event.checked"
+               [disabled]="isLoading">
+             </mat-slide-toggle>
+          </div>
+
         </div>
 
         <!-- Section des paramètres temporels (statiques) -->

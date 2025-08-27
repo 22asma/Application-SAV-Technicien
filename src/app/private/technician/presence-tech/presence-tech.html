@@ -1,0 +1,107 @@
+<div class="daily-attendance-container">
+  <!-- En-tête avec statistiques et recherche -->
+  <div class="header-section">
+    <div class="search-bar">
+      <input 
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Rechercher un technicien..."
+        class="search-input">
+      <i class="fas fa-search"></i>
+    </div>
+    
+    <div class="date-selector">
+      <label for="selectedDate">Date :</label>
+      <span class="date-display">{{ selectedDate | date:'dd/MM/yyyy' }}</span>
+      <button class="btn btn-primary" (click)="refresh()">
+        <i class="fas fa-sync-alt"></i>
+        Actualiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Liste des techniciens -->
+  <div *ngIf="!loading && !errorMessage && filteredTechnicians.length > 0" class="technicians-list">
+    <div class="technician-card" *ngFor="let tech of filteredTechnicians">
+      <!-- En-tête de la carte -->
+      <div class="card-header">
+        <div class="tech-info">
+          <h3>{{ tech.firstName }} {{ tech.lastName }}</h3>
+          <p class="badge-id">Badge: {{ tech.badgeId }}</p>
+        </div>
+        <div class="status-time-container">
+          <div class="status-info">
+            <span class="status-badge" [class]="getStatusClass(tech.statut)">
+              {{ tech.statut }}
+            </span>
+            <div class="work-time">
+              <i class="far fa-clock"></i>
+              {{ tech.tempsTotal }}
+            </div>
+          </div>
+          <button class="btn btn-toggle" (click)="toggleDetails(tech.id)">
+            {{ expandedTechIds.has(tech.id) ? 'Masquer' : 'Détails' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Détails affichés uniquement si toggle ouvert -->
+      <div class="card-content" *ngIf="expandedTechIds.has(tech.id)">
+        <div class="attendance-details">
+          <!-- Pointage -->
+          <div class="attendance-section">
+            <h4><i class="fas fa-sign-in-alt"></i> Pointage</h4>
+            <div class="attendance-grid">
+              <div class="attendance-item" *ngIf="tech.entree">
+                <label>Entrée :</label>
+                <span class="time-value">{{ tech.entree }}</span>
+              </div>
+              <div class="attendance-item" *ngIf="tech.sortie">
+                <label>Sortie :</label>
+                <span class="time-value">{{ tech.sortie }}</span>
+              </div>
+              <div class="attendance-item full-width">
+                <label>Pauses :</label>
+                <span class="pause-value">{{ formatPauses(tech.pauses) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tâches commencées -->
+          <div class="tasks-section" *ngIf="tech.tachesCommencees.length > 0">
+            <h4><i class="fas fa-play-circle"></i> Tâches Commencées ({{ tech.tachesCommencees.length }})</h4>
+            <div class="tasks-list">
+              <div class="task-item started" *ngFor="let tache of tech.tachesCommencees">
+                <div class="task-info">
+                  <span class="task-title">{{ tache.titre }}</span>
+                  <span class="task-or" *ngIf="tache.ordreReparation">OR: {{ tache.ordreReparation }}</span>
+                </div>
+                <span class="task-time">{{ tache.heure }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tâches terminées -->
+          <div class="tasks-section" *ngIf="tech.tachesTerminees.length > 0">
+            <h4><i class="fas fa-check-circle"></i> Tâches Terminées ({{ tech.tachesTerminees.length }})</h4>
+            <div class="tasks-list">
+              <div class="task-item completed" *ngFor="let tache of tech.tachesTerminees">
+                <div class="task-info">
+                  <span class="task-title">{{ tache.titre }}</span>
+                  <span class="task-or" *ngIf="tache.ordreReparation">OR: {{ tache.ordreReparation }}</span>
+                </div>
+                <span class="task-time">{{ tache.heure }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Message si aucune tâche -->
+          <div class="no-tasks" *ngIf="tech.tachesCommencees.length === 0 && tech.tachesTerminees.length === 0">
+            <i class="fas fa-info-circle"></i>
+            <span>Aucune tâche enregistrée pour ce jour</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

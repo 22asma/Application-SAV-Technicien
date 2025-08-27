@@ -8,6 +8,7 @@ export interface Configuration {
   parallelTasksPerTechnician: boolean;
   multiTechniciansPerTask: boolean;
   onlyCreatorEndTask: boolean;
+  restartTask: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,6 +17,7 @@ export interface UpdateConfigurationDto {
   parallelTasksPerTechnician?: boolean;
   multiTechniciansPerTask?: boolean;
   onlyCreatorEndTask?: boolean;
+  restartTask: boolean;
 }
 
 @Injectable({

@@ -35,22 +35,25 @@ export class Parametres implements OnInit {
   }
 
   chargerConfiguration() {
-    this.isLoading = true;
-    this.configService.getConfiguration().subscribe({
-      next: (config) => {
-        this.configuration = config;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement de la configuration:', error);
-        this.snackBar.open('Erreur lors du chargement de la configuration', 'Fermer', {
-          duration: 3000,
-          panelClass: ['error-snackbar']
-        });
-        this.isLoading = false;
-      }
-    });
-  }
+  this.isLoading = true;
+  this.configService.getConfiguration().subscribe({
+    next: (config) => {
+      this.configuration = {
+        ...config,
+        restartTask: config.restartTask ?? false // fallback si absent
+      };
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('Erreur lors du chargement de la configuration:', error);
+      this.snackBar.open('Erreur lors du chargement de la configuration', 'Fermer', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+      this.isLoading = false;
+    }
+  });
+}
 
   enregistrerParametres() {
     if (!this.configuration) {
@@ -67,7 +70,8 @@ export class Parametres implements OnInit {
     const updateDto: UpdateConfigurationDto = {
       parallelTasksPerTechnician: this.configuration.parallelTasksPerTechnician,
       multiTechniciansPerTask: this.configuration.multiTechniciansPerTask,
-      onlyCreatorEndTask: this.configuration.onlyCreatorEndTask
+      onlyCreatorEndTask: this.configuration.onlyCreatorEndTask,
+      restartTask: this.configuration.restartTask
     };
 
     this.configService.updateConfiguration(this.configuration.id, updateDto).subscribe({

@@ -386,6 +386,16 @@
   color: #689f38;
 }
 
+.type-badge.TASK_RESTART {
+  background-color: #f1f8e9;
+  color: #959f38;
+}
+
+.type-badge.JOIN_TASK {
+  background-color: #f1f8e9;
+  color: #389c9f;
+}
+
 .no-data {
   text-align: center;
   padding: 40px;
